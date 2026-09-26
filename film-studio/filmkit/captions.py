@@ -272,8 +272,8 @@ def burn(video: Path, ass: Path, out: Path) -> Path:
         ff.run(["-i", video, "-vf", vf, *ff.VIDEO_OUT, "-c:a", "copy", out])
     except Exception as e:
         if "No such filter" in str(e):
-            die("this ffmpeg has no subtitles filter (libass). Install a full build "
-                "(macOS: brew install ffmpeg) or use the Remotion captions route in the captions skill.")
+            die(f"this ffmpeg ({ff.ffmpeg_bin()}) has no subtitles filter (libass). Install a build with it "
+                f"({ff.INSTALL_HINT}) or use the Remotion captions route in the captions skill.")
         raise
     return out
 

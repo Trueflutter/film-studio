@@ -57,7 +57,7 @@ Captions go on last: after the mix, the master and `film deliver`, once per deli
 - Phrase-at-once is used for RTL (per-word effects can break joining and reading order).
 - Transcribe dialect with more than one engine when accuracy matters; the words the engines disagree on are the ones a native speaker must check.
 - Mixed-script tokens join correctly with a tatweel ("وبالـAI").
-- **Check one burnt frame.** Arabic shaping needs a libass built with HarfBuzz (standard Homebrew ffmpeg has it). If letters appear as boxes or disconnected, use the Remotion route below.
+- **Check one burnt frame.** Arabic shaping needs a libass built with HarfBuzz (Homebrew's `ffmpeg-full` has it; the plain `ffmpeg` formula has no libass at all). If letters appear as boxes or disconnected, use the Remotion route below.
 
 ## Premium route: animated captions in Remotion
 

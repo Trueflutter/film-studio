@@ -21,7 +21,7 @@ studio-kit/
 
 ## Install (student)
 
-Requirements: Claude Code, Python 3.9+, ffmpeg (with libass for captions; Homebrew's has it).
+Requirements: Claude Code, Python 3.9+, ffmpeg with libass for captions (macOS: `brew install ffmpeg-full`, which `film` finds by itself; Homebrew's plain `ffmpeg` has no libass. Windows: `winget install Gyan.FFmpeg`).
 
 ```
 /plugin marketplace add <owner>/<repo>          # the repo where this folder is published
@@ -59,6 +59,6 @@ film assemble · film mix · film captions transcribe|build|check|burn · film q
 ## Test
 
 ```
-cd film-studio && python3 -m unittest discover -s tests      # 7 tests; media tests need ffmpeg
+cd film-studio && python3 -m unittest discover -s tests      # 8 tests; media tests need ffmpeg
 claude plugin validate ./film-studio && claude plugin validate .
 ```

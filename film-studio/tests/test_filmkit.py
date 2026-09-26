@@ -13,7 +13,10 @@ import unittest
 from pathlib import Path
 
 KIT = Path(__file__).resolve().parents[1]
-FFMPEG = os.environ.get("FFMPEG") or shutil.which("ffmpeg")
+sys.path.insert(0, str(KIT))
+from filmkit import ff  # noqa: E402
+
+FFMPEG = ff.find("ffmpeg")
 
 
 def film(project: Path, *args: str) -> subprocess.CompletedProcess:
@@ -122,6 +125,27 @@ class TestLogic(StudioCase):
         self.assertIn("https://queue.fal.run/fal-ai/some-model", out)
 
 
+class TestFfmpegDiscovery(unittest.TestCase):
+    def test_env_then_full_build_then_path_and_paired_ffprobe(self):
+        from unittest import mock
+        tmp = Path(tempfile.mkdtemp())
+        try:
+            for d in ("env", "full"):
+                (tmp / d).mkdir()
+                for exe in ("ffmpeg", "ffprobe"):
+                    (tmp / d / exe).write_text("")
+            clean = {k: v for k, v in os.environ.items() if k not in ("FFMPEG", "FFPROBE")}
+            with mock.patch.dict(os.environ, clean, clear=True), \
+                    mock.patch.object(ff, "FULL_BUILDS", (tmp / "missing", tmp / "full")):
+                self.assertEqual(ff.find("ffmpeg"), str(tmp / "full" / "ffmpeg"))
+                self.assertEqual(ff.find("ffprobe"), str(tmp / "full" / "ffprobe"))
+                os.environ["FFMPEG"] = str(tmp / "env" / "ffmpeg")
+                self.assertEqual(ff.find("ffmpeg"), str(tmp / "env" / "ffmpeg"))
+                self.assertEqual(ff.find("ffprobe"), str(tmp / "env" / "ffprobe"))
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
+
+
 @unittest.skipUnless(FFMPEG, "ffmpeg not available")
 class TestMedia(StudioCase):
     def test_pipeline_end_to_end(self):
@@ -142,8 +166,6 @@ class TestMedia(StudioCase):
         self.ok("dailies")
         (prod / "06_edit/cut.txt").write_text("S01_t001\nS02_t001 0.2 1.4\nslate 0.5\nS01_t001 1 2.3\n")
         cut = Path(self.ok("assemble").strip())
-        sys.path.insert(0, str(KIT))
-        from filmkit import ff
         info = ff.probe(cut)
         self.assertEqual((info["width"], info["height"]), (1920, 1080))
         expected = (round(2.8 * 24) + round(1.2 * 24) + round(0.5 * 24) + round(1.3 * 24)) / 24

@@ -225,20 +225,28 @@ def cmd_doctor(a):
     print(f"filmkit {__version__} · python {sys.version.split()[0]}")
     if sys.version_info < (3, 9):
         print("  ✗ python 3.9+ required"); ok = False
-    ffm = os.environ.get("FFMPEG") or shutil.which("ffmpeg")
-    print(f"  {'✓' if ffm else '✗'} ffmpeg {ffm or 'missing (brew install ffmpeg / winget install ffmpeg)'}")
+    from . import ff
+    ffm = ff.find("ffmpeg")
+    print(f"  {'✓' if ffm else '✗'} ffmpeg {ffm or f'missing ({ff.INSTALL_HINT})'}")
     ok &= bool(ffm)
-    print(f"  {'✓' if shutil.which('ffprobe') else '·'} ffprobe {'found' if shutil.which('ffprobe') else 'missing (optional)'}")
+    fp = ff.find("ffprobe")
+    print(f"  {'✓' if fp else '·'} ffprobe {fp or 'missing (optional)'}")
     if ffm:
         filters = subprocess.run([ffm, "-hide_banner", "-filters"], capture_output=True, text=True).stdout
-        for f, why in (("subtitles", "burnt-in captions"), ("drawtext", "text overlays"),
-                       ("sidechaincompress", "music ducking"), ("ebur128", "loudness QC")):
+        for f, why in (("subtitles", "burnt-in captions (libass)"), ("sidechaincompress", "music ducking"),
+                       ("ebur128", "loudness QC")):
             has = f" {f} " in filters
-            print(f"  {'✓' if has else '·'} {f:<18} {why}{'' if has else ' (not in this build)'}")
+            ok &= has
+            print(f"  {'✓' if has else '✗'} {f:<18} {why}{'' if has else ' (not in this build)'}")
+        if " subtitles " not in filters:
+            print(f"    captions need an ffmpeg with libass: {ff.INSTALL_HINT}. "
+                  "film finds Homebrew's ffmpeg-full by itself; no PATH change needed.")
     from .gen import PROVIDERS, load_env
     load_env()
     for via, p in PROVIDERS.items():
-        print(f"  {'✓' if os.environ.get(p['key']) else '·'} {p['key']:<16} ({via}) {'set' if os.environ.get(p['key']) else 'not set'}")
+        print(f"  {'✓' if os.environ.get(p['key']) else '·'} {p['key']:<18} ({via}) {'set' if os.environ.get(p['key']) else 'not set'}")
+    el = os.environ.get("ELEVENLABS_API_KEY")
+    print(f"  {'✓' if el else '·'} {'ELEVENLABS_API_KEY':<18} (captions transcribe, voices) {'set' if el else 'not set'}")
     print(f"  film lives at {KIT_ROOT / 'bin' / 'film'} (outside Claude Code: alias film=\"{KIT_ROOT / 'bin' / 'film'}\")")
     print("  ✓ studio ready" if ok else "  fix the ✗ items above")
 

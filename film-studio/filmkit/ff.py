@@ -11,11 +11,31 @@ from pathlib import Path
 from .core import die
 
 
+# Homebrew's plain `ffmpeg` has no libass (burnt-in captions). `ffmpeg-full` does, but is keg-only
+# (not on PATH), so look for it before PATH.
+FULL_BUILDS = (Path("/opt/homebrew/opt/ffmpeg-full/bin"), Path("/usr/local/opt/ffmpeg-full/bin"))
+INSTALL_HINT = ("macOS: `brew install ffmpeg-full`; Windows: `winget install Gyan.FFmpeg`; "
+                "Linux: your package manager's ffmpeg")
+
+
+def find(name: str) -> str | None:
+    """ffmpeg or ffprobe: the FFMPEG/FFPROBE env var, then Homebrew's ffmpeg-full, then PATH.
+    ffprobe is taken from beside the chosen ffmpeg when it's there, so the pair always match."""
+    env = os.environ.get(name.upper())
+    if env:
+        return env
+    if name == "ffprobe":
+        exe = find("ffmpeg")
+        mate = Path(exe).with_name("ffprobe" + Path(exe).suffix) if exe else None
+        return str(mate) if mate and mate.exists() else shutil.which("ffprobe")
+    full = next((d / name for d in FULL_BUILDS if (d / name).exists()), None)
+    return str(full) if full else shutil.which(name)
+
+
 def ffmpeg_bin() -> str:
-    exe = os.environ.get("FFMPEG") or shutil.which("ffmpeg")
+    exe = find("ffmpeg")
     if not exe:
-        die("ffmpeg not found. Install it (macOS: `brew install ffmpeg`, Windows: `winget install ffmpeg`) "
-            "or set FFMPEG=/path/to/ffmpeg.")
+        die(f"ffmpeg not found. Install it ({INSTALL_HINT}) or set FFMPEG=/path/to/ffmpeg.")
     return exe
 
 
@@ -44,7 +64,7 @@ def probe(path: Path) -> dict:
     path = Path(path)
     if not path.exists():
         die(f"not found: {path}")
-    fp = shutil.which("ffprobe")
+    fp = find("ffprobe")
     if fp:
         res = subprocess.run([fp, "-v", "error", "-print_format", "json", "-show_format",
                               "-show_streams", str(path)], capture_output=True, text=True)
