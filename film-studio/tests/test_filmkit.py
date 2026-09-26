@@ -27,7 +27,8 @@ def film(project: Path, *args: str) -> subprocess.CompletedProcess:
 
 class StudioCase(unittest.TestCase):
     def setUp(self):
-        self.tmp = Path(tempfile.mkdtemp())
+        # resolve(): on macOS the temp dir (/var/...) is a symlink to /private/var/..., and film prints real paths
+        self.tmp = Path(tempfile.mkdtemp()).resolve()
         self.studio = self.tmp / "project"
         (self.studio / "productions").mkdir(parents=True)
 
