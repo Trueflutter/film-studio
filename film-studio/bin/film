@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+# `film`: the production spine. Installed on PATH by the film-studio plugin.
+KIT="$(cd "$(dirname "$0")/.." && pwd)"
+PYTHONPATH="$KIT${PYTHONPATH:+:$PYTHONPATH}" exec python3 -m filmkit "$@"

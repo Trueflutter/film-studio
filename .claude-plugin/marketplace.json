@@ -1,0 +1,12 @@
+{
+  "name": "saqr-film",
+  "description": "AI Filmmaking Bootcamp: the student studio",
+  "owner": { "name": "Saqr Academy" },
+  "plugins": [
+    {
+      "name": "film-studio",
+      "source": "./film-studio",
+      "description": "The AI filmmaking studio: skills, the film command, templates and handbook."
+    }
+  ]
+}

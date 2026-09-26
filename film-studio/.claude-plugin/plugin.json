@@ -1,0 +1,9 @@
+{
+  "name": "film-studio",
+  "displayName": "AI Film Studio",
+  "version": "1.0.0",
+  "description": "Story-to-screen AI filmmaking inside Claude Code: story engine, bibles, shot design, directed prompts, draft-to-final generation with cost tracking, performance and voice, sound, captions, edit, QC and delivery. Ships the `film` command and the filmmaking handbook.",
+  "author": { "name": "Saqr Academy" },
+  "license": "Proprietary (course material). Bundled fonts: SIL Open Font License 1.1.",
+  "keywords": ["filmmaking", "ai-video", "seedance", "kling", "storyboard", "captions", "remotion", "ffmpeg"]
+}

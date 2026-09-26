@@ -1,0 +1,15 @@
+# secrets
+.env
+
+# heavy media: keep it in cloud storage, not git (boards, refs and stills are kept)
+*.mp4
+*.mov
+*.webm
+*.wav
+*.mp3
+*.m4a
+*.aac
+
+# system
+.DS_Store
+__pycache__/

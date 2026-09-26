@@ -1,0 +1,5 @@
+shot,scene,beat,purpose,size,angle,lens,move,action,dialogue,sound,duration_s,route,refs,status,notes
+# EXAMPLE (rows starting with # are ignored: delete these when you add real shots),,,,,,,,,,,,,,,
+#S01,1,SETUP,Show she is alone and waiting,WS,eye level,24mm,static,Maya sits at the kitchen table in the dark; phone face-down,,rain on glass; fridge hum,3,draft: seedance-2.5 draft 480p / final: 1080p from draft,LOC-01 plate; maya face_34,planned,
+#S02,1,TENSION,The call she won't take,INSERT,high,85mm,slow push-in,Phone buzzes and crawls on the wood,,buzz on wood (foley),2,still + i2v cheap model,phone prop ref,planned,pre-planned insert: editorial insurance
+#S03,1,CHOICE,She decides,MCU,eye level,50mm,static,She stands; the chair scrapes back,"Not tonight.",chair scrape; buzz continues,3,seedance audio-ref (voice first),maya face_34 + wardrobe A,planned,cut on the stand

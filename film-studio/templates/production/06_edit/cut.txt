@@ -1,0 +1,6 @@
+# cut.txt: one line per event, top to bottom = order in the cut. Build it with `film assemble`.
+# <take id | file path | 'slate'>  [in seconds]  [out seconds]  [# comment]
+# Examples:
+#   S01_t003                  (whole take, minus the default 0.1s head/tail trim)
+#   S02_t001  0.4  3.1        (in at 0.4s, out at 3.1s of the take)
+#   slate     1.5             (1.5s of black: a placeholder or a held beat)
