@@ -1,6 +1,6 @@
-# My AI film studio
+# My AI video studio
 
-This folder is an AI film studio. Productions live in `productions/`, one folder each, created with `film new "Title"`.
+This folder is an AI video studio. Productions live in `productions/`, one folder each, created with `film new "Title"`.
 
 ## How to work here
 

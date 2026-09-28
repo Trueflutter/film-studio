@@ -13,7 +13,7 @@ studio-kit/
     bin/film                        the `film` command (added to PATH by Claude Code)
     filmkit/                        the Python behind it (stdlib only + ffmpeg)
     templates/production/           what `film new` creates
-    handbook/                       17 chapters the skills read on demand
+    handbook/                       18 chapters the skills read on demand
     assets/fonts/                   caption fonts (SIL Open Font License)
     tests/                          python3 -m unittest discover -s tests
   starter/                          the student's studio folder (CLAUDE.md, .env.example, .mcp.json)

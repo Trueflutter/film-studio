@@ -40,6 +40,13 @@ Before sending a shot back to `take-doctor` for a new generation, try: trim · r
 
 When the director names a film or ad to learn from: `film teardown <file>` gives its cut list, shot lengths, holds and bursts, and one frame per shot. Write the grammar up from the sheets (shot sizes in order, camera moves, transitions, how text enters and leaves, where the holds fall) and apply it to this cut. Take the grammar, never the content. Use a file the director is allowed to have and keep it private.
 
+## Short-form, cutdowns and other formats
+
+Read `${CLAUDE_PLUGIN_ROOT}/handbook/18-short-form-series-and-volume.md`.
+- **The first second:** `film frames <cut> --at 0,0.5,1 --width 360` and look. If the first frame wouldn't stop a thumb, propose a different opening shot, not a caption.
+- **Every version gets its own hook.** A cutdown is its own list (`06_edit/cutdown_15.txt`, best seconds only, opening on its strongest moment): `film assemble --edl 06_edit/cutdown_15.txt`, then review it like any cut.
+- **Loops and buttons:** end on the payoff and stop; a loop only when the last frame leads into the first.
+
 ## J and L cuts, finishing
 
 `film assemble` makes straight cuts. For J/L cuts, colour and grain, move the assembled cut (or the selects) into DaVinci Resolve, Premiere or CapCut. Finishing order: conform → upscale locked clips → balance → match → look → grain once over everything. Picture lock is a decision: after it, only sound, colour and titles change.

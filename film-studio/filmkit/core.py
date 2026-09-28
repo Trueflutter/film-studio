@@ -195,10 +195,21 @@ def resolve_path(p, prod: "Production | None" = None) -> Path:
     return alt if alt.exists() else path
 
 
-def create_production(title: str, fmt: str, aspect: str | None, fps: float, duration: int | None,
-                      budget: float, slug: str | None = None) -> Production:
-    aspect = aspect or FORMAT_DEFAULTS[fmt][0]
-    duration = duration or FORMAT_DEFAULTS[fmt][1]
+# What a new production reuses from an earlier one (`film new --from`): the brief, the look and
+# the cast, the graphics and the sound kit. Story, boards, shots, cuts and deliveries start fresh.
+REUSE = ("00_brief", "02_design", "05_sound/ambience", "05_sound/music", "05_sound/sfx", "06_edit/graphics")
+
+
+def create_production(title: str, fmt: str | None, aspect: str | None, fps: float | None, duration: int | None,
+                      budget: float | None, slug: str | None = None, base: Production | None = None) -> Production:
+    """A new production from the template, or from an earlier production (`base`): an episode, a
+    cutdown campaign or the next piece in a series keeps its format, look, cast, graphics and sound kit."""
+    b = base.cfg if base else {}
+    fmt = fmt or b.get("format", "film")
+    aspect = aspect or b.get("aspect") or FORMAT_DEFAULTS[fmt][0]
+    duration = duration or b.get("target_duration_s") or FORMAT_DEFAULTS[fmt][1]
+    fps = fps or b.get("fps", 24)
+    budget = budget if budget is not None else b.get("budget_usd", 60)
     if aspect not in ASPECTS:
         die(f"aspect must be one of {', '.join(ASPECTS)}")
     if not TEMPLATE.exists():
@@ -222,6 +233,8 @@ def create_production(title: str, fmt: str, aspect: str | None, fps: float, dura
         "loudness_lufs": -14 if fmt in ("ad", "social") else -16,
         "created": today(),
     }
+    if base:
+        cfg["from"] = base.cfg.get("slug", base.root.name)
     (root / "production.json").write_text(json.dumps(cfg, indent=2) + "\n")
     for f in root.rglob("*.md"):
         f.write_text(fill_template(f.read_text(encoding="utf-8"), cfg), encoding="utf-8")
@@ -230,6 +243,9 @@ def create_production(title: str, fmt: str, aspect: str | None, fps: float, dura
     keep, drop = ("brief_ad.md", "brief_film.md") if fmt in ("ad", "social") else ("brief_film.md", "brief_ad.md")
     (brief_dir / drop).unlink()
     (brief_dir / keep).rename(brief_dir / "brief.md")
+    for rel in REUSE if base else ():
+        if (base.root / rel).is_dir():
+            shutil.copytree(base.root / rel, root / rel, dirs_exist_ok=True)
     PRODUCTIONS.mkdir(exist_ok=True)
     CURRENT.write_text(slug)
     return Production(root)

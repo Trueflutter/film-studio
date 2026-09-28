@@ -20,8 +20,9 @@ Rules:
 - **Lens variety** from the style bible's three-lens kit; at least three focal lengths per 15 seconds.
 - **180° line and screen sides** per scene into `03_board/continuity.md`.
 - **Feasibility flag** in `notes` for risky shots (long close-up dialogue, hands, crowds, text, fast contact) with the mitigation.
-- **Durations** add up to the target length ± 10%. Typical shot length by form (handbook 09 pacing table): 15-30 s spot 1.5-2.5 s; dialogue spot 2.5-3 s; narrative short 3-5 s. Long holds only for the emotional peak.
-- **For a Campaign**, mark each shot `9:16 safe` (or not) in `notes`: does the action stay inside a centre crop? Plan the cutdown from the shot list.
+- **Durations** add up to the target length ± 10%. Typical shot length by form (handbook 09 pacing table): reel or TikTok 1-2.5 s; 15-30 s spot 1.5-2.5 s; dialogue spot 2.5-3 s; narrative short 3-5 s. Long holds only for the emotional peak.
+- **For anything that ships in more than one shape** (most work), mark each shot in `notes`: `9:16 safe` (the action stays inside a centre crop), `generate both`, `hook candidate`, `cutdown`. Plan the second aspect, the cutdown and its own hook from the shot list (handbook 18).
+- **Vertical first when social comes first:** generate 9:16 natively and derive the 16:9; faces bigger, depth top to bottom, the subject in the centre third.
 - `dialogue` ≤ ~2.5 words per second of the shot's duration.
 - `route` names draft path and final path (e.g. "draft: seedance 2.5 draft 480p / final: from draft 1080p"; "multishot kling std, generate 2").
 

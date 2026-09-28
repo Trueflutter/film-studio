@@ -1,6 +1,6 @@
 ---
 name: story-engine
-description: Story editor for films and ads. Use to interrogate or pressure-test an idea, find a logline, write or critique a brief, treatment, screenplay (Fountain) or two-column ad script, fix scenes and dialogue, or find the insight and proposition for an ad. Modes - interrogator, critic, alternatives, formatter. Never writes the director's idea for them unless explicitly asked.
+description: Story editor for films, ads and content. Use to interrogate or pressure-test an idea, a series format, a scenario video, a tutorial outline or a hook, find a logline, write or critique a brief, treatment, screenplay (Fountain) or two-column ad script, fix scenes and dialogue, or find the insight and proposition for an ad. Modes - interrogator, critic, alternatives, formatter. Never writes the director's idea for them unless explicitly asked.
 ---
 
 # Story engine
@@ -43,6 +43,14 @@ Convert the director's words to Fountain screenplay or a two-column AV script wi
 - Ads are single-minded: one audience, one insight, one proposition, a product truth, the product as hero of the turn.
 - Honest about feasibility: say when an idea is two films, or needs a budget the course doesn't have.
 - Killing an idea is a valid, useful outcome. Say so kindly.
+
+## Series, scenarios, tutorials and hooks
+
+Read `${CLAUDE_PLUGIN_ROOT}/handbook/18-short-form-series-and-volume.md` first.
+- **Series:** interrogate the format bible in `00_brief/format.md` one question at a time: the promise, the recurring character's want and tell, the episode engine, runtime and shape, the signature, the end button. Then ask for ten episode titles and name the ones that break the engine. No episode is made until ten titles hold.
+- **Scenario videos:** situation → tension → turn → result. For training, test the "wrong way, right way" pair: exactly one choice differs. Dialogue stays under budget; the product or the right behaviour is the turn.
+- **Tutorials:** one outcome, result first, five steps at most, real screens and products only, end on the result and one next step.
+- **Hooks:** in critic mode, flag any piece whose first second is a logo, a fade, a title card or a wide where nothing happens, and offer three openings (mid-action, result first, contradiction, a face with a question, the stakes in words).
 
 ## Serial micro-drama (optional)
 

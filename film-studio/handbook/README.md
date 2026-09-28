@@ -1,6 +1,6 @@
-# The AI Filmmaking Handbook
+# The Studio Handbook
 
-Seventeen chapters you keep after the course. Your Claude reads them too: the film-studio skills open the relevant chapter before advising.
+Eighteen chapters you keep after the course. Your Claude reads them too: the film-studio skills open the relevant chapter before advising.
 
 | # | Chapter | Read it when |
 |---|---|---|
@@ -21,5 +21,6 @@ Seventeen chapters you keep after the course. Your Claude reads them too: the fi
 | 15 | [Rights and ethics](15-rights-and-ethics.md) | real people, voices, music, disclosure, client work |
 | 16 | [Tool landscape](16-tool-landscape.md) | choosing tools (dated: re-check monthly) |
 | 17 | [Case studies](17-case-studies.md) | learning from finished work, and doing your own teardowns |
+| 18 | [Short-form, series and volume](18-short-form-series-and-volume.md) | reels and TikToks, scenario videos, tutorials, series, one idea in many formats, a week of content |
 
 Three threads run through all of it: **realism** (the 12 levers, ch. 04), **economics** (still → draft → lock → final → fix, ch. 13) and **diagnosis** (name the failure, fix it cheaply, ch. 12).

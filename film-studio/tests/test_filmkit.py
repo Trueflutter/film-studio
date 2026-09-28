@@ -61,6 +61,32 @@ class TestLogic(StudioCase):
         self.ok("character", "Maya Haddad")
         self.assertIn("Maya Haddad", (prod / "02_design/characters/maya-haddad/bible.md").read_text())
 
+    def test_new_from_reuses_cast_look_and_kit(self):
+        self.ok("new", "Desk Diaries", "--format", "social", "--duration", "20", "--budget", "15")
+        pilot = self.studio / "productions" / "desk-diaries"
+        (pilot / "00_brief/brief.md").write_text("series brief")
+        self.ok("character", "Noor")
+        (pilot / "02_design/style.md").write_text("pilot style")
+        (pilot / "06_edit/graphics/endcard_9x16/renders").mkdir(parents=True)
+        (pilot / "06_edit/graphics/endcard_9x16/renders/endcard.mov").write_bytes(b"mov")
+        (pilot / "05_sound/music/theme.wav").write_bytes(b"wav")
+        (pilot / "05_sound/dialogue/ep1_line.wav").write_bytes(b"wav")
+        (pilot / "01_story/script.md").write_text("episode one")
+        out = self.ok("new", "Desk Diaries Ep 2", "--from", "desk-diaries")
+        self.assertIn("from desk-diaries", out)
+        self.assertIn("social · 9:16 · 20s · $15", out)
+        ep2 = self.studio / "productions" / "desk-diaries-ep-2"
+        self.assertEqual((ep2 / "00_brief/brief.md").read_text(), "series brief")
+        self.assertEqual((ep2 / "02_design/style.md").read_text(), "pilot style")
+        self.assertTrue((ep2 / "02_design/characters/noor/bible.md").exists())
+        self.assertTrue((ep2 / "06_edit/graphics/endcard_9x16/renders/endcard.mov").exists())
+        self.assertTrue((ep2 / "05_sound/music/theme.wav").exists())
+        # episode-specific work starts fresh
+        self.assertFalse((ep2 / "05_sound/dialogue/ep1_line.wav").exists())
+        self.assertNotEqual((ep2 / "01_story/script.md").read_text(), "episode one")
+        self.assertIn('"from": "desk-diaries"', (ep2 / "production.json").read_text())
+        self.assertIn("16:9", self.ok("new", "Desk Diaries Wide", "--from", "desk-diaries", "--aspect", "16:9"))
+
     def test_takes_rating_and_economics(self):
         self.ok("new", "Econ", "--budget", "20")
         f = self.tmp / "clip.mp4"

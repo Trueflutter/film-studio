@@ -23,8 +23,11 @@ def _floats(s: str) -> list[float]:
 
 
 def cmd_new(a):
-    prod = create_production(a.title, a.format, a.aspect, a.fps, a.duration, a.budget, a.slug)
+    base = find_production(a.base) if a.base else None
+    prod = create_production(a.title, a.format, a.aspect, a.fps, a.duration, a.budget, a.slug, base)
     cfg = prod.cfg
+    if base:
+        print(f"from {base.root.name}: brief, characters, locations, style, graphics and sound kit copied")
     print(f"created {prod.root}  [{cfg['format']} · {cfg['aspect']} · {cfg['target_duration_s']}s · ${cfg['budget_usd']:.0f}]\n"
           "now current. Paths like 04_shots/... work from anywhere in your studio.\n"
           "Start with 00_brief/brief.md, then `film status`. To change aspect or budget later, edit production.json.")
@@ -282,12 +285,14 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("new", help="create a production from the template")
     p.add_argument("title")
-    p.add_argument("--format", default="film", choices=["film", "ad", "social"])
+    p.add_argument("--format", choices=["film", "ad", "social"], help="default: film, or --from's")
     p.add_argument("--aspect", choices=list(ASPECTS), help="default: 16:9 film, 9:16 ad/social")
-    p.add_argument("--fps", type=float, default=24)
+    p.add_argument("--fps", type=float, help="default: 24")
     p.add_argument("--duration", type=int, help="target seconds (default: film 60, ad 30, social 15)")
-    p.add_argument("--budget", type=float, default=60, help="generation budget in USD")
+    p.add_argument("--budget", type=float, help="generation budget in USD (default: 60)")
     p.add_argument("--slug")
+    p.add_argument("--from", dest="base", metavar="PRODUCTION",
+                   help="start from an earlier production: reuse its brief, cast, look, graphics and sound kit")
     p.set_defaults(fn=cmd_new)
 
     p = sub.add_parser("use", help="switch the current production"); p.add_argument("slug"); p.set_defaults(fn=cmd_use)
