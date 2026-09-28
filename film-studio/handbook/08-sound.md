@@ -116,6 +116,15 @@ When the lift arrives too early, don't time-stretch the track. Repeat whole bars
 
 Bonus: a pre-chorus rest can land in the pause after the last line and set up the hit on the end-card cut.
 
+### Cutting picture to the beat
+
+Montage, hooks and campaign spots feel driven when the cuts land with the music. Dialogue scenes don't work that way: the performance sets the cut and the music follows.
+
+- **One beat lasts 60 / BPM seconds:** 0.5 s at 120 BPM, 0.83 s at 72. The tempo is in your music brief or the track's listing.
+- **Cut on the beat, or a frame or two before it.** A cut slightly ahead of the beat often feels more in time than one exactly on it; try both.
+- **Save the biggest change for a downbeat**, the first beat of a bar: the reveal, the product, the cut to the end card.
+- **Check it:** `film review --bpm 120 --offset 0.42` lists every cut against the grid ("beat 7 on", "beat 9 -2f"). The offset is where the first beat falls in the cut; find the first strong transient on your editor's waveform.
+
 ### Licensing is a first-class decision
 
 Choose by what the client and platform allow, then by sound. Ranked by safety for client work:

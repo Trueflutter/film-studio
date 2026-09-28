@@ -151,19 +151,49 @@ def _resolve(prod: Production, src: str) -> Path:
     raise AssertionError
 
 
+def plan(prod: Production, events: list[tuple[str, float | None, float | None]], trim: float = 0.1) -> list[dict]:
+    """Where each cut.txt event comes from and how many whole frames it lasts in the cut.
+
+    `assemble` builds the cut from this plan and `review` finds the joins with it, so the two agree.
+    trim: seconds shaved off the head and tail of whole takes (generation jitter lives there).
+    """
+    fps = prod.fps
+    out = []
+    for src, a, b in events:
+        ev = {"src": src, "path": None, "start": 0.0, "kind": "slate", "audio": False}
+        if src.lower() == "slate":
+            dur = a or 1.0
+        else:
+            ev["path"] = path = _resolve(prod, src)
+            if path.suffix.lower() in IMAGE_EXT:
+                ev["kind"] = "still"
+                dur = (b - a) if (a is not None and b is not None) else (a or 2.0)
+            else:
+                info = ff.probe(path)
+                start = a if a is not None else trim
+                end = b if b is not None else max(info["duration"] - trim, start + 0.1)
+                ev.update(kind="clip", start=start, audio=info["has_audio"])
+                dur = end - start
+        ev["frames"] = max(1, round(dur * fps))
+        ev["whole"] = ev["kind"] == "clip" and a is None
+        out.append(ev)
+    return out
+
+
 def assemble(prod: Production, edl_path: Path | None = None, trim: float = 0.1,
              fit: str = "crop", fade_ms: int = 30) -> Path:
     """Rough cut from cut.txt: conform every event to the production frame, then join.
 
-    trim: seconds shaved off the head and tail of whole takes (generation jitter lives there).
-    Every event gets a short audio fade in/out so joins don't click.
+    Every event gets a short audio fade in/out so joins don't click. A copy of the cut list is
+    saved beside the cut (cut_v004.txt), so every version keeps the list that made it.
     """
     edl_path = edl_path or prod.dir("edit") / "cut.txt"
     if not edl_path.exists():
         edl_path.parent.mkdir(parents=True, exist_ok=True)
         edl_path.write_text(EDL_HELP)
         die(f"wrote an empty {prod.rel(edl_path)}: list your takes in it, then run assemble again")
-    events = parse_edl(edl_path.read_text())
+    edl_text = edl_path.read_text(encoding="utf-8")
+    events = parse_edl(edl_text)
     if not events:
         die(f"{prod.rel(edl_path)} has no events yet")
     w, h = prod.size
@@ -175,33 +205,24 @@ def assemble(prod: Production, edl_path: Path | None = None, trim: float = 0.1,
     # per-event frame rounding and AAC priming push audio ahead of picture at every cut.
     with tempfile.TemporaryDirectory() as tmp:
         parts = []
-        for i, (src, a, b) in enumerate(events):
+        for i, ev in enumerate(plan(prod, events, trim)):
             seg = Path(tmp) / f"ev{i:03d}.mkv"
-            if src.lower() == "slate":
-                path, has_audio, start = None, False, 0.0
-                dur = a or 1.0
-                inputs = ["-f", "lavfi", "-t", f"{dur + 1}", "-i", f"color=c=black:s={w}x{h}:r={fps}"]
-            else:
-                path = _resolve(prod, src)
-                info = ff.probe(path)
-                if path.suffix.lower() in IMAGE_EXT:
-                    dur = (b - a) if (a is not None and b is not None) else (a or 2.0)
-                    inputs = ["-loop", "1", "-t", f"{dur + 1}", "-i", path]
-                    has_audio = False
-                else:
-                    start = a if a is not None else trim
-                    end = b if b is not None else max(info["duration"] - trim, start + 0.1)
-                    dur = end - start
-                    inputs = ["-ss", f"{start}", "-t", f"{dur + 1}", "-i", path]
-                    has_audio = info["has_audio"]
-            frames = max(1, round(dur * fps))
+            frames = ev["frames"]
             dur = frames / fps
-            vf = ff.fit_filter(w, h, fps, fit)
-            if has_audio:
+            if ev["kind"] == "slate":
+                inputs = ["-f", "lavfi", "-t", f"{dur + 1}", "-i", f"color=c=black:s={w}x{h}:r={fps}"]
+            elif ev["kind"] == "still":
+                inputs = ["-loop", "1", "-t", f"{dur + 1}", "-i", ev["path"]]
+            else:
+                inputs = ["-ss", f"{ev['start']}", "-t", f"{dur + 1}", "-i", ev["path"]]
+            # Restart every event's clock at zero: after a seek the first frame can sit part of a frame
+            # late, and the fps filter would round that into a one-frame hole at the join.
+            vf = "setpts=PTS-STARTPTS," + ff.fit_filter(w, h, fps, fit)
+            if ev["audio"]:
                 audio_in, amap = [], "0:a:0"
             else:
                 audio_in, amap = ["-f", "lavfi", "-i", "anullsrc=r=48000:cl=stereo"], "1:a"
-            af = (f"aresample=48000,aformat=channel_layouts=stereo,atrim=duration={dur:.6f},"
+            af = (f"asetpts=PTS-STARTPTS,aresample=48000,aformat=channel_layouts=stereo,atrim=duration={dur:.6f},"
                   f"apad=whole_dur={dur:.6f},afade=t=in:d={fade},afade=t=out:st={max(dur - fade, 0):.4f}:d={fade}")
             ff.run([*inputs, *audio_in, "-map", "0:v:0", "-map", amap, "-vf", vf, "-af", af,
                     "-frames:v", str(frames), *ff.VIDEO_OUT[:-2], "-c:a", "pcm_s16le", "-t", f"{dur:.6f}", seg])
@@ -210,4 +231,6 @@ def assemble(prod: Production, edl_path: Path | None = None, trim: float = 0.1,
         concat.write_text("".join(f"file '{p}'\n" for p in parts))
         ff.run(["-f", "concat", "-safe", "0", "-i", concat, "-c:v", "copy", *ff.AUDIO_OUT,
                 "-movflags", "+faststart", out])
+    out.with_suffix(".txt").write_text(
+        f"# {out.name} from {edl_path.name}: film assemble --trim {trim} --fit {fit}\n{edl_text}", encoding="utf-8")
     return out

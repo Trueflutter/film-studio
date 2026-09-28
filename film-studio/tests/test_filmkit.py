@@ -113,6 +113,18 @@ class TestLogic(StudioCase):
         self.assertIn("chars/sec", report)
         self.assertIn("on screen 0.40s", report)
 
+    def test_rhythm_and_beat_grid(self):
+        from filmkit.review import _beat, rhythm
+        flat = "\n".join(rhythm([5.0, 4.8, 5.1, 4.9]))
+        self.assertIn("nearly uniform", flat)
+        self.assertIn("engine's default length", flat)
+        varied = "\n".join(rhythm([0.9, 8.0, 2.0, 1.2, 2.4]))
+        self.assertIn("0.9b 8.0H 2.0 1.2b 2.4", varied)
+        self.assertNotIn("!", varied)
+        self.assertEqual(_beat(2.0, 120, 0.0, 24), ("downbeat 5 on", True))
+        self.assertEqual(_beat(1.8, 120, 0.0, 24), ("downbeat 5 -5f", False))
+        self.assertEqual(_beat(0.2, 120, 1.0, 24), ("before the music", False))
+
     def test_gen_dry_run_payloads(self):
         self.ok("new", "Gen")
         prompt = self.tmp / "p.md"
@@ -170,7 +182,7 @@ class TestMedia(StudioCase):
         info = ff.probe(cut)
         self.assertEqual((info["width"], info["height"]), (1920, 1080))
         expected = (round(2.8 * 24) + round(1.2 * 24) + round(0.5 * 24) + round(1.3 * 24)) / 24
-        self.assertAlmostEqual(info["duration"], expected, delta=0.06)
+        self.assertAlmostEqual(info["duration"], expected, delta=0.02)  # no timestamp holes at the joins
         # paths relative to the production resolve from the studio root
         (prod / "05_sound/sfx").mkdir(parents=True, exist_ok=True)
         shutil.copy(self.media("hit.wav", "sine=f=900:d=0.3", []), prod / "05_sound/sfx/hit.wav")
@@ -182,6 +194,58 @@ class TestMedia(StudioCase):
         self.assertTrue(Path(self.ok("qc", str(mixed.relative_to(prod))).strip()).exists())
         outs = self.ok("deliver", str(mixed), "--aspects", "9:16,1:1").split()
         self.assertEqual(ff.probe(outs[0])["height"], 1920)
+
+    def test_review_teardown_and_frame_exact_joins(self):
+        self.ok("new", "Rev", "--aspect", "16:9")
+        prod = self.studio / "productions" / "rev"
+        (prod / "03_board/shotlist.csv").write_text(
+            "shot,scene,beat,purpose,size,angle,lens,move,action,dialogue,sound,duration_s,route,refs,status,notes\n"
+            "S01,1,,,MCU,front,,,,,,2,,,planned,\nS02,1,,,MCU,front,,,,,,1,,,planned,\n")
+        for shot, colour in (("S01", "red"), ("S02", "blue")):
+            clip = self.media(f"{colour}.mp4", f"color=c={colour}:s=320x180:r=24:d=2", ["-pix_fmt", "yuv420p"])
+            self.ok("take", "add", shot, str(clip))
+        # a whole take starts 0.1 s in: part of a frame, which used to leave a timestamp hole at the join
+        (prod / "06_edit/cut.txt").write_text("S01_t001\nS02_t001 0.5 1.5\n")
+        cut = Path(self.ok("assemble").strip())
+        self.assertTrue(cut.with_suffix(".txt").read_text().startswith("# cut_v001.mp4 from cut.txt"))
+        self.assertAlmostEqual(ff.probe(cut)["duration"], (43 + 24) / 24, delta=0.02)
+        out = self.ok("review", "--bpm", "120")
+        self.assertIn("J01    1.79s  downbeat 5 -5f", out)
+        self.assertIn("same size and angle in the shot list (MCU, front)", out)
+        sheet = cut.with_name("cut_v001_joins_1.png")
+        pixel = lambda x: subprocess.run([FFMPEG, "-v", "error", "-i", str(sheet), "-vf", f"crop=1:1:{x}:107",
+                                          "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], capture_output=True).stdout
+        red, blue = pixel(183), pixel(535)  # the middle of the frame out and the frame in
+        self.assertGreater(red[0], 200); self.assertLess(red[2], 60)
+        self.assertGreater(blue[2], 200); self.assertLess(blue[0], 60)
+        # an editor export has no cut list: the joins are found by picture change
+        export = prod / "06_edit/cuts/cut_v002.mp4"
+        shutil.copy(cut, export)
+        (prod / "06_edit/cut.txt").write_text("S01_t001\n")
+        out = self.ok("review")
+        self.assertIn("cuts found by picture change", out)
+        self.assertIn("J01    1.79s  shot 1 → shot 2", out)
+        report = self.ok("teardown", str(cut))
+        self.assertIn("2 shots", report)
+        self.assertIn("Cuts (s): 1.79", report)
+        self.assertTrue((cut.parent / "cut_v001_teardown" / "shots_1.png").exists())
+
+    def test_overlay_graphics_per_shape(self):
+        self.ok("new", "Gfx", "--aspect", "16:9")
+        bg = self.media("bg.mp4", "color=c=blue:s=320x180:r=24:d=2",
+                        ["-f", "lavfi", "-i", "sine=f=440:d=2", "-shortest", "-pix_fmt", "yuv420p"])
+        # a transparent card: the left half opaque red, the right half clear
+        card = self.media("card.mov", "color=c=red:s=160x180:r=24:d=1,format=rgba,pad=320:180:0:0:color=black@0",
+                          ["-c:v", "prores_ks", "-pix_fmt", "yuva444p10le"])
+        out = Path(self.ok("overlay", str(bg), f"{card}@0.5").strip())
+        self.assertTrue(ff.probe(out)["has_audio"])
+        rgb = lambda t, x: subprocess.run([FFMPEG, "-v", "error", "-ss", str(t), "-i", str(out), "-frames:v", "1",
+                                           "-vf", f"format=rgb24,crop=1:1:{x}:90", "-f", "rawvideo", "-pix_fmt", "rgb24", "-"],
+                                          capture_output=True).stdout
+        self.assertGreater(rgb(0.2, 80)[2], 150)   # before the card: the picture
+        self.assertGreater(rgb(1.0, 80)[0], 150)   # the card's opaque half
+        self.assertGreater(rgb(1.0, 240)[2], 150)  # the card's clear half shows the picture
+        self.assertGreater(rgb(1.8, 80)[2], 150)   # after the card ends: the picture again
 
     def test_captions_build_and_burn(self):
         import json

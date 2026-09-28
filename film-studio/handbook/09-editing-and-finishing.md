@@ -12,6 +12,7 @@ A generated clip is raw material, not a shot. The edit decides which 1-3 seconds
 6. **Text and UI are never generated.** Composite them.
 7. **One finish:** one grade and one grain pass over everything. Upscale only locked clips.
 8. **Version every cut and lock picture** before you finish sound, colour and captions.
+9. **Look before anyone watches.** `film review` puts every join on a sheet; Claude checks each one and fixes the worst before the director's first viewing.
 
 ## Where realism is made
 
@@ -114,13 +115,24 @@ Pre-plan inserts in the shot list: hands, props, screens, textures. They are che
 
 Log each fix as a take so the cost report counts it: `--stage fix` (handbook 13).
 
-## Text and UI are never generated
+## Text and graphics in code
 
-Models scramble letters. In the studio's reference teardown, every generated phone screen carried gibberish in the body text (studio-tested May 2026). Product names, screens, signs, lower thirds and end cards are composited:
+Models scramble letters. In the studio's reference teardown, every generated phone screen carried gibberish in the body text (studio-tested May 2026). Product names, screens, signs, lower thirds and end cards are built separately and composited.
 
-- **Editor titles** (Resolve, Premiere, CapCut) for simple supers.
-- **HTML → PNG** through a headless browser for cards and screen UI: exact fonts, exact layout.
-- **Remotion** for animated text, UI and end cards. Render stills with `--image-format=png --color-space=bt709`: the default JPEG bands soft gradients, and the default colour space shifts colours once the card joins BT.709 footage (studio-tested Sep 2026).
+Build them in code and Claude can do what a motion designer does: render a frame, look at it, fix it, render again. Most first attempts at AI motion graphics look alike (a centred title on a gradient, everything fading in, a logo at the end) because nobody gave the model a reference or asked it to look at its own frames (Movez, "How to build a motion design studio with Opus 5.5", Sep 2026). The `graphics` skill builds that loop in:
+
+1. **Brief in five lines:** the exact approved words, the job, where it sits, the brand files, the sound cue it lands on.
+2. **Build** one HyperFrames project per graphic per shape (HTML and CSS, rendered frame by frame; open source under Apache 2.0, so free for any company). Real product screenshots only.
+3. **Look before anyone watches:** `npx hyperframes check`, then snapshots at the arrival, the settled read and the exit, plus a phone-size frame. Score reads-at-phone-size, hierarchy, motion, brand, composition and fit with the film; fix the three worst; repeat until every score is 8.
+4. **Render** a transparent MOV at the production's frame rate, and put it on each delivered shape with `film overlay` (or on the track above the picture in your editor).
+
+| Route | Use it for | Notes |
+|---|---|---|
+| **HyperFrames** (the `graphics` skill) | End cards, titles, supers, lower thirds, UI, kinetic type | Needs Node 22+. Renders MP4, transparent MOV or a PNG sequence |
+| **Editor titles** (Resolve, Premiere, CapCut) | A simple super on your main shape | Quickest; laid out by hand for each shape |
+| **Remotion** (React) | Teams already using it; the captions skill's animated caption track | Free for individuals, non-profits and companies of up to three people; a larger for-profit company needs a paid licence (remotion.dev/license, checked Sep 2026). Render with `--image-format=png --color-space=bt709`: the default JPEG bands soft gradients, and the default colour space shifts colours once the card joins BT.709 footage (studio-tested Sep 2026) |
+
+- **The master stays text-free.** In `cut.txt`, hold the end card's place with a `slate` of its length. Each shape gets its own layout of every graphic, never a crop of another shape's (handbook 14).
 - Generate the screen or sign **blank** so there is a clean surface to track onto.
 - Captions are text too: the `captions` skill builds them, and handbook 14 covers caption QC.
 
@@ -149,6 +161,25 @@ Work in this order, once, across the whole timeline:
 - **Re-check every face** against the character's reference pack after every upscale. Drift here is an IDENTITY failure you paid for.
 - Log it: `film take add S06 S06_1080.mp4 --stage upscale`.
 
+## Look before anyone watches
+
+A generated clip can't be judged from one frame, but a join can: the last frame out and the first frame in show almost every problem this chapter warns about. `film review` builds sheets of every join in the latest cut, with the rhythm in numbers and flags on the joins most likely to break the transition rule:
+
+```
+Rhythm:
+  1.5 4.8H 1.0b 1.2b 1.0b 0.9b 2.0   (seconds · H hold · b burst)
+  ! 1 event(s) use a whole take: most shots want only their best 1-3 seconds.
+Joins:
+  J01    1.50s  S01_t001 → S02_t001   ! same size and angle in the shot list (MCU, front): check the transition rule
+  J02    6.29s  S02_t001 → S02_t002   ! two takes of S02 back to back: same framing unless one is punched in
+```
+
+Claude opens every sheet and checks each pair: the same person at the same size and angle, an eyeline or a movement that flips direction, a jump in colour or light, a flash frame. It fixes the three worst in `cut.txt`, assembles and reviews again, then hands the cut to the director with a note on each change. The director still watches full screen: frames catch mismatches, only watching catches rhythm, performance and sound.
+
+- The joins come from the cut list saved beside each cut, so they are exact. An editor export has no cut list, so `film review` finds its cuts by picture change instead (a dissolve or a soft cut can be missed).
+- `--bpm` and `--offset` add where each cut sits on the music's beat (handbook 08).
+- For a second opinion, give the sheets to a fresh subagent that didn't make the film and ask it only for what's wrong.
+
 ## Versions and the three passes
 
 | Pass | Goal | Where | Done when |
@@ -157,12 +188,14 @@ Work in this order, once, across the whole timeline:
 | **Fine cut** | Rhythm, trims, transitions, inserts, J/L cuts, punch-ins | Your NLE | No same-size jumps, weak frames hidden, rhythm varies |
 | **Lock** | Picture frozen | | No more timing changes. Then upscale, grade, mix, captions, QC |
 
-`film assemble` writes `06_edit/cuts/cut_v001.mp4`, then `cut_v002.mp4`, and never overwrites. Copy `cut.txt` beside each version (`cuts/cut_v004.txt`) and put one line at its top saying what changed (`#` lines are comments). Every change after lock ripples into the mix, the captions and every deliverable, which is why lock is a decision, not a mood.
+`film assemble` writes `06_edit/cuts/cut_v001.mp4`, then `cut_v002.mp4`, and never overwrites. It saves the list that made each version beside it (`cuts/cut_v004.txt`); put a line at the top of `cut.txt` saying what changed (`#` lines are comments) and it travels with the version. Every change after lock ripples into the mix, the captions and every deliverable, which is why lock is a decision, not a mood.
 
 ## Editing tools
 
 | Tool | Use it for | Notes |
 |---|---|---|
+| **`film review`** | Every join of a cut as frames, the rhythm, cuts against the beat | Works on an editor export too. Claude reads the sheets before the director watches |
+| **`film teardown`** | Cut list, shot lengths and one frame per shot of a reference film | Hard cuts only; check the sheets for dissolves and whips |
 | **`film assemble`** | Fast, frame-exact rough cuts from `cut.txt` | Conforms every event to the production frame (crop to fill; `--fit pad` letterboxes), quantises each event to whole frames so audio can't creep ahead of picture at the joins, and adds 30 ms audio fades so joins don't click. Accepts stills and `slate` lines (black placeholders). Claude can write `cut.txt` for you |
 | **DaVinci Resolve** (free or Studio) | Fine cut, colour, sound | The free version covers the course. Some effects, and scripting from outside the app, need Studio (verify before cohort) |
 | **Premiere Pro** | Fine cut in an Adobe workflow | Subscription |
@@ -216,7 +249,8 @@ The insert separates the two shots of her face and hides the collar change. The 
 
 | Skill | Use it for |
 |---|---|
-| `editor` | Builds `cut.txt` from your selects, applies the transition rule and rhythm, proposes fixes in post before regeneration |
+| `editor` | Builds `cut.txt` from your selects, applies the transition rule and rhythm, reviews every join before you watch, proposes fixes in post before regeneration |
+| `graphics` | End cards, titles, supers and UI built in code, critiqued from stills, laid out per shape |
 | `take-doctor` | Codes a failed take and names the cheapest rung of the remedy ladder (often "cut around" or "fix in post") |
 | `sound-design` | J/L cuts, room tone under the joins, the mix (handbook 08) |
 | `captions`, `qc-review` | Captions and the final checks (handbook 14) |
@@ -226,7 +260,10 @@ film take list --shot S05                      # what have I got?
 film contact --shot S05                        # takes side by side, one row each
 film frames 04_shots/S05/takes/S05_t003_seedance-2.5_480p.mp4 --every 0.5
 film take rate S05_t003 select --note "best 1.1-3.6s"
-film assemble                                  # rough cut → 06_edit/cuts/cut_v001.mp4
+film assemble                                  # rough cut → 06_edit/cuts/cut_v001.mp4 (+ cut_v001.txt)
+film review                                    # every join as frames, the rhythm, flags
+film review --bpm 96 --offset 0.4              # ... and where each cut lands on the beat
+film teardown 00_brief/refs/reference.mp4      # a reference film's cut list, rhythm and one frame per shot
 film assemble --trim 0.5                       # an engine with a longer unstable head and tail
 film assemble --fit pad                        # letterbox instead of crop (to inspect odd-sized clips)
 film take add S06 S06_punchin.mp4 --stage fix --tool resolve --cost 0 --notes "1.3x punch-in, tail trimmed"
@@ -235,11 +272,12 @@ film mix --video 06_edit/cuts/cut_v004.mp4 --dialogue 05_sound/dialogue/scene2.w
 film qc 06_edit/cuts/cut_v004_mix_v001.mp4
 ```
 
-Ask Claude in plain words: "Build a rough cut of scene 2 from my selects, best seconds only, and flag every same-subject join that breaks the transition rule."
+Ask Claude in plain words: "Build a rough cut of scene 2 from my selects, best seconds only, review every join yourself and fix the worst before I watch."
 
 ## Drills
 
 1. **Best seconds (10 min).** Take one 5-second generation. Frame-step it (`film frames ... --every 0.25`) and mark the best 1.5 seconds. Assemble it whole and trimmed, then watch both twice. Write one line on what the trim removed.
 2. **Repair a jump cut (20 min).** Put two same-size generations of one character back to back. Fix the join three ways: a punch-in, an insert, and a J-cut. Show a neighbour all three without saying which is which, and ask which cut they noticed.
-3. **Rhythm map (15 min).** Time every shot of a 30-second ad you admire. Write the lengths in a row and mark the holds and the bursts. Then re-cut your EX2 sequence so it has one hold and one burst.
+3. **Rhythm map (15 min).** Run `film teardown` on a 30-second ad you admire (a file you're allowed to have). Read its rhythm line and mark the holds and the bursts on the sheet; write two lines on its grammar. Then re-cut your EX2 sequence so it has one hold and one burst.
 4. **Post before pixels (15 min).** Take one rejected take. Try three fixes from the toolkit table before you allow yourself a re-roll. Log the best as `--stage fix`, or write down why none worked and which diagnosis code sends it back to generation.
+5. **Look first (10 min).** Run `film review` on your latest cut before you watch it. Write down what the sheets show, then watch it full screen and write down what only watching showed. The second list is what frames can't tell Claude.

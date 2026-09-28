@@ -51,3 +51,32 @@ def deliver(prod: Production, master: Path, aspects: list[str], fit: str = "crop
                 ff.run(["-i", master, *picture, *ff.VIDEO_OUT, out])
             made.append(out)
     return made
+
+
+def overlay(video: Path, graphics: list[tuple[Path, float]], out: Path | None = None) -> Path:
+    """Composite transparent graphics (end card, supers, lower thirds) over a delivered shape.
+
+    Each graphic is a render with an alpha channel (a HyperFrames MOV, or a PNG held to the end)
+    placed at a time in seconds. It's scaled to fit the frame and centred; the audio is copied
+    untouched. Render every shape's graphics at that shape: a crop would cut the type.
+    """
+    from .media import IMAGE_EXT
+    info = ff.probe(video)
+    w, h = info["width"], info["height"]
+    out = out or video.with_name(f"{video.stem}_gfx{video.suffix}")
+    inputs, chain, last = [], [], "0:v"
+    for i, (g, at) in enumerate(graphics, 1):
+        g = Path(g)
+        if not g.exists():
+            die(f"not found: {g}")
+        if g.suffix.lower() in IMAGE_EXT:
+            inputs += ["-loop", "1", "-t", f"{max(info['duration'] - at, 0.1):.3f}", "-i", g]
+        else:  # ffmpeg's own VP9 decoder drops alpha; libvpx keeps it
+            inputs += (["-c:v", "libvpx-vp9"] if g.suffix.lower() == ".webm" else []) + ["-i", g]
+        chain.append(f"[{i}:v]scale={w}:{h}:force_original_aspect_ratio=decrease,format=rgba,"
+                     f"setpts=PTS-STARTPTS+{at}/TB[g{i}];[{last}][g{i}]overlay=(W-w)/2:(H-h)/2:eof_action=pass[v{i}]")
+        last = f"v{i}"
+    audio = ["-map", "0:a", "-c:a", "copy"] if info["has_audio"] else []
+    ff.run(["-i", video, *inputs, "-filter_complex", ";".join(chain) + f";[{last}]format=yuv420p[vout]",
+            "-map", "[vout]", *audio, *ff.VIDEO_OUT, out])
+    return out

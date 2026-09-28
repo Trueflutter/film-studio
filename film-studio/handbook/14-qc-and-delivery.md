@@ -171,7 +171,7 @@ A 9:16 crop from a 16:9 frame keeps less than a third of the width. Decide at sh
 
 - In `shotlist.csv` notes, mark each shot: `9:16 safe` (subject central), `needs reframe`, or `generate both` (hero shots where both formats matter).
 - Draw the vertical extraction box on 16:9 boards so you compose for both.
-- Keep titles, end cards and captions out of the master. They are laid out per aspect.
+- Keep titles, end cards and captions out of the master. They are laid out per aspect: graphics with the `graphics` skill, put on each delivered shape with `film overlay`, then captions with `film captions burn`.
 
 **Reframe rather than blind-crop.** `film deliver` applies one fit to the whole master:
 
@@ -186,11 +186,12 @@ For the priority deliverable, reframe shot by shot in the NLE (keyframe the posi
 **Order of operations:**
 1. Lock, grade and mix the **textless master**; run `film qc` on it.
 2. Make the aspect variants (`film deliver` or NLE reframes). `film deliver` also normalises loudness to the production target.
-3. Build captions per variant (`--video` reads that variant's frame size) and burn them in.
-4. Run `film qc --spec ...` on every file you will upload.
-5. Name it, log it in `07_delivery/delivery.md`, upload with the right labels.
+3. Put each variant's own graphics on: `film overlay <variant> <render>@<seconds>` (end card, supers; the `graphics` skill).
+4. Build captions per variant (`--video` reads that variant's frame size) and burn them in.
+5. Run `film qc --spec ...` on every file you will upload, and `film review` to frame-step every cut.
+6. Name it, log it in `07_delivery/delivery.md`, upload with the right labels.
 
-Never run `film deliver` on a captioned file: the crop cuts through the captions.
+Never run `film deliver` on a file with graphics or captions: the crop cuts through the type.
 
 ## Names, versions, masters and deliverables
 
@@ -253,6 +254,7 @@ Each note names where, what area, how bad, why (the code), and the cheapest fix 
 | Skill | Use it for |
 |---|---|
 | `qc-review` | Runs `film qc`, walks you through the viewing protocol and rubric, and sorts the fixes cheapest first |
+| `graphics` | End cards, titles and supers per shape, rendered transparent for `film overlay` |
 | `captions` | Transcribe, author lines, build, check and burn captions |
 | `editor`, `sound-design` | Carrying out the edit and mix fixes (handbooks 09, 08) |
 | `studio` | Status, the delivery log, the wrap notes |
@@ -265,8 +267,10 @@ film deliver 07_delivery/masters/nightshift_master.mp4 --aspects 9:16 --fit blur
 film captions transcribe 07_delivery/masters/nightshift_master.mp4 --lang en
 film captions build 07_delivery/masters/nightshift_master.words.json --lines 06_edit/captions.txt --style social --video 07_delivery/masters/nightshift_9x16_v001.mp4
 film captions check 07_delivery/masters/nightshift_master.srt
-film captions burn 07_delivery/masters/nightshift_9x16_v001.mp4 07_delivery/masters/nightshift_master.social.ass
-film qc 07_delivery/masters/nightshift_9x16_v001_captioned.mp4 --spec social
+film overlay 07_delivery/masters/nightshift_9x16_v001.mp4 06_edit/graphics/endcard_9x16/renders/endcard.mov@41.5
+film captions burn 07_delivery/masters/nightshift_9x16_v001_gfx.mp4 07_delivery/masters/nightshift_master.social.ass
+film qc 07_delivery/masters/nightshift_9x16_v001_gfx_captioned.mp4 --spec social
+film review 07_delivery/masters/nightshift_9x16_v001_gfx_captioned.mp4   # every cut on a sheet
 film cost --save                                            # the numbers for wrap.md
 ```
 

@@ -169,7 +169,7 @@ Workflows: handbook 07 (performance and dialogue) and 08 (sound). Rights: handbo
 |---|---|---|---|---|
 | Rough cut, mix, captions, QC, delivery | `film` | | Frame-exact assembly from `06_edit/cut.txt` | studio-tested |
 | Edit and grade | DaVinci Resolve (free or Studio) | Premiere Pro (Runway plugins for Adobe, 17 Sep 2026); CapCut | We run Resolve 20.x; whether 21 has shipped (verify before cohort) | reported |
-| Titles, cards, animated text | Remotion (official skills; Claude Code plugin since 16 Jul 2026) | HTML rendered to PNG | Text never lives in the generation | studio-tested |
+| Titles, cards, animated text | HyperFrames (the `graphics` skill; Apache 2.0, Claude Code plugin `hyperframes@hyperframes`) | Remotion (official skills; Claude Code plugin since 16 Jul 2026; free up to three employees, then a paid company licence); editor titles | Text never lives in the generation. Transparent MOV renders go on each shape with `film overlay` | verified Sep 2026 (HyperFrames 0.8.81); studio-tested (Remotion) |
 | Upscale locked clips | Topaz via Higgsfield `upscale_video` (about 4 credits a clip) or fal (~$0.08/s at 1080p) | Magnific (stills) | Desktop Topaz is subscription-only since Oct 2025 | studio-tested |
 | Frame rate | Runway Enhance Frame Rate (17 Sep 2026) | Topaz | Interpolate only after picture lock | reported |
 
@@ -196,6 +196,7 @@ Workflows: handbook 07 (performance and dialogue) and 08 (sound). Rights: handbo
 - **Budget-guard hooks:** a PreToolUse hook on `mcp__higgsfield__*` and `mcp__fal-ai__*` blocks generations over a per-student cap; a PostToolUse hook downloads results and logs the take before 24-hour links expire (handbook 13).
 - **Plugins** bundle skills, hooks and MCP config: `/plugin marketplace add <org>/<repo>`, then `/plugin install <name>@<marketplace>`. The film-studio kit installs this way; Higgsfield publishes its own skills plugin (verified Sep 2026).
 - **Claude plan:** Pro ($20/month) minimum; Max 5x (about $100) recommended for a 4-day intensive (verified Sep 2026).
+- **Effort:** set it in `/model`. Medium for small fixes and re-renders; xhigh for a new sequence, a graphic or a review pass; max when the first seconds of a launch must carry it. The widely shared one-prompt motion pieces all ran on xhigh or max (reported Sep 2026).
 
 ## 10. Not for this course
 

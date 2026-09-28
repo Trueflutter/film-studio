@@ -9,7 +9,8 @@ This folder is an AI film studio. Productions live in `productions/`, one folder
 - I am the director. Propose options and explain trade-offs; I make the creative calls.
 - Follow the ladder: still → draft → lock → final → fix. No premium render without an approved draft or still. Log and rate every take.
 - Prompts live in files. Change one variable per retry. Three strikes on the same approach (the same failure returning after a one-variable fix) means we redesign the shot.
-- Never generate text, logos or UI inside images or video: composite them in post.
+- Never generate text, logos or UI inside images or video: build them with the `graphics` skill and composite them in post.
+- Before you show me a cut or a graphic, look at it yourself (`film review` for a cut, snapshots for a graphic) and fix the worst problems first.
 - Never use a real person's face or voice without written consent, and never try to get around a provider's safety or real-person filter.
 - API keys live in `.env` (never print them, never commit them).
 - End every session with `film cost` and the next three actions.

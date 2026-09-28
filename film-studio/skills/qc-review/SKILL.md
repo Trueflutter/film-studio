@@ -20,10 +20,12 @@ You can't watch or listen, so run the protocol with the director and write their
 2. once muted: does the picture tell the story?
 3. once with eyes closed: does the sound tell it?
 4. once on a phone at arm's length: captions, safe zones, legibility;
-5. frame-step every cut (you can help: `film frames <file> --at <cut times>` and look for flashes, jumps, duplicated frames);
+5. frame-step every cut (you can help: `film review <file>` puts every join on a sheet; look for flashes, jumps, duplicated frames and colour shifts);
 6. one fresh viewer: "what was it about?"
 
 ## 3. The creative rubric
+
+For a second opinion, hand the sheets, the brief and this rubric to a fresh subagent that didn't make the film, with one instruction: find what's wrong, and never score high out of politeness. Compare its notes with the director's.
 
 Score 1-5 with the director: Story · Emotion · Realism · Continuity · Composition · Motion & physics · Faces & anatomy · Lip sync & voice · Sound · Edit & pacing · Artefacts & text · Brief fit. Anything under 3 gets a timecode, a diagnosis code (CONCEPT, REF, PROMPT, MODEL, MODE, CAMERA, ACTION, FRAME, IDENTITY, PHYSICS, PERFORMANCE, SYNC, ARTEFACT, WORKFLOW) and a fix.
 
@@ -34,7 +36,8 @@ Order fixes by severity, then cheapest first (cut or trim → post fix → re-mi
 ## 5. Deliver
 
 - Aspect variants: `film deliver <master> --aspects 9:16,1:1 --fit crop|pad|blur`. Warn when an automatic crop loses the story; recommend a manual reframe for the priority deliverable.
-- Loudness per platform (`--lufs`), captions per variant (`captions` skill), sidecar `.srt`.
+- Graphics per variant: each shape's end card and supers from the `graphics` skill, on with `film overlay <variant> <render>@<seconds>`; never a crop of another shape's.
+- Loudness per platform (`--lufs`), captions per variant (`captions` skill, on the `_gfx` file), sidecar `.srt`.
 - Naming: `<slug>_<aspect>_vNNN.mp4`; masters kept textless where possible.
 - `07_delivery/delivery.md`: deliverables table ticked, AI disclosure planned per platform, provenance log complete (tool, model, plan/licence, date, permitted use, receipts), consent forms for any real person's face or voice.
 - Re-run `film qc` on each deliverable.

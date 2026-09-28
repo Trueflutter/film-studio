@@ -157,6 +157,17 @@ def cmd_assemble(a):
     print(assemble(prod, R(a.edl) if a.edl else None, a.trim, a.fit))
 
 
+def cmd_review(a):
+    from .review import review
+    print(review(find_production(a.prod), R(a.cut) if a.cut else None, R(a.edl) if a.edl else None,
+                 a.bpm, a.offset, a.threshold))
+
+
+def cmd_teardown(a):
+    from .review import teardown
+    print(teardown(R(a.video), Path(a.out) if a.out else None, a.threshold))
+
+
 def cmd_mix(a):
     from .sound import mix, parse_placed
     prod = find_production(a.prod)
@@ -220,6 +231,13 @@ def cmd_deliver(a):
         print(p)
 
 
+def cmd_overlay(a):
+    from .deliver import overlay
+    from .sound import parse_placed
+    placed = [(R(p), at) for p, at in (parse_placed(x) for x in a.graphics)]
+    print(overlay(R(a.video), placed, Path(a.out) if a.out else None))
+
+
 def cmd_doctor(a):
     ok = True
     print(f"filmkit {__version__} · python {sys.version.split()[0]}")
@@ -231,6 +249,11 @@ def cmd_doctor(a):
     ok &= bool(ffm)
     fp = ff.find("ffprobe")
     print(f"  {'✓' if fp else '·'} ffprobe {fp or 'missing (optional)'}")
+    node = shutil.which("node")
+    ver = subprocess.run([node, "--version"], capture_output=True, text=True).stdout.strip() if node else ""
+    major = int(ver.lstrip("v").split(".")[0]) if ver[1:2].isdigit() else 0
+    print(f"  {'✓' if major >= 22 else '·'} node {ver or 'missing'}"
+          f"{'' if major >= 22 else ' (optional: the graphics skill needs Node 22+ for HyperFrames)'}")
     if ffm:
         filters = subprocess.run([ffm, "-hide_banner", "-filters"], capture_output=True, text=True).stdout
         for f, why in (("subtitles", "burnt-in captions (libass)"), ("sidechaincompress", "music ducking"),
@@ -342,6 +365,20 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--edl"); p.add_argument("--trim", type=float, default=0.1, help="head/tail trim for whole takes")
     p.add_argument("--fit", default="crop", choices=["crop", "pad"]); p.set_defaults(fn=cmd_assemble)
 
+    p = sub.add_parser("review", help="every join of a cut as frames, the rhythm, cuts against the beat")
+    p.add_argument("cut", nargs="?", help="default: the latest 06_edit/cuts/cut_vNNN.mp4 (an editor export works too)")
+    p.add_argument("--edl", help="the cut list that made it (default: the copy saved beside the cut)")
+    p.add_argument("--bpm", type=float, default=0, help="music tempo: show where each cut sits on the beat")
+    p.add_argument("--offset", type=float, default=0, help="seconds into the cut of the music's first beat")
+    p.add_argument("--threshold", type=float, default=0.3, help="scene-change sensitivity when finding cuts by picture")
+    p.set_defaults(fn=cmd_review)
+
+    p = sub.add_parser("teardown", help="cut list, shot lengths and one frame per shot of a reference film")
+    p.add_argument("video")
+    p.add_argument("--threshold", type=float, default=0.3, help="scene-change sensitivity (lower finds softer cuts)")
+    p.add_argument("--out", help="folder for the sheets and teardown.md (default: <video>_teardown/)")
+    p.set_defaults(fn=cmd_teardown)
+
     p = sub.add_parser("mix", help="dialogue + ducked music + beds + fx, loudness-matched")
     p.add_argument("--video"); p.add_argument("--dialogue"); p.add_argument("--music")
     p.add_argument("--ambience", action="append", help="bed; add @seconds to start it later")
@@ -380,11 +417,19 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--fit", default="crop", choices=["crop", "pad", "blur"]); p.add_argument("--lufs", type=float)
     p.set_defaults(fn=cmd_deliver)
 
+    p = sub.add_parser("overlay", help="composite transparent graphics over a delivered shape")
+    p.add_argument("video")
+    p.add_argument("graphics", nargs="+", help="render@seconds, e.g. 06_edit/graphics/endcard_9x16/renders/endcard.mov@38.5")
+    p.add_argument("--out"); p.set_defaults(fn=cmd_overlay)
+
     sub.add_parser("doctor", help="check this machine is ready").set_defaults(fn=cmd_doctor)
     return ap
 
 
 def main(argv: list[str] | None = None) -> int:
+    for stream in (sys.stdout, sys.stderr):  # Windows pipes default to a code page without ✓ or →
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8", errors="replace")
     args = build_parser().parse_args(argv)
     try:
         args.fn(args)

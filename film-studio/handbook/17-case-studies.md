@@ -150,7 +150,7 @@ The pre-work before Day 1, and a habit worth keeping for any film you want to le
 
 1. **Watch once for feeling.** No pausing, no notes. Then write three words for what you felt, and the moment you felt it most.
 2. **Watch again and build the shot table.** One row per shot.
-3. **Average shot length** = runtime ÷ number of shots. Note the longest hold and the fastest burst. Is the rhythm uniform or bimodal?
+3. **Average shot length** = runtime ÷ number of shots. Note the longest hold and the fastest burst. Is the rhythm uniform or bimodal? `film teardown` does the counting: cut list, shot lengths, average, holds and bursts, and a sheet with one frame per shot to fill the table from. It finds hard cuts only, so check the sheet for dissolves and whips.
 4. **Where does the turn (film) or the brand (ad) land**, as a percentage of runtime?
 5. **One thing to steal**, with the reason it works.
 6. **One thing to avoid**, with the reason.
@@ -198,7 +198,7 @@ The economics lesson under all of it: spend your exploration budget freely on st
 | `studio` | The decision log you write up in `07_delivery/wrap.md` |
 
 ```
-film frames reference_ad.mp4 --every 0.5     # stills for a private teardown in 00_brief/refs/
+film teardown 00_brief/refs/reference_ad.mp4 # cut list, rhythm and one frame per shot, for a private teardown
 film contact --shot S04                      # every take of one shot, side by side
 film dailies                                 # verdicts, fail codes and prompts: your decision log
 film cost --save                             # keep rate, cost per usable shot, iterations before lock

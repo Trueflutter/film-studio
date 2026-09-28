@@ -7,9 +7,9 @@ studio-kit/
   .claude-plugin/marketplace.json   the marketplace
   film-studio/                      the plugin
     .claude-plugin/plugin.json
-    skills/                         12 skills (studio, story-engine, bible-builder, shot-designer,
+    skills/                         13 skills (studio, story-engine, bible-builder, shot-designer,
                                     prompt-director, take-doctor, performance-voice, sound-design,
-                                    captions, editor, qc-review, hybrid-footage)
+                                    captions, editor, graphics, qc-review, hybrid-footage)
     bin/film                        the `film` command (added to PATH by Claude Code)
     filmkit/                        the Python behind it (stdlib only + ffmpeg)
     templates/production/           what `film new` creates
@@ -21,7 +21,7 @@ studio-kit/
 
 ## Install (student)
 
-Requirements: Claude Code, Python 3.9+, ffmpeg with libass for captions (macOS: `brew install ffmpeg-full`, which `film` finds by itself; Homebrew's plain `ffmpeg` has no libass. Windows: `winget install Gyan.FFmpeg`).
+Requirements: Claude Code, Python 3.9+, ffmpeg with libass for captions (macOS: `brew install ffmpeg-full`, which `film` finds by itself; Homebrew's plain `ffmpeg` has no libass. Windows: `winget install Gyan.FFmpeg`). For the `graphics` skill: Node 22+ and the HyperFrames plugin (`/plugin marketplace add heygen-com/hyperframes`, then `/plugin install hyperframes@hyperframes`; Apache 2.0).
 
 ```
 /plugin marketplace add <owner>/<repo>          # the repo where this folder is published
@@ -53,12 +53,13 @@ film take add|rate|list|codes           log, rate (select/maybe/reject + fail co
 film gen <SHOT> --via ark|fal|evolink ...  generate + log (Seedance 2.5 --draft / --from-draft)
 film cost [--save|--check]              exploration vs production, cost per usable shot, budget guard
 film frames · film contact · film boards · film dailies · film animatic
-film assemble · film mix · film captions transcribe|build|check|burn · film qc · film deliver
+film assemble · film review · film teardown    cut from cut.txt; every join as frames; a reference's rhythm
+film mix · film captions transcribe|build|check|burn · film qc · film deliver · film overlay
 ```
 
 ## Test
 
 ```
-cd film-studio && python3 -m unittest discover -s tests      # 8 tests; media tests need ffmpeg
+cd film-studio && python3 -m unittest discover -s tests      # 11 tests; media tests need ffmpeg
 claude plugin validate ./film-studio && claude plugin validate .
 ```

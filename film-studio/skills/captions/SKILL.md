@@ -61,7 +61,7 @@ Captions go on last: after the mix, the master and `film deliver`, once per deli
 
 ## Premium route: animated captions in Remotion
 
-For motion-graphic captions (word pop, brand-coloured "signal words", custom fonts, captions integrated with titles), use `${CLAUDE_SKILL_DIR}/remotion/CaptionTrack.tsx` in a Remotion project:
+For motion-graphic captions (word pop, brand-coloured "signal words", custom fonts, captions integrated with titles), use `${CLAUDE_SKILL_DIR}/remotion/CaptionTrack.tsx` in a Remotion project. Check the licence first: Remotion is free for individuals, non-profits and companies of up to three people; a larger for-profit company needs a paid company licence (remotion.dev/license). Without one, build animated captions with the `graphics` skill (HyperFrames, Apache 2.0) instead.
 1. `npx create-video@latest captions --blank` (or use an existing Remotion project); `npm i @remotion/google-fonts`.
 2. Copy `CaptionTrack.tsx` into `src/`; build events with `film captions build ... --lines ...` and convert the words JSON to the component's `events` prop (Claude can write that conversion), or pass the words directly.
 3. Register a composition at the video's size and fps with the cut as `<OffthreadVideo>` underneath, or render the captions alone on a transparent background and overlay them.
