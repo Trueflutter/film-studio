@@ -1,19 +1,23 @@
 {
   "_read_me": "USD per second of output, keyed '<via>:<model id>:<resolution>' (or '<via>:<model id>'). Used by `film gen` to cost each take automatically. Prices move monthly: check the provider page before a production and update 'verified'. Replace the model ids with the exact ids your provider uses; an unknown key just means you pass --cost yourself.",
-  "verified": "2026-09-26 (research pass; see course/research/). Studio-billed rows marked [billed].",
+  "verified": "2026-10-11 (EvoLink Seedance 2.5 rows); 2026-09-26 for the rest (research pass; see course/research/). Studio-billed rows marked [billed].",
   "per_second": {
-    "ark:seedance-2-5:480p": 0.10,
+    "ark:seedance-2-5:480p": 0.1,
     "ark:seedance-2-5:720p": 0.23,
     "ark:seedance-2-5:1080p": 0.57,
     "evolink:seedance-2.0-fast-reference-to-video:480p": 0.074,
     "evolink:seedance-2.0-fast-reference-to-video:720p": 0.161,
     "evolink:seedance-2.0-reference-to-video:480p": 0.092,
     "evolink:seedance-2.0-reference-to-video:720p": 0.199,
+    "evolink:seedance-2.5:480p": 0.136,
+    "evolink:seedance-2.5:720p": 0.293,
+    "evolink:seedance-2.5:1080p": 0.528,
     "fal:fal-ai/minimax/h3-max:768p": 0.08
   },
   "_notes": {
     "ark:seedance-2-5": "BytePlus list prices (reported Sep 2026 via aggregator; ByteDance's 57%/77% savings claims reproduce exactly from them), 5s clip without video input. Draft (480p) → final (1080p) from the draft task id: a 5s experiment costs ~$0.50 vs ~$2.85 at 1080p.",
     "evolink:seedance-2.0-*": "[billed] Studio EvoLink invoices, 2026-04. EvoLink Seedance 2.0 tops out at 720p.",
+    "evolink:seedance-2.5": "[billed] Studio EvoLink usage, Aug 2026 (9.34 credits/s at 480p, ~68.7 credits = $1). Matches every 2.5 route (text-, image-, reference-to-video). 4-30 s, 1080p ceiling, no seed, output links last 24 h, 3 concurrent tasks per account.",
     "fal:fal-ai/minimax/h3-max": "fal launch price, Sep 2026. Id is illustrative: copy the exact endpoint id from the fal model page.",
     "reference, not used for lookup": "Veo 3.1 (Gemini API): Lite ~$0.05/s, Fast ~$0.10/s, Standard ~$0.40/s. Kling 3.0 API 1080p ~$0.112/s (~$0.168/s with audio). Runway Gen-4.5 ~$0.12/s. Topaz video upscale via fal ~$0.08/s at 1080p. Images: gpt-image-2 ~$0.03-0.08, Nano Banana Pro ~$0.134."
   }

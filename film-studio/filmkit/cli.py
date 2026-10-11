@@ -321,7 +321,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--via", required=True, choices=["ark", "evolink", "fal"])
     p.add_argument("--model", default="")
     p.add_argument("--prompt-file")
-    p.add_argument("--image", action="append", help="start frame / reference (path or URL); repeatable")
+    p.add_argument("--image", action="append", help="start frame / reference: path, URL or a take id (EvoLink reuses the take's link); repeatable")
     p.add_argument("--image-role", default="", help="ark: first_frame | last_frame | reference_image")
     p.add_argument("--audio-ref", action="append", help="voice/audio reference for lip sync (path or URL)")
     p.add_argument("--audio-role", default="", help="ark audio role (default reference_audio; check provider docs)")

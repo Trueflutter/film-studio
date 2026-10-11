@@ -90,6 +90,33 @@ def _image_ref(src: str, allow_data_uri: bool) -> str:
     return f"data:{mime};base64,{base64.b64encode(p.read_bytes()).decode()}"
 
 
+HOSTED_TTL_S = 23 * 3600  # EvoLink output links last about 24 hours
+
+
+def _hosted_ref(prod: Production, src: str) -> str:
+    """A take id (S01_t003) or a logged take's file becomes the provider link it came from,
+    so a still made with film gen can start a video on a provider that only takes URLs."""
+    if src.startswith(("http://", "https://", "data:")):
+        return src
+    p = Path(src).expanduser()
+    row = None
+    for t in prod.takes():
+        if t["take"].upper() == p.name.upper() or (p.exists() and t.get("file") and
+                                                 (prod.root / t["file"]).resolve() == p.resolve()):
+            row = t
+            break
+    if not row:
+        return src
+    link, made = row.get("source_url", ""), to_float(row.get("source_at"))
+    if not link:
+        die(f"{row['take']} has no provider link (it was not made with film gen). "
+            "Upload the file and pass its public URL.")
+    if time.time() - made > HOSTED_TTL_S:
+        die(f"{row['take']}'s provider link has expired (they last about 24 hours). "
+            "Regenerate the still, or upload the file and pass its public URL.")
+    return link
+
+
 def _video_url(src: str) -> str:
     if not src.startswith(("http://", "https://")):
         die(f"video references must be public URLs (upload {Path(src).name} to your storage and pass the link)")
@@ -270,7 +297,8 @@ def generate(prod: Production, shot: str, via: str, model: str, prompt_file: str
     if draft:
         res = "480p"  # Seedance 2.5 drafts are always 480p
     aspect = aspect or prod.cfg["aspect"]
-    url, body = build_payload(via, model, prompt, images, image_role, duration, res, aspect,
+    payload_images = [_hosted_ref(prod, i) for i in images] if via == "evolink" else images
+    url, body = build_payload(via, model, prompt, payload_images, image_role, duration, res, aspect,
                               audio, seed, draft, draft_task, dict(extra), kind, audio_refs, audio_role,
                               video_refs)
     if dry_run:
@@ -361,6 +389,7 @@ def _finish(prod: Production, rec: dict, result: dict) -> dict:
     for r in rows_all:
         if r["take"] == row["take"]:
             r["job"] = rec["job"]
+            r["source_url"], r["source_at"] = media, str(int(time.time()))
     prod.save_takes(rows_all)
     _pending(prod, remove=rec["job"])
     row["job"] = rec["job"]

@@ -42,7 +42,7 @@ SHOT_FIELDS = ["shot", "scene", "beat", "purpose", "size", "angle", "lens", "mov
                "action", "dialogue", "sound", "duration_s", "route", "refs", "status", "notes"]
 TAKE_FIELDS = ["take", "shot", "created", "stage", "tool", "model", "mode", "res",
                "duration_s", "cost_usd", "file", "prompt", "refs", "seed", "job", "verdict",
-               "fail", "notes"]
+               "fail", "notes", "source_url", "source_at"]
 
 # Where each kind of thing lives inside a production. One place to change it.
 LAYOUT = {

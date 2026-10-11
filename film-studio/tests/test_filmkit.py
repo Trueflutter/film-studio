@@ -163,6 +163,29 @@ class TestLogic(StudioCase):
                       "--param", "duration=\"5\"", "--dry-run")
         self.assertIn("https://queue.fal.run/fal-ai/some-model", out)
 
+    def test_evolink_uses_a_takes_provider_link(self):
+        # EvoLink only takes URLs: a still made with film gen starts a video by its take id
+        import csv
+        import time
+        self.ok("new", "Links")
+        still = self.tmp / "still.png"
+        still.write_bytes(b"png")
+        self.ok("take", "add", "S01", str(still), "--stage", "still")
+        takes = next(self.studio.glob("productions/*/04_shots/takes.csv"))
+        with takes.open() as f:
+            rows = list(csv.DictReader(f))
+            fields = list(rows[0].keys())
+        rows[0]["source_url"], rows[0]["source_at"] = "https://cdn.example/still.png", str(int(time.time()))
+        with takes.open("w", newline="") as f:
+            w = csv.DictWriter(f, fieldnames=fields)
+            w.writeheader()
+            w.writerows(rows)
+        prompt = self.tmp / "p.md"
+        prompt.write_text("She sets the cup down.")
+        out = self.ok("gen", "S01", "--via", "evolink", "--model", "seedance-2.0-fast-image-to-video",
+                      "--prompt-file", str(prompt), "--image", "S01_t001", "--dry-run")
+        self.assertIn("https://cdn.example/still.png", out)
+
 
 class TestFfmpegDiscovery(unittest.TestCase):
     def test_env_then_full_build_then_path_and_paired_ffprobe(self):
