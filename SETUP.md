@@ -16,9 +16,11 @@ It works on a Mac and on a Windows PC (Claude Code runs it in Git Bash there). I
 - **Any other ✗:** read the message, fix what you can, run the installer again. If git is missing, macOS offers to install the developer tools: tell the student to accept, then run step 1 again.
 - **Windows:** Claude Code needs Git for Windows (it provides the Git Bash shell and `git`). If `git` or bash is missing, the student installs it from https://git-scm.com/download/win with the default options, restarts Claude, and asks again. The installer uses winget. Tell the student to click Yes if Windows asks for permission (the Node installer does). If it says winget is missing, the student installs "App Installer" from the Microsoft Store. If it can't find Claude Code to add the plugins, it prints four `/plugin` lines: ask the student to type them in Claude Code, one at a time. A tool installed today may only be found after a new Claude session: if step 3 says "not found", start one and run step 3 again.
 
-## 2. Add the keys
+## 2. Connect Aristotto and add the keys
 
-Work in `~/Documents/my-studio` from now on. Ask the student for their **EvoLink** key, then their **ElevenLabs** key, one at a time. Write each into `.env` yourself (`EVOLINK_API_KEY=` and `ELEVENLABS_API_KEY=`). Never print the file or echo a key back; confirm with "EvoLink key saved".
+Pictures and video are made on **Aristotto**; the studio plugin brings the connection. After step 1, ask the student to start a new Claude session in `~/Documents/my-studio`, type `/mcp`, choose **aristotto** and sign in with their Aristotto account (the one with the course discount). Then check it works by calling Aristotto's `list_capabilities` for video and saying "Aristotto connected". If the student already added Aristotto as a connector in Claude's settings, that works too: skip the sign-in.
+
+Then work in `~/Documents/my-studio`. Ask the student for their **ElevenLabs** key (voices, music, sound effects, captions) and write it into `.env` yourself (`ELEVENLABS_API_KEY=`). If they also have an **EvoLink** key, add it as the fallback route (`EVOLINK_API_KEY=`). Never print the file or echo a key back; confirm with "ElevenLabs key saved".
 
 ## 3. Check
 
@@ -31,6 +33,6 @@ Everything that matters shows ✓. Explain anything red in one plain sentence an
 ## 4. Hand over
 
 Tell the student, in three lines:
-1. Setup is done: the studio, the film command, graphics in code, and the keys.
-2. Start a new Claude Code session in the `my-studio` folder (or type `/reload-plugins`) so the studio skills load.
+1. Setup is done: the studio, the film command, graphics in code, Aristotto and the keys.
+2. Every picture or clip shows its price in a card first; nothing is spent until they click Approve.
 3. Updates install themselves; nothing else to install this week.

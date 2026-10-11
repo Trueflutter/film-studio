@@ -6,10 +6,12 @@ import os
 import shutil
 import subprocess
 import sys
+import tempfile
+import time
 from pathlib import Path
 
 from . import __version__
-from .core import (ASPECTS, CURRENT, KIT_ROOT, PRODUCTIONS, TEMPLATE, FilmError, create_production, die,
+from .core import (to_float, ASPECTS, CURRENT, KIT_ROOT, PRODUCTIONS, TEMPLATE, FilmError, create_production, die,
                    find_production, resolve_path, slugify)
 
 
@@ -67,10 +69,35 @@ def cmd_take(a):
     from . import log
     prod = find_production(a.prod)
     if a.take_cmd == "add":
-        row = log.add_take(prod, a.shot, str(R(a.file)), stage=a.stage, tool=a.tool, model=a.model, mode=a.mode,
-                           res=a.res, duration=a.duration or "", cost=a.cost, prompt=str(R(a.prompt)) if a.prompt else "",
-                           refs=a.refs, seed=a.seed, notes=a.notes, move=a.move)
-        print(f"logged {row['take']} → {row['file']}")
+        cost = a.cost
+        if a.credits:  # credit platforms (Aristotto): convert with the per-credit rate in rates.json
+            from .gen import credit_usd
+            rate = credit_usd(a.tool)
+            if rate is None:
+                print(f"note: no credit rate for '{a.tool}' in rates.json; logging without a cost")
+            else:
+                cost = cost or f"{float(a.credits) * rate:.2f}"
+        notes = (a.notes + " " if a.notes else "") + (f"{a.credits} credits" if a.credits else "")
+        src, move = a.file, a.move
+        with tempfile.TemporaryDirectory() as tmp:
+            if src.startswith(("http://", "https://")):  # a provider link: download it now (links expire)
+                from .gen import _download
+                name = Path(src.split("?")[0]).name or "take.mp4"
+                local = Path(tmp) / name
+                _download(src, local)
+                src, move = str(local), True
+            else:
+                src = str(R(src))
+            row = log.add_take(prod, a.shot, src, stage=a.stage, tool=a.tool, model=a.model, mode=a.mode,
+                               res=a.res, duration=a.duration or "", cost=cost, prompt=str(R(a.prompt)) if a.prompt else "",
+                               refs=a.refs, seed=a.seed, notes=notes.strip(), move=move)
+        if a.file.startswith(("http://", "https://")):
+            rows = prod.takes()
+            for r in rows:
+                if r["take"] == row["take"]:
+                    r["source_url"], r["source_at"] = a.file, str(int(time.time()))
+            prod.save_takes(rows)
+        print(f"logged {row['take']} → {row['file']}" + (f"  (${to_float(cost):.2f})" if cost else ""))
     elif a.take_cmd == "rate":
         row = log.rate_take(prod, a.take, a.verdict, a.fail, a.note)
         print(f"{row['take']}: {row['verdict']} {row['fail']}".strip())
@@ -271,6 +298,7 @@ def cmd_doctor(a):
     load_env()
     for via, p in PROVIDERS.items():
         print(f"  {'✓' if os.environ.get(p['key']) else '·'} {p['key']:<18} ({via}) {'set' if os.environ.get(p['key']) else 'not set'}")
+    print(f"  · {'Aristotto':<18} (pictures and video) signs in through Claude: /mcp, then aristotto")
     el = os.environ.get("ELEVENLABS_API_KEY")
     print(f"  {'✓' if el else '·'} {'ELEVENLABS_API_KEY':<18} (captions transcribe, voices) {'set' if el else 'not set'}")
     print(f"  film lives at {KIT_ROOT / 'bin' / 'film'} (outside Claude Code: alias film=\"{KIT_ROOT / 'bin' / 'film'}\")")
@@ -303,10 +331,11 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("take", help="log, rate and list takes")
     ts = p.add_subparsers(dest="take_cmd", required=True)
     t = ts.add_parser("add", help="log a generated file as a take of a shot")
-    t.add_argument("shot"); t.add_argument("file")
+    t.add_argument("shot"); t.add_argument("file", help="a local file or a provider link (downloaded now)")
     t.add_argument("--stage", default="draft", choices=["still", "draft", "final", "upscale", "fix"])
     for f in ("tool", "model", "mode", "res", "duration", "cost", "prompt", "refs", "seed", "notes"):
         t.add_argument(f"--{f}", default="")
+    t.add_argument("--credits", default="", help="credits the platform charged (Aristotto); costed via rates.json")
     t.add_argument("--move", action="store_true", help="move instead of copy")
     t = ts.add_parser("rate", help="select / maybe / reject a take, with failure codes")
     t.add_argument("take"); t.add_argument("verdict", choices=["select", "maybe", "reject"])

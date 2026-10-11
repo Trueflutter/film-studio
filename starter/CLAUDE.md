@@ -12,6 +12,7 @@ This folder is an AI video studio. Productions live in `productions/`, one folde
 - Never generate text, logos or UI inside images or video: build them with the `graphics` skill and composite them in post.
 - Before you show me a cut or a graphic, look at it yourself (`film review` for a cut, snapshots for a graphic) and fix the worst problems first.
 - Never use a real person's face or voice without written consent, and never try to get around a provider's safety or real-person filter.
+- Pictures and video are made on Aristotto: show me the price, I approve it on the card, then log the result at once with `film take add` (links expire). EvoLink (`film gen --via evolink`) is the fallback.
 - API keys live in `.env` (never print them, never commit them).
 - End every session with `film cost` and the next three actions.
 

@@ -223,6 +223,13 @@ def rate_for(via: str, model: str, res: str) -> float | None:
     return None
 
 
+def credit_usd(tool: str) -> float | None:
+    """USD per credit for a credit platform (rates.json "per_credit"), e.g. aristotto."""
+    rates = json.loads((KIT_ROOT / "filmkit" / "rates.json").read_text())
+    v = rates.get("per_credit", {}).get((tool or "").lower())
+    return float(v) if v is not None else None
+
+
 def build_payload(via: str, model: str, prompt: str, images: list[str], image_role: str,
                   duration: int | None, res: str, aspect: str, audio: bool | None,
                   seed: str, draft: bool, draft_task: str | None, params: dict,

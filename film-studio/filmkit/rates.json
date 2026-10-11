@@ -19,6 +19,10 @@
     "evolink:seedance-2.0-*": "[billed] Studio EvoLink invoices, 2026-04. EvoLink Seedance 2.0 tops out at 720p.",
     "evolink:seedance-2.5": "[billed] Studio EvoLink usage, Aug 2026 (9.34 credits/s at 480p, ~68.7 credits = $1). Matches every 2.5 route (text-, image-, reference-to-video). 4-30 s, 1080p ceiling, no seed, output links last 24 h, 3 concurrent tasks per account.",
     "fal:fal-ai/minimax/h3-max": "fal launch price, Sep 2026. Id is illustrative: copy the exact endpoint id from the fal model page.",
-    "reference, not used for lookup": "Veo 3.1 (Gemini API): Lite ~$0.05/s, Fast ~$0.10/s, Standard ~$0.40/s. Kling 3.0 API 1080p ~$0.112/s (~$0.168/s with audio). Runway Gen-4.5 ~$0.12/s. Topaz video upscale via fal ~$0.08/s at 1080p. Images: gpt-image-2 ~$0.03-0.08, Nano Banana Pro ~$0.134."
+    "reference, not used for lookup": "Veo 3.1 (Gemini API): Lite ~$0.05/s, Fast ~$0.10/s, Standard ~$0.40/s. Kling 3.0 API 1080p ~$0.112/s (~$0.168/s with audio). Runway Gen-4.5 ~$0.12/s. Topaz video upscale via fal ~$0.08/s at 1080p. Images: gpt-image-2 ~$0.03-0.08, Nano Banana Pro ~$0.134.",
+    "per_credit": "USD per credit on credit platforms, used by `film take add --credits`. aristotto: Pro Pack $50 = 40,000 credits ($0.00125) less the course's 70% discount (agreed 2026-10-11; confirm the exact rate on your plan). Measured 2026-10-11: gpt-image-2 still 1K 200 cr; Seedance 2.5 image-to-video 4 s 480p 491 cr, 12 s 480p 1,463 cr, 12 s 720p 3,148 cr; text-to-video 25 s 720p with audio 6,539 cr."
+  },
+  "per_credit": {
+    "aristotto": 0.000375
   }
 }

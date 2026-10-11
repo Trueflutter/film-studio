@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "aristotto": {
+      "type": "http",
+      "url": "https://aristotto.ai/api/mcp"
+    }
+  }
+}

@@ -188,7 +188,7 @@ fi
 
 echo
 if [ $FAILED = 0 ]; then
-  echo "Done. Start a new Claude session in $STUDIO (or type /reload-plugins) so the studio skills load."
+  echo "Done. Start a new Claude session in $STUDIO so the studio skills load, then sign in to Aristotto (type /mcp, choose aristotto)."
 else
   echo "Finished with problems: fix the ✗ lines above, then run the setup again."
 fi
