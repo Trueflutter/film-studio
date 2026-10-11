@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
-# One-shot setup for the AI video studio (macOS). Safe to run again: every step checks first.
+# One-shot setup for the AI video studio, on a Mac (Homebrew) or a Windows PC (winget, run from
+# the Git Bash that Claude Code uses on Windows). Safe to run again: every step checks first.
 #
 #   bash setup/install.sh [--dry-run] [--studio ~/Documents/my-studio]
 #
-# Installs: ffmpeg-full (cuts, mixes, captions), Node 22+ (graphics in code), the film-studio
-# plugin (auto-updating), the HyperFrames plugin, and the student's studio folder.
+# Installs: ffmpeg with libass (cuts, mixes, captions), Node 22+ (graphics in code), Python 3.9+,
+# the film-studio plugin (auto-updating), the HyperFrames plugin, and the student's studio folder.
 # Claude runs this for the student (see SETUP.md). It never asks for or prints API keys.
 
 set -u
@@ -27,30 +28,43 @@ todo() { printf '  \033[33m→\033[0m %s\n' "$1"; }
 bad()  { printf '  \033[31m✗\033[0m %s\n' "$1"; FAILED=1; }
 run()  { if [ $DRY = 1 ]; then echo "    [dry-run] $*"; else "$@"; fi; }
 
-echo "AI video studio setup$([ $DRY = 1 ] && echo ' (dry run)')"
+case "$(uname -s)" in
+  Darwin) OS=mac ;;
+  MINGW*|MSYS*|CYGWIN*) OS=win ;;
+  *) echo "This installer supports macOS and Windows (Git Bash). Follow SETUP.md by hand on Linux."; exit 1 ;;
+esac
+echo "AI video studio setup, $([ $OS = mac ] && echo macOS || echo Windows)$([ $DRY = 1 ] && echo ' (dry run)')"
 
-if [ "$(uname)" != "Darwin" ]; then
-  bad "This installer is for macOS. On Windows: winget install Gyan.FFmpeg OpenJS.NodeJS Python.Python.3.12, then follow SETUP.md from step 3."
-  exit 1
+# Windows: winget puts new tools where this shell can't see them until a new session; look there too.
+if [ $OS = win ]; then
+  LAD="$(cygpath -u "${LOCALAPPDATA:-$HOME/AppData/Local}")"
+  export PATH="$LAD/Microsoft/WinGet/Links:/c/Program Files/nodejs:$LAD/Programs/Python/Python312:$LAD/Programs/Python/Python312/Scripts:$PATH"
+  WINGET="winget.exe"
+  wg() { run "$WINGET" install -e --id "$1" --silent --accept-source-agreements --accept-package-agreements; }
+  command -v "$WINGET" >/dev/null 2>&1 || { bad "winget is missing: install 'App Installer' from the Microsoft Store, then run the setup again."; exit 1; }
+  ok "winget"
 fi
 
-# 1. Homebrew (needs the student's password once, so Claude can't do it for them)
-if command -v brew >/dev/null 2>&1; then
-  ok "Homebrew"
-else
-  bad "Homebrew is missing. Open the Terminal app, paste this, press Return and type your Mac password when asked:"
-  echo '      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
-  echo "    Then ask Claude to run the setup again."
-  exit 1
+# 1. Homebrew (Mac only; needs the student's password once, so Claude can't do it for them)
+if [ $OS = mac ]; then
+  if command -v brew >/dev/null 2>&1; then
+    ok "Homebrew"
+  else
+    bad "Homebrew is missing. Open the Terminal app, paste this, press Return and type your Mac password when asked:"
+    echo '      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
+    echo "    Then ask Claude to run the setup again."
+    exit 1
+  fi
+  BREW_BIN="$(brew --prefix)/bin"
 fi
-BREW_BIN="$(brew --prefix)/bin"
 
-# 2. ffmpeg with libass (captions need it; plain Homebrew ffmpeg lacks it)
-if [ -x "$(brew --prefix)/opt/ffmpeg-full/bin/ffmpeg" ]; then
-  ok "ffmpeg-full"
+# 2. ffmpeg with libass (captions need it; Homebrew's plain ffmpeg lacks it, Gyan's Windows build has it)
+if [ $OS = mac ]; then
+  if [ -x "$(brew --prefix)/opt/ffmpeg-full/bin/ffmpeg" ]; then ok "ffmpeg-full"
+  else todo "installing ffmpeg-full (a few minutes)"; run brew install ffmpeg-full && ok "ffmpeg-full" || bad "ffmpeg-full did not install"; fi
 else
-  todo "installing ffmpeg-full (a few minutes)"
-  run brew install ffmpeg-full && ok "ffmpeg-full" || bad "ffmpeg-full did not install"
+  if command -v ffmpeg >/dev/null 2>&1; then ok "ffmpeg"
+  else todo "installing ffmpeg (a few minutes)"; wg Gyan.FFmpeg && ok "ffmpeg" || bad "ffmpeg did not install"; fi
 fi
 
 # 3. Node 22 or newer (HyperFrames renders graphics with it)
@@ -59,31 +73,49 @@ NODE_NOW="$(command -v node || true)"
 if [ -n "$NODE_NOW" ] && [ "$(node_major "$NODE_NOW")" -ge 22 ]; then
   ok "Node $("$NODE_NOW" --version)"
 else
-  todo "installing Node (current release)"
-  run brew install node || bad "Node did not install"
-  if [ $DRY = 0 ] && [ -n "$NODE_NOW" ] && [ "$NODE_NOW" != "$BREW_BIN/node" ]; then
+  todo "installing Node (current release; on Windows, click Yes if asked)"
+  if [ $OS = mac ]; then run brew install node || bad "Node did not install"
+  else wg OpenJS.NodeJS || bad "Node did not install"; fi
+  if [ $OS = mac ] && [ $DRY = 0 ] && [ -n "$NODE_NOW" ] && [ "$NODE_NOW" != "$BREW_BIN/node" ]; then
     todo "an older Node ($NODE_NOW) comes first on your PATH; your studio notes tell Claude to use $BREW_BIN/node"
     NODE_SHADOW=1
   fi
 fi
 
-# 4. Python 3.9+ (the film command)
-if python3 -c 'import sys; sys.exit(0 if sys.version_info >= (3, 9) else 1)' 2>/dev/null; then
-  ok "Python $(python3 -c 'import platform; print(platform.python_version())')"
+# 4. Python 3.9+ (the film command). On Windows `python3` may be a Store placeholder, so test each name.
+find_python() {
+  for c in python3 python py; do
+    if command -v "$c" >/dev/null 2>&1 && "$c" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 9) else 1)' >/dev/null 2>&1; then
+      echo "$c"; return
+    fi
+  done
+}
+PY="$(find_python)"
+if [ -n "$PY" ]; then
+  ok "Python $("$PY" -c 'import platform; print(platform.python_version())')"
 else
   todo "installing Python"
-  run brew install python && ok "Python" || bad "Python did not install"
+  if [ $OS = mac ]; then run brew install python; else wg Python.Python.3.12; fi
+  PY="$(find_python)"
+  if [ -n "$PY" ]; then ok "Python"; elif [ $DRY = 1 ]; then PY=python3; else bad "Python did not install"; fi
 fi
 
-# 5. The Claude Code plugins: film-studio and HyperFrames, auto-updating
+# 5. The Claude Code plugins: film-studio (auto-updating) and HyperFrames
 find_claude() {
   if command -v claude >/dev/null 2>&1; then command -v claude; return; fi
-  # The desktop app ships its own binary; take the newest.
-  ls -t "$HOME/Library/Application Support/Claude/claude-code/"*/*/claude.app/Contents/MacOS/claude 2>/dev/null | head -1
+  if [ $OS = mac ]; then  # the desktop app ships its own binary; take the newest
+    ls -t "$HOME/Library/Application Support/Claude/claude-code/"*/*/claude.app/Contents/MacOS/claude 2>/dev/null | head -1
+  else
+    find "$LAD" "$(cygpath -u "${APPDATA:-$HOME/AppData/Roaming}")" -maxdepth 7 -iname claude.exe 2>/dev/null | grep -i claude-code | head -1
+  fi
 }
 CLAUDE_BIN="$(find_claude)"
 if [ -z "$CLAUDE_BIN" ]; then
-  bad "Claude Code not found. Install the Claude desktop app (claude.ai/download), open the Code tab once, then run the setup again."
+  todo "Claude can't add plugins from here. Ask the student to type these four lines in Claude Code, one at a time:"
+  echo "      /plugin marketplace add $KIT_REPO"
+  echo "      /plugin install film-studio@saqr-film"
+  echo "      /plugin marketplace add heygen-com/hyperframes"
+  echo "      /plugin install hyperframes@hyperframes"
 else
   have_mkt() { "$CLAUDE_BIN" plugin marketplace list 2>/dev/null | grep -q "$1"; }
   have_plugin() { "$CLAUDE_BIN" plugin list 2>/dev/null | grep -q "$1"; }
@@ -102,23 +134,29 @@ EOF
       run "$CLAUDE_BIN" plugin install "$PLUGIN" >/dev/null 2>&1 && ok "$PLUGIN installed" || bad "$PLUGIN did not install"
     fi
   done
-  # Auto-update only the course's own marketplace, so our fixes arrive by themselves. HyperFrames is
-  # third-party: it stays at the version installed today unless someone updates it on purpose.
-  SETTINGS="$HOME/.claude/settings.json"
-  if [ $DRY = 1 ]; then
-    echo "    [dry-run] set autoUpdate on saqr-film in $SETTINGS"
-  elif [ -f "$SETTINGS" ]; then
-    python3 - "$SETTINGS" <<'PY' && ok "auto-update on for the course kit" || bad "could not turn on auto-update (the studio still works)"
-import json, shutil, sys
+fi
+
+# Auto-update only the course's own marketplace, so our fixes arrive by themselves. HyperFrames is
+# third-party: it stays at the version installed today unless someone updates it on purpose.
+SETTINGS="$HOME/.claude/settings.json"
+if [ $DRY = 1 ]; then
+  echo "    [dry-run] set autoUpdate on saqr-film in $SETTINGS"
+elif [ -n "$PY" ]; then
+  if [ $OS = win ]; then SETTINGS_ARG="$(cygpath -w "$SETTINGS")"; else SETTINGS_ARG="$SETTINGS"; fi
+  "$PY" - "$SETTINGS_ARG" <<'PY' && ok "auto-update on for the course kit" || bad "could not turn on auto-update (the studio still works)"
+import json, os, shutil, sys
 p = sys.argv[1]
-d = json.load(open(p))
-shutil.copy(p, p + ".before-film-studio")
+d = {}
+if os.path.exists(p):
+    d = json.load(open(p, encoding="utf-8"))
+    shutil.copy(p, p + ".before-film-studio")
+else:
+    os.makedirs(os.path.dirname(p), exist_ok=True)
 known = d.setdefault("extraKnownMarketplaces", {})
 entry = known.setdefault("saqr-film", {"source": {"source": "github", "repo": "Trueflutter/film-studio"}})
 entry["autoUpdate"] = True
-json.dump(d, open(p, "w"), indent=2)
+json.dump(d, open(p, "w", encoding="utf-8"), indent=2)
 PY
-  fi
 fi
 
 # 6. The studio folder: where every production lives
@@ -135,16 +173,17 @@ else
   run cp "$HERE/starter/.env.example" "$STUDIO/.env"
   todo ".env created: Claude asks for your EvoLink and ElevenLabs keys next"
 fi
-
 if [ $NODE_SHADOW = 1 ] && [ $DRY = 0 ] && ! grep -q "HyperFrames needs Node 22" "$STUDIO/CLAUDE.md" 2>/dev/null; then
   printf '\n- HyperFrames needs Node 22+: an older Node comes first on PATH here, so run graphics commands with PATH="%s:$PATH".\n' "$BREW_BIN" >> "$STUDIO/CLAUDE.md"
   ok "studio notes: graphics use $BREW_BIN/node"
 fi
+if [ $OS = win ] && [ $DRY = 0 ] && ! grep -q "Windows PC" "$STUDIO/CLAUDE.md" 2>/dev/null; then
+  printf '\n- This is a Windows PC: commands run in Git Bash. If a tool installed today is "not found", start a new Claude session (new tools join the PATH then).\n' >> "$STUDIO/CLAUDE.md"
+fi
 
 # 7. The check
-FILM="$HERE/film-studio/bin/film"
-if [ $DRY = 0 ] && [ -x "$FILM" ]; then
-  echo; (cd "$STUDIO" && "$FILM" doctor) || true
+if [ $DRY = 0 ] && [ -n "$PY" ]; then
+  echo; (cd "$STUDIO" && sh "$HERE/film-studio/bin/film" doctor) || true
 fi
 
 echo

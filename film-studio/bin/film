@@ -1,4 +1,16 @@
 #!/usr/bin/env sh
 # `film`: the production spine. Installed on PATH by the film-studio plugin.
 KIT="$(cd "$(dirname "$0")/.." && pwd)"
-PYTHONPATH="$KIT${PYTHONPATH:+:$PYTHONPATH}" exec python3 -m filmkit "$@"
+# Windows: `python3` is often the Microsoft Store placeholder, so try the real interpreters in turn.
+for PY in python3 python py; do
+  if command -v "$PY" >/dev/null 2>&1 && "$PY" -c 'import sys; sys.exit(0 if sys.version_info >= (3, 9) else 1)' >/dev/null 2>&1; then
+    break
+  fi
+  PY=""
+done
+[ -n "$PY" ] || { echo "film: Python 3.9 or newer is not installed (see SETUP.md)" >&2; exit 1; }
+case "$(uname -s)" in
+  MINGW*|MSYS*|CYGWIN*) KIT="$(cygpath -w "$KIT")"; SEP=";" ;;  # Windows Python wants C:\ paths and ;
+  *) SEP=":" ;;
+esac
+PYTHONPATH="$KIT${PYTHONPATH:+$SEP$PYTHONPATH}" exec "$PY" -m filmkit "$@"
