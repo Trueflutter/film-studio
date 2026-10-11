@@ -58,7 +58,7 @@ def _key(via: str) -> str:
 def _http(method: str, url: str, headers: dict, body: dict | None = None, timeout: int = 90) -> dict:
     data = json.dumps(body).encode() if body is not None else None
     req = urllib.request.Request(url, data=data, method=method,
-                                 headers={**headers, "Content-Type": "application/json"})
+                                 headers={"User-Agent": "filmkit/1.3", **headers, "Content-Type": "application/json"})
     try:
         with urllib.request.urlopen(req, timeout=timeout) as r:
             raw = r.read().decode() or "{}"
@@ -91,11 +91,35 @@ def _image_ref(src: str, allow_data_uri: bool) -> str:
 
 
 HOSTED_TTL_S = 23 * 3600  # EvoLink output links last about 24 hours
+UPLOAD_URL = "https://files-api.evolink.ai/api/v1/files/upload/base64"  # files kept 72 hours
 
 
-def _hosted_ref(prod: Production, src: str) -> str:
-    """A take id (S01_t003) or a logged take's file becomes the provider link it came from,
-    so a still made with film gen can start a video on a provider that only takes URLs."""
+def _upload(prod: Production, p: Path) -> str:
+    """Upload a local file to EvoLink's file store once; reuse the link until it nearly expires."""
+    import hashlib
+    cache_f = prod.dir("shots") / ".uploads.json"
+    cache = json.loads(cache_f.read_text()) if cache_f.exists() else {}
+    digest = hashlib.sha1(p.read_bytes()).hexdigest()
+    hit = cache.get(digest)
+    if hit and hit["until"] - time.time() > 3600:
+        return hit["url"]
+    mime = mimetypes.guess_type(p.name)[0] or "application/octet-stream"
+    data = f"data:{mime};base64,{base64.b64encode(p.read_bytes()).decode()}"
+    print(f"  uploading {p.name} to EvoLink (kept 72 hours)")
+    r = _http("POST", UPLOAD_URL, {"Authorization": f"Bearer {_key('evolink')}"},
+              {"base64_data": data, "file_name": p.name}, timeout=300)
+    d = r.get("data") or {}
+    link = d.get("file_url")
+    if not link:
+        die(f"EvoLink upload failed: {json.dumps(r)[:400]}")
+    cache[digest] = {"url": link, "until": time.time() + 71 * 3600, "file": p.name}
+    cache_f.write_text(json.dumps(cache, indent=1))
+    return link
+
+
+def _hosted_ref(prod: Production, src: str, upload: bool = True) -> str:
+    """For providers that only take URLs: a take id (S01_t003) or a logged take's file becomes the
+    provider link it came from while that link lives; any other local file is uploaded."""
     if src.startswith(("http://", "https://", "data:")):
         return src
     p = Path(src).expanduser()
@@ -105,16 +129,14 @@ def _hosted_ref(prod: Production, src: str) -> str:
                                                  (prod.root / t["file"]).resolve() == p.resolve()):
             row = t
             break
-    if not row:
-        return src
-    link, made = row.get("source_url", ""), to_float(row.get("source_at"))
-    if not link:
-        die(f"{row['take']} has no provider link (it was not made with film gen). "
-            "Upload the file and pass its public URL.")
-    if time.time() - made > HOSTED_TTL_S:
-        die(f"{row['take']}'s provider link has expired (they last about 24 hours). "
-            "Regenerate the still, or upload the file and pass its public URL.")
-    return link
+    if row:
+        link, made = row.get("source_url", ""), to_float(row.get("source_at"))
+        if link and time.time() - made < HOSTED_TTL_S:
+            return link
+        p = prod.root / row["file"]
+    if not p.exists():
+        die(f"file not found: {src}")
+    return _upload(prod, p) if upload else f"<uploaded at run time: {p.name}>"
 
 
 def _video_url(src: str) -> str:
@@ -144,14 +166,23 @@ def _find_media_url(obj) -> str | None:
     return found[0][1] if found else None
 
 
-def _download(url: str, dest: Path) -> None:
-    req = urllib.request.Request(url, headers={"User-Agent": "filmkit"})
-    with urllib.request.urlopen(req, timeout=300) as r, dest.open("wb") as f:
-        while True:
-            chunk = r.read(1 << 18)
-            if not chunk:
-                break
-            f.write(chunk)
+def _download(url: str, dest: Path, tries: int = 3) -> None:
+    for n in range(1, tries + 1):
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": "filmkit"})
+            with urllib.request.urlopen(req, timeout=120) as r, dest.open("wb") as f:
+                while True:
+                    chunk = r.read(1 << 18)
+                    if not chunk:
+                        break
+                    f.write(chunk)
+            return
+        except (TimeoutError, urllib.error.URLError, ConnectionError) as e:
+            if n == tries:
+                die(f"download failed after {tries} tries ({e}). The job is done and still pending: "
+                    "run `film jobs --resume` to collect it without paying again.")
+            print(f"  download hiccup ({e}); retrying")
+            time.sleep(3 * n)
 
 
 def _poll(fetch, done, failed, label: str, max_wait: int = 900, every: int = 5) -> dict:
@@ -232,7 +263,9 @@ def build_payload(via: str, model: str, prompt: str, images: list[str], image_ro
             body["video_urls"] = [_video_url(v) for v in video_refs]
         if kind == "image":  # size/quality for images go in via --param (e.g. size=1536x1024)
             return f"{base}/images/generations", {**body, "n": 1, **params}
-        opt = {"duration": duration, "quality": res, "aspect_ratio": aspect, "generate_audio": audio,
+        # image-to-video takes its shape from the start frame (EvoLink rejects anything but "adaptive")
+        opt = {"duration": duration, "quality": res,
+               "aspect_ratio": "adaptive" if "image-to-video" in model else aspect, "generate_audio": audio,
                "seed": int(seed) if seed else None}
         body.update({k: v for k, v in opt.items() if v not in (None, "")})
         return f"{base}/videos/generations", {**body, **params}
@@ -297,7 +330,9 @@ def generate(prod: Production, shot: str, via: str, model: str, prompt_file: str
     if draft:
         res = "480p"  # Seedance 2.5 drafts are always 480p
     aspect = aspect or prod.cfg["aspect"]
-    payload_images = [_hosted_ref(prod, i) for i in images] if via == "evolink" else images
+    payload_images = [_hosted_ref(prod, i, not dry_run) for i in images] if via == "evolink" else images
+    if via == "evolink":
+        audio_refs = [_hosted_ref(prod, a, not dry_run) for a in audio_refs or []]
     url, body = build_payload(via, model, prompt, payload_images, image_role, duration, res, aspect,
                               audio, seed, draft, draft_task, dict(extra), kind, audio_refs, audio_role,
                               video_refs)
