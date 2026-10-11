@@ -21,17 +21,15 @@ studio-kit/
 
 ## Install (student)
 
-Requirements: Claude Code, Python 3.9+, ffmpeg with libass for captions (macOS: `brew install ffmpeg-full`, which `film` finds by itself; Homebrew's plain `ffmpeg` has no libass. Windows: `winget install Gyan.FFmpeg`). For the `graphics` skill: Node 22+ and the HyperFrames plugin (`/plugin marketplace add heygen-com/hyperframes`, then `/plugin install hyperframes@hyperframes`; Apache 2.0).
+One prompt in Claude Code does everything:
 
 ```
-/plugin marketplace add <owner>/<repo>          # the repo where this folder is published
-/plugin install film-studio@saqr-film
+Set up my AI video studio. Follow the instructions at https://github.com/Trueflutter/film-studio/blob/main/SETUP.md and do every step for me. Ask me for my keys when you need them.
 ```
-Then copy `starter/` to where you keep projects, open Claude Code in it, `cp .env.example .env`, add keys, and type `!film doctor`. Claude Code puts the plugin's `bin/` on its PATH, so `film` works inside Claude Code. For a normal terminal, `film doctor` prints the path to alias.
 
-Update later with `/plugin marketplace update saqr-film` (or on session start); bump `version` in `film-studio/.claude-plugin/plugin.json` when you ship changes.
+Claude clones this repo and runs `setup/install.sh` (macOS): ffmpeg-full, Node 22+, Python if needed, the `film-studio` and `hyperframes` plugins with auto-update on, and the studio folder at `~/Documents/my-studio`. Then it adds the EvoLink and ElevenLabs keys to `.env` and runs `film doctor`. The only manual step is Homebrew on a Mac that lacks it (it needs the Mac password). Windows: `SETUP.md` has the winget route.
 
-Without git access, the same folder works from disk: `/plugin marketplace add /path/to/studio-kit`.
+Without git access, the zip works from disk: unzip it and run `bash film-studio-kit/setup/install.sh`.
 
 ## Publish for a cohort (instructor)
 
