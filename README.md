@@ -27,7 +27,7 @@ One prompt in Claude Code does everything:
 Set up my AI video studio. Follow the instructions at https://github.com/Trueflutter/film-studio/blob/main/SETUP.md and do every step for me. Ask me for my keys when you need them.
 ```
 
-Claude clones this repo and runs `setup/install.sh` (macOS): ffmpeg-full, Node 22+, Python if needed, the `film-studio` and `hyperframes` plugins with auto-update on, and the studio folder at `~/Documents/my-studio`. Then it adds the EvoLink and ElevenLabs keys to `.env` and runs `film doctor`. The only manual step is Homebrew on a Mac that lacks it (it needs the Mac password). Windows: `SETUP.md` has the winget route.
+Claude clones this repo and runs `setup/install.sh` (macOS): ffmpeg-full, Node 22+, Python if needed, the `film-studio` plugin (auto-updating) and the `hyperframes` plugin, and the studio folder at `~/Documents/my-studio`. Then it adds the EvoLink and ElevenLabs keys to `.env` and runs `film doctor`. The only manual step is Homebrew on a Mac that lacks it (it needs the Mac password). Windows: `SETUP.md` has the winget route.
 
 Without git access, the zip works from disk: unzip it and run `bash film-studio-kit/setup/install.sh`.
 

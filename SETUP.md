@@ -10,7 +10,7 @@ git clone --depth 1 https://github.com/Trueflutter/film-studio.git /tmp/film-stu
 bash /tmp/film-studio-setup/setup/install.sh
 ```
 
-It installs ffmpeg-full, Node 22+, Python if needed, the `film-studio` and `hyperframes` Claude Code plugins (with auto-update on, so fixes arrive by themselves), and creates the studio folder at `~/Documents/my-studio`. It is safe to run again. Use a long timeout (ffmpeg-full can take several minutes).
+It installs ffmpeg-full, Node 22+, Python if needed, the `film-studio` plugin (auto-updating, so course fixes arrive by themselves) and the `hyperframes` plugin, and creates the studio folder at `~/Documents/my-studio`. It is safe to run again. Use a long timeout (ffmpeg-full can take several minutes).
 
 - **Homebrew missing:** the installer prints one line for the student to paste into the Terminal app (it needs their Mac password, which you must never ask for or type). Wait, then run step 1 again.
 - **Any other ✗:** read the message, fix what you can, run the installer again. If git is missing, macOS offers to install the developer tools: tell the student to accept, then run step 1 again.

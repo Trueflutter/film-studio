@@ -4,7 +4,7 @@
 #   bash setup/install.sh [--dry-run] [--studio ~/Documents/my-studio]
 #
 # Installs: ffmpeg-full (cuts, mixes, captions), Node 22+ (graphics in code), the film-studio
-# and HyperFrames Claude Code plugins with auto-update on, and the student's studio folder.
+# plugin (auto-updating), the HyperFrames plugin, and the student's studio folder.
 # Claude runs this for the student (see SETUP.md). It never asks for or prints API keys.
 
 set -u
@@ -102,21 +102,20 @@ EOF
       run "$CLAUDE_BIN" plugin install "$PLUGIN" >/dev/null 2>&1 && ok "$PLUGIN installed" || bad "$PLUGIN did not install"
     fi
   done
-  # Auto-update both marketplaces, so fixes during the week arrive without anyone doing anything.
+  # Auto-update only the course's own marketplace, so our fixes arrive by themselves. HyperFrames is
+  # third-party: it stays at the version installed today unless someone updates it on purpose.
   SETTINGS="$HOME/.claude/settings.json"
   if [ $DRY = 1 ]; then
-    echo "    [dry-run] set autoUpdate on saqr-film and hyperframes in $SETTINGS"
+    echo "    [dry-run] set autoUpdate on saqr-film in $SETTINGS"
   elif [ -f "$SETTINGS" ]; then
-    python3 - "$SETTINGS" <<'PY' && ok "auto-update on" || bad "could not turn on auto-update (the studio still works)"
+    python3 - "$SETTINGS" <<'PY' && ok "auto-update on for the course kit" || bad "could not turn on auto-update (the studio still works)"
 import json, shutil, sys
 p = sys.argv[1]
 d = json.load(open(p))
 shutil.copy(p, p + ".before-film-studio")
 known = d.setdefault("extraKnownMarketplaces", {})
-srcs = {"saqr-film": "Trueflutter/film-studio", "hyperframes": "heygen-com/hyperframes"}
-for name, repo in srcs.items():
-    entry = known.setdefault(name, {"source": {"source": "github", "repo": repo}})
-    entry["autoUpdate"] = True
+entry = known.setdefault("saqr-film", {"source": {"source": "github", "repo": "Trueflutter/film-studio"}})
+entry["autoUpdate"] = True
 json.dump(d, open(p, "w"), indent=2)
 PY
   fi
@@ -142,13 +141,7 @@ if [ $NODE_SHADOW = 1 ] && [ $DRY = 0 ] && ! grep -q "HyperFrames needs Node 22"
   ok "studio notes: graphics use $BREW_BIN/node"
 fi
 
-# 7. Warm the graphics renderer so the first render in class is fast
-if [ $DRY = 0 ]; then
-  NPX="$(command -v npx)"; [ "$(node_major "$(command -v node)")" -lt 22 ] && NPX="$BREW_BIN/npx"
-  "$NPX" -y hyperframes --version >/dev/null 2>&1 && ok "HyperFrames renderer ready" || todo "HyperFrames will download on first use"
-fi
-
-# 8. The check
+# 7. The check
 FILM="$HERE/film-studio/bin/film"
 if [ $DRY = 0 ] && [ -x "$FILM" ]; then
   echo; (cd "$STUDIO" && "$FILM" doctor) || true
