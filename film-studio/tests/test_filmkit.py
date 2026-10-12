@@ -169,7 +169,7 @@ class TestLogic(StudioCase):
         clip.write_bytes(b"mp4")
         out = self.ok("take", "add", "S01", str(clip), "--stage", "draft", "--tool", "aristotto",
                       "--model", "seedance-2.5-image-to-video", "--credits", "1000")
-        self.assertIn("($0.38)", out)  # 1,000 credits at the course rate in rates.json
+        self.assertIn("($0.30)", out)  # 1,000 credits at the course rate in rates.json
         self.assertIn("1000 credits", self.ok("take", "list") + (self.studio / next(self.studio.glob("productions/*/04_shots/takes.csv")).relative_to(self.studio)).read_text())
 
     def test_evolink_uses_a_takes_provider_link(self):

@@ -18,9 +18,9 @@ It works on a Mac and on a Windows PC (Claude Code runs it in Git Bash there). I
 
 ## 2. Connect Aristotto and add the keys
 
-Pictures and video are made on **Aristotto**; the studio plugin brings the connection. After step 1, ask the student to start a new Claude session in `~/Documents/my-studio`, type `/mcp`, choose **aristotto** and sign in with their Aristotto account (the one with the course discount). Then check it works by calling Aristotto's `list_capabilities` for video and saying "Aristotto connected". If the student already added Aristotto as a connector in Claude's settings, that works too: skip the sign-in.
+Pictures and video are made on **Aristotto** (a monthly subscription; students use the code **SAQR** at checkout for 70% off the first month), with **EvoLink** (pay as you go) as the fallback when Aristotto credits run out. The studio plugin brings the Aristotto connection. After step 1, ask the student to start a new Claude session in `~/Documents/my-studio`, type `/mcp`, choose **aristotto** and sign in with their Aristotto account. No Aristotto account yet: skip it, the studio runs on EvoLink until they sign up. Then check it works by calling Aristotto's `list_capabilities` for video and saying "Aristotto connected". If the student already added Aristotto as a connector in Claude's settings, that works too: skip the sign-in.
 
-Then work in `~/Documents/my-studio`. Ask the student for their **ElevenLabs** key (voices, music, sound effects, captions) and write it into `.env` yourself (`ELEVENLABS_API_KEY=`). If they also have an **EvoLink** key, add it as the fallback route (`EVOLINK_API_KEY=`). Never print the file or echo a key back; confirm with "ElevenLabs key saved".
+Then work in `~/Documents/my-studio`. Ask the student for their **EvoLink** key (the fallback, `EVOLINK_API_KEY=`), then their **ElevenLabs** key (voices, music, sound effects, captions; `ELEVENLABS_API_KEY=`), one at a time, and write each into `.env` yourself. Never print the file or echo a key back; confirm with "EvoLink key saved".
 
 ## 3. Check
 
@@ -34,5 +34,5 @@ Everything that matters shows ✓. Explain anything red in one plain sentence an
 
 Tell the student, in three lines:
 1. Setup is done: the studio, the film command, graphics in code, Aristotto and the keys.
-2. Every picture or clip shows its price in a card first; nothing is spent until they click Approve.
+2. Every picture or clip on Aristotto shows its price in a card first; nothing is spent until they click Approve. When Aristotto credits run out, Claude switches to EvoLink and says so.
 3. Updates install themselves; nothing else to install this week.
