@@ -106,3 +106,53 @@ def dailies(prod: Production) -> Path:
     ar = prod.cfg["aspect"].replace(":", "/")
     out.write_text(_page(f"{prod.cfg['title']}: dailies", sub, "".join(blocks), ar))
     return out
+
+
+BOARD_CSS = """
+.opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+.opt{background:var(--card);border:2px solid var(--line);border-radius:12px;overflow:hidden;cursor:pointer}
+.opt.on{border-color:var(--sel)}.opt img,.opt video{display:block;width:100%;background:#000}
+.opt audio{width:100%;margin:14px 0 4px}.num{font-size:22px;font-weight:600}.cap{color:var(--mute);margin-top:2px}
+.bar{position:sticky;bottom:0;margin-top:22px;background:var(--card);border:1px solid var(--line);border-radius:12px;
+ padding:12px;display:flex;gap:10px;align-items:center}.bar input{flex:1;font:inherit;padding:10px;border:1px solid var(--line);
+ border-radius:8px;background:var(--bg);color:var(--ink)}.bar button{font:inherit;padding:10px 18px;border:0;border-radius:999px;
+ background:var(--sel);color:#fff;cursor:pointer}.hint{color:var(--mute);font-size:13px}
+"""
+
+BOARD_JS = """
+let pick=null;const opts=[...document.querySelectorAll('.opt')];
+opts.forEach(o=>o.addEventListener('click',e=>{if(e.target.closest('audio,video[controls]'))return;
+ opts.forEach(x=>x.classList.remove('on'));o.classList.add('on');pick=o.dataset.label;document.getElementById('msg').textContent='';}));
+document.getElementById('copy').addEventListener('click',()=>{
+ if(!pick){document.getElementById('msg').textContent='Click an option first.';return;}
+ const note=document.getElementById('note').value.trim();
+ const text=document.getElementById('lead').value+' '+pick+'.'+(note?' '+note:'');
+ navigator.clipboard.writeText(text).then(()=>{document.getElementById('msg').textContent='Copied. Paste it into Claude.';});});
+"""
+
+
+def board(prod: Production, title: str, items: list[tuple[Path, str]], ask: str = "I pick") -> Path:
+    """An options page the director chooses from: numbered cards (image, video or audio),
+    click one, add a note, copy the pick into Claude."""
+    slug = "".join(c if c.isalnum() else "-" for c in title.lower()).strip("-")[:48] or "options"
+    out = prod.dir("board") / "options" / f"{slug}.html"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    cards = []
+    for i, (path, caption) in enumerate(items, 1):
+        ext = path.suffix.lower()
+        src = _src(out, path)
+        if ext in (".mp4", ".mov", ".webm"):
+            media = f"<video src='{src}' controls muted loop playsinline preload='metadata'></video>"
+        elif ext in (".mp3", ".wav", ".m4a", ".aac", ".ogg"):
+            media = f"<div class='body'><audio src='{src}' controls preload='none'></audio></div>"
+        else:
+            media = f"<img src='{src}' alt='option {i}' loading='lazy'>"
+        label = f"{i}" + (f" ({html.escape(caption.split(' ')[0])})" if caption.startswith(("S", "C", "W", "P")) and "_t" in caption.split(" ")[0] else "")
+        cards.append(f"<div class='opt' data-label='{html.escape(label)}'>{media}<div class='body'>"
+                     f"<div class='num'>{i}</div><div class='cap'>{html.escape(caption)}</div></div></div>")
+    bar = (f"<div class='bar'><input type='hidden' id='lead' value='{html.escape(ask)}'>"
+           "<input id='note' placeholder='Anything to change? e.g. warmer light, older, closer'>"
+           "<button id='copy'>Copy my pick</button><span id='msg' class='hint'></span></div>")
+    body = f"<style>{BOARD_CSS}</style><div class='opts'>{''.join(cards)}</div>{bar}<script>{BOARD_JS}</script>"
+    out.write_text(_page(title, f"{len(items)} options · click one, add a note, copy it into Claude · {today()}", body, "auto"), encoding="utf-8")
+    return out

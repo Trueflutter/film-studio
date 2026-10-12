@@ -176,6 +176,30 @@ def cmd_dailies(a):
     print(dailies(find_production(a.prod)))
 
 
+def cmd_board(a):
+    """Options board: from logged takes (--shot/--stage) or files ('path' or 'path|caption')."""
+    from .pages import board
+    prod = find_production(a.prod)
+    items = []
+    if a.shot:
+        for t in prod.takes():
+            if t["shot"].upper() == a.shot.upper() and (not a.stage or t["stage"] == a.stage):
+                items.append((prod.root / t["file"], f"{t['take']} {t.get('model', '')}".strip()))
+    for f in a.files or []:
+        path, _, cap = f.partition("|")
+        items.append((Path(str(R(path.strip()))), cap.strip() or Path(path).stem))
+    if not items:
+        die("nothing to show: pass --shot (with --stage) or files")
+    out = board(prod, a.title, items, a.ask)
+    print(out)
+    if not a.no_open:
+        opener = {"darwin": ["open"], "win32": ["cmd", "/c", "start", ""]}.get(sys.platform, ["xdg-open"])
+        try:
+            subprocess.Popen(opener + [str(out)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except OSError:
+            pass
+
+
 def cmd_animatic(a):
     from .media import animatic
     print(animatic(find_production(a.prod), R(a.audio) if a.audio else None))
@@ -392,6 +416,11 @@ def build_parser() -> argparse.ArgumentParser:
 
     sub.add_parser("boards", help="printable storyboard page from shotlist + boards").set_defaults(fn=cmd_boards)
     sub.add_parser("dailies", help="review page of every take, grouped by shot").set_defaults(fn=cmd_dailies)
+    p = sub.add_parser("board", help="an options page to choose from (opens in the browser)")
+    p.add_argument("title"); p.add_argument("files", nargs="*", help="path or 'path|caption'")
+    p.add_argument("--shot"); p.add_argument("--stage", default="")
+    p.add_argument("--ask", default="I pick", help="the sentence the copied pick starts with")
+    p.add_argument("--no-open", action="store_true"); p.set_defaults(fn=cmd_board)
     p = sub.add_parser("animatic", help="timed animatic from boards + shot durations")
     p.add_argument("--audio", help="temp VO / music to lay under it"); p.set_defaults(fn=cmd_animatic)
 
