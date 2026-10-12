@@ -416,7 +416,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     sub.add_parser("boards", help="printable storyboard page from shotlist + boards").set_defaults(fn=cmd_boards)
     sub.add_parser("dailies", help="review page of every take, grouped by shot").set_defaults(fn=cmd_dailies)
-    p = sub.add_parser("board", help="an options page to choose from (opens in the browser)")
+    p = sub.add_parser("board", help="an options page to choose from: images, clips, audio or text cards (.md) (opens in the browser)")
     p.add_argument("title"); p.add_argument("files", nargs="*", help="path or 'path|caption'")
     p.add_argument("--shot"); p.add_argument("--stage", default="")
     p.add_argument("--ask", default="I pick", help="the sentence the copied pick starts with")

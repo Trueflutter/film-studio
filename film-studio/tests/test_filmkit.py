@@ -48,6 +48,21 @@ class StudioCase(unittest.TestCase):
 
 
 class TestLogic(StudioCase):
+    def test_board_text_cards(self):
+        self.ok("new", "Monday Brief", "--format", "social")
+        prod = self.studio / "productions" / "monday-brief"
+        c = prod / "01_story" / "concepts"
+        c.mkdir(parents=True)
+        (c / "c1.md").write_text("# Now You Can\n**First second:** big type\n\n- Story card\n- Her line <ok>\n")
+        (c / "c2.md").write_text("# The Monday Brief\nCalm desk read.\n")
+        out = self.ok("board", "Concepts", str(c / "c1.md"), str(c / "c2.md") + "|Calm", "--no-open")
+        page = Path(out.strip()).read_text()
+        self.assertIn("class='opts text'", page)
+        self.assertIn("<h3>Now You Can</h3>", page)
+        self.assertIn("<b>First second:</b> big type", page)
+        self.assertIn("<li>Her line &lt;ok&gt;</li>", page)
+        self.assertIn("Calm", page)
+
     def test_new_status_and_character(self):
         self.ok("new", "Night Call", "--format", "ad", "--aspect", "9:16", "--duration", "30")
         prod = self.studio / "productions" / "night-call"

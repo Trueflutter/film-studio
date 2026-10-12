@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import html
+import re
 import os
 from pathlib import Path
 
@@ -112,7 +113,8 @@ BOARD_CSS = """
 .opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
 .opt{background:var(--card);border:2px solid var(--line);border-radius:12px;overflow:hidden;cursor:pointer}
 .opt.on{border-color:var(--sel)}.opt img,.opt video{display:block;width:100%;background:#000}
-.opt audio{width:100%;margin:14px 0 4px}.num{font-size:22px;font-weight:600}.cap{color:var(--mute);margin-top:2px}
+.opt audio{width:100%;margin:14px 0 4px}.opts.text{grid-template-columns:repeat(auto-fill,minmax(340px,1fr))}
+.txt{padding:18px 18px 0;line-height:1.5}.txt h3{margin:0 0 8px;font-size:19px}.txt p{margin:6px 0}.txt ul{margin:6px 0;padding-left:20px}.num{font-size:22px;font-weight:600}.cap{color:var(--mute);margin-top:2px}
 .bar{position:sticky;bottom:0;margin-top:22px;background:var(--card);border:1px solid var(--line);border-radius:12px;
  padding:12px;display:flex;gap:10px;align-items:center}.bar input{flex:1;font:inherit;padding:10px;border:1px solid var(--line);
  border-radius:8px;background:var(--bg);color:var(--ink)}.bar button{font:inherit;padding:10px 18px;border:0;border-radius:999px;
@@ -131,6 +133,32 @@ document.getElementById('copy').addEventListener('click',()=>{
 """
 
 
+def _inline(t: str) -> str:
+    t = html.escape(t)
+    return re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", t)
+
+
+def _text_card(path: Path) -> str:
+    """A concept, script or brief written as a short markdown file: '# heading', '- bullets', paragraphs."""
+    out, items = [], []
+    def flush():
+        if items:
+            out.append("<ul>" + "".join(f"<li>{i}</li>" for i in items) + "</ul>")
+            items.clear()
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line:
+            flush()
+        elif line.startswith("#"):
+            flush(); out.append(f"<h3>{_inline(line.lstrip('#').strip())}</h3>")
+        elif line.startswith(("- ", "* ")):
+            items.append(_inline(line[2:]))
+        else:
+            flush(); out.append(f"<p>{_inline(line)}</p>")
+    flush()
+    return f"<div class='txt'>{''.join(out)}</div>"
+
+
 def board(prod: Production, title: str, items: list[tuple[Path, str]], ask: str = "I pick") -> Path:
     """An options page the director chooses from: numbered cards (image, video or audio),
     click one, add a note, copy the pick into Claude."""
@@ -145,6 +173,9 @@ def board(prod: Production, title: str, items: list[tuple[Path, str]], ask: str 
             media = f"<video src='{src}' controls muted loop playsinline preload='metadata'></video>"
         elif ext in (".mp3", ".wav", ".m4a", ".aac", ".ogg"):
             media = f"<div class='body'><audio src='{src}' controls preload='none'></audio></div>"
+        elif ext in (".md", ".txt"):
+            media = _text_card(path)
+            caption = "" if caption == path.stem else caption  # the card's own heading names it
         else:
             media = f"<img src='{src}' alt='option {i}' loading='lazy'>"
         label = f"{i}" + (f" ({html.escape(caption.split(' ')[0])})" if caption.startswith(("S", "C", "W", "P")) and "_t" in caption.split(" ")[0] else "")
@@ -153,6 +184,7 @@ def board(prod: Production, title: str, items: list[tuple[Path, str]], ask: str 
     bar = (f"<div class='bar'><input type='hidden' id='lead' value='{html.escape(ask)}'>"
            "<input id='note' placeholder='Anything to change? e.g. warmer light, older, closer'>"
            "<button id='copy'>Copy my pick</button><span id='msg' class='hint'></span></div>")
-    body = f"<style>{BOARD_CSS}</style><div class='opts'>{''.join(cards)}</div>{bar}<script>{BOARD_JS}</script>"
+    kind = " text" if all(p.suffix.lower() in (".md", ".txt") for p, _ in items) else ""
+    body = f"<style>{BOARD_CSS}</style><div class='opts{kind}'>{''.join(cards)}</div>{bar}<script>{BOARD_JS}</script>"
     out.write_text(_page(title, f"{len(items)} options · click one, add a note, copy it into Claude · {today()}", body, "auto"), encoding="utf-8")
     return out
