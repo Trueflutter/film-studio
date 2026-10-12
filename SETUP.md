@@ -1,6 +1,6 @@
 # Set up the AI video studio
 
-**For Claude.** A student has asked you to set up their studio from this repository. Do every step yourself; the student only answers your questions. Speak in plain words, one short line per step, and never show or repeat an API key.
+**For Claude.** A student has asked you to set up their studio from this repository. Do every step yourself, except typing keys: those the student pastes into a file you open for them. Speak in plain words, one short line per step. Never ask for a key in the chat, never read, print or echo `.env`.
 
 ## 1. Get the kit and run the installer
 
@@ -18,9 +18,9 @@ It works on a Mac and on a Windows PC (Claude Code runs it in Git Bash there). I
 
 ## 2. Connect Aristotto and add the keys
 
-Pictures and video are made on **Aristotto** (a monthly subscription; students use the code **SAQR** at checkout for 70% off the first month), with **EvoLink** (pay as you go) as the fallback when Aristotto credits run out. The studio plugin brings the Aristotto connection. After step 1, ask the student to start a new Claude session in `~/Documents/my-studio`, type `/mcp`, choose **aristotto** and sign in with their Aristotto account. No Aristotto account yet: skip it, the studio runs on EvoLink until they sign up. Then check it works by calling Aristotto's `list_capabilities` for video and saying "Aristotto connected". If the student already added Aristotto as a connector in Claude's settings, that works too: skip the sign-in.
+Pictures and video are made on **Aristotto** (a monthly subscription; course students find their discount code in the course portal), with **EvoLink** (pay as you go) as the fallback when Aristotto credits run out. The studio plugin brings the Aristotto connection. After step 1, ask the student to start a new Claude session in `~/Documents/my-studio`, type `/mcp`, choose **aristotto** and sign in with their Aristotto account. No Aristotto account yet: skip it, the studio runs on EvoLink until they sign up. Then check it works by calling Aristotto's `list_capabilities` for video and saying "Aristotto connected". If the student already added Aristotto as a connector in Claude's settings, that works too: skip the sign-in.
 
-Then work in `~/Documents/my-studio`. Ask the student for their **EvoLink** key (the fallback, `EVOLINK_API_KEY=`), then their **ElevenLabs** key (voices, music, sound effects, captions; `ELEVENLABS_API_KEY=`), one at a time, and write each into `.env` yourself. Never print the file or echo a key back; confirm with "EvoLink key saved".
+Then the keys, which the student types themselves. `~/Documents/my-studio/.env` already holds the names with empty values (`EVOLINK_API_KEY=`, the fallback for pictures and video; `ELEVENLABS_API_KEY=`, voices, music, sound effects and captions). Open it for them in a plain text editor (Mac: `open -e ~/Documents/my-studio/.env`; Windows: `notepad "$USERPROFILE\Documents\my-studio\.env"`) and say: "Paste each key after its `=`, no spaces or quotes, then save and close the file, and tell me." Then run step 3, which reports each key as set or not set without showing it. If the editor shows no file, it's hidden-file related: open it with the command above, never by printing it.
 
 ## 3. Check
 
