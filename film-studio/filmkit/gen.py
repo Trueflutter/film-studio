@@ -66,7 +66,10 @@ def _http(method: str, url: str, headers: dict, body: dict | None = None, timeou
         die(f"{method} {url.split('?')[0]} → HTTP {e.code}: {e.read().decode()[:600]}")
     except urllib.error.URLError as e:
         raise ConnectionError(str(e))
-    return json.loads(raw)
+    try:
+        return json.loads(raw)
+    except ValueError:  # a gateway page instead of JSON: treat it like a dropped connection
+        raise ConnectionError(f"non-JSON reply from {url.split('?')[0]}: {raw[:120]!r}")
 
 
 def _value(v: str):
