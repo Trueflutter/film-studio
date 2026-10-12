@@ -226,6 +226,13 @@ def rate_for(via: str, model: str, res: str) -> float | None:
     return None
 
 
+def default_image_model(via: str) -> str:
+    """The still-image model `film gen --image-gen` uses when --model is left out: rates.json
+    "default_image_model" (GPT Image 2.5 where the provider carries it)."""
+    rates_file = Path(__file__).with_name("rates.json")
+    return json.loads(rates_file.read_text()).get("default_image_model", {}).get(via, "") if rates_file.exists() else ""
+
+
 def credit_usd(tool: str) -> float | None:
     """USD per credit for a credit platform (rates.json "per_credit"), e.g. aristotto."""
     rates = json.loads((KIT_ROOT / "filmkit" / "rates.json").read_text())
@@ -312,6 +319,12 @@ def generate(prod: Production, shot: str, via: str, model: str, prompt_file: str
             die(f"--param expects key=value, got {p}")
         k, v = p.split("=", 1)
         extra[k] = _value(v)
+    if kind == "image" and not model:
+        model = default_image_model(via)
+        if model:
+            print(f"no --model: using {model} (default still-image model for {via}; see rates.json)")
+        else:
+            die(f"no default still-image model for {via}: pass --model")
     prompt = ""
     if prompt_file:
         pf = Path(prompt_file)

@@ -166,6 +166,62 @@ class TestLogic(StudioCase):
         self.assertEqual(_beat(1.8, 120, 0.0, 24), ("downbeat 5 -5f", False))
         self.assertEqual(_beat(0.2, 120, 1.0, 24), ("before the music", False))
 
+    def test_frame_counts_are_cumulative(self):
+        from filmkit.media import frame_counts
+        # ten 0.52 s events at 24 fps: each alone rounds to 12 frames (6 s early overall); cumulative stays on the frame
+        counts = frame_counts([0.52] * 10, 24)
+        self.assertEqual(sum(counts), round(5.2 * 24))
+        self.assertEqual(counts[:3], [12, 13, 12])
+        self.assertEqual(frame_counts([0.001, 0.001], 24), [1, 1])  # never zero frames
+
+    def test_guard_range_keeps_clear_of_cuts(self):
+        from filmkit.media import guard_range
+        # untouched: the cut is 0.3 s past the range
+        self.assertEqual(guard_range([2.0], 0.5, 1.7, 4.0), (0.5, 1.7, None))
+        # crossing: the bigger side (before the cut) wins, stopping 0.05 s short of it
+        s, e, cut = guard_range([2.0], 1.0, 2.6, 4.0)
+        self.assertEqual((round(s, 3), round(e, 3), cut), (1.0, 1.95, 2.0))
+        # touching from the far side: starts 0.05 s inside the next shot
+        s, e, cut = guard_range([2.0], 1.98, 3.5, 4.0)
+        self.assertEqual((round(s, 3), round(e, 3), cut), (2.05, 3.5, 2.0))
+        # an in point just after a cut is touching too
+        self.assertEqual(guard_range([2.0], 2.02, 3.0, 4.0)[0], 2.05)
+
+    def test_mix_option_parsers(self):
+        from filmkit.sound import load_cues, parse_bed, parse_lift
+        self.assertEqual(parse_lift("30.5:-12"), (30.5, -12.0))
+        self.assertEqual(parse_bed("sfx/rain.wav@4-20:-26"), ("sfx/rain.wav", 4.0, 20.0, -26.0))
+        self.assertEqual(parse_bed(r"C:\sfx\rain.wav@4.5-20", -24)[0], r"C:\sfx\rain.wav")
+        self.assertEqual(parse_bed("r.wav@0-3", -24)[3], -24.0)
+        for bad in ("rain.wav", "rain.wav@20-4:-20"):
+            with self.assertRaises(Exception):
+                parse_bed(bad)
+        cues = self.tmp / "cues.json"
+        cues.write_text('[{"file": "hit.wav", "at": 2.5, "db": -6, "max": 0.4}, {"file": "tick.wav", "at": 1}]')
+        got = load_cues(cues)
+        self.assertEqual((got[0]["at"], got[0]["db"], got[0]["max"]), (2.5, -6.0, 0.4))
+        self.assertEqual((got[1]["db"], got[1]["max"]), (0.0, None))
+
+    def test_speech_chunks_split_on_gaps(self):
+        from filmkit.sound import speech_chunks
+        words = [{"start": 0.2, "end": 0.6}, {"start": 0.7, "end": 1.1}, {"start": 1.9, "end": 2.3},
+                 {"start": 2.5, "end": 2.6}, {"start": 3.2, "end": 3.6}]
+        spans = speech_chunks(words, 4.0)
+        self.assertEqual([(round(a, 2), round(b, 2)) for a, b in spans], [(0.16, 1.17), (1.86, 2.67), (3.16, 3.67)])
+
+    def test_default_still_model_is_gpt_image_2_5(self):
+        from filmkit.gen import default_image_model, rate_for
+        self.assertEqual(default_image_model("evolink"), "gpt-image-2.5")
+        self.assertEqual(default_image_model("ark"), "")
+        self.assertEqual(rate_for("ark", "seedance-2-5", "480p"), 0.10)  # the rate table still reads
+        self.ok("new", "Stills")
+        prompt = self.tmp / "p.md"
+        prompt.write_text("A kitchen at dawn.")
+        out = self.ok("gen", "S01", "--via", "evolink", "--image-gen", "--prompt-file", str(prompt), "--dry-run")
+        self.assertIn("gpt-image-2.5", out)
+        self.assertNotEqual(film(self.studio, "gen", "S01", "--via", "ark", "--image-gen",
+                                 "--prompt-file", str(prompt), "--dry-run").returncode, 0)
+
     def test_gen_dry_run_payloads(self):
         self.ok("new", "Gen")
         prompt = self.tmp / "p.md"
@@ -302,6 +358,143 @@ class TestMedia(StudioCase):
         self.assertIn("2 shots", report)
         self.assertIn("Cuts (s): 1.79", report)
         self.assertTrue((cut.parent / "cut_v001_teardown" / "shots_1.png").exists())
+
+    def test_voice_tighten(self):
+        import json
+        import wave
+        sr = 16000
+        voice = self.tmp / "vo.wav"
+        with wave.open(str(voice), "wb") as w:  # four 0.4 s "words" in a 4 s file, separated by pauses
+            w.setnchannels(1); w.setsampwidth(2); w.setframerate(sr)
+            import math
+            for i in range(4 * sr):
+                t = i / sr
+                on = any(a <= t < a + 0.4 for a in (0.2, 0.7, 1.9, 3.2))
+                w.writeframes(int(8000 * math.sin(2 * math.pi * 300 * t) * on).to_bytes(2, "little", signed=True))
+        words = [{"text": f"w{i}", "start": a, "end": a + 0.4} for i, a in enumerate((0.2, 0.7, 1.9, 3.2))]
+        wj = self.tmp / "vo.words.json"
+        wj.write_text(json.dumps(words))
+        out = self.tmp / "vo_tight.wav"
+        report = self.ok("voice", "tighten", str(voice), "--words", str(wj), "--out", str(out))
+        # chunks (0.16-1.17, 1.86-2.37?) hold 'w0 w1' and the two lone words: 3 chunks, 2 gaps of 0.2 s
+        self.assertIn("3 chunks", report)
+        self.assertIn("4.00s →", report)
+        self.assertIn("words/sec", report)
+        spans = [(0.16, 1.14), (1.86, 2.37), (3.16, 3.67)]
+        expected = (sum(b - a for a, b in spans) + 0.4) / 1.15
+        self.assertAlmostEqual(ff.probe(out)["duration"], expected, delta=0.04)
+        # a pitch-preserving speed-up: the tone stays near 300 Hz (a resample would give ~345 Hz)
+        zero = self.tmp / "t.raw"
+        subprocess.run([FFMPEG, "-nostdin", "-v", "error", "-y", "-ss", "0.08", "-t", "0.25", "-i", str(out), "-f", "s16le",
+                        "-ac", "1", "-ar", "16000", str(zero)], check=True)
+        pcm = zero.read_bytes()
+        vals = [int.from_bytes(pcm[i:i + 2], "little", signed=True) for i in range(0, len(pcm), 2)]
+        crossings = sum(1 for a, b in zip(vals, vals[1:]) if a < 0 <= b)
+        self.assertAlmostEqual(crossings / 0.25, 300, delta=15)
+
+    def test_assemble_shot_guard_and_frame_exact_cuts(self):
+        self.ok("new", "Guard", "--aspect", "16:9")
+        prod = self.studio / "productions" / "guard"
+        (prod / "03_board/shotlist.csv").write_text(
+            "shot,scene,beat,purpose,size,angle,lens,move,action,dialogue,sound,duration_s,route,refs,status,notes\n"
+            "S01,1,,,WS,,,,,,,2,,,planned,\nS02,1,,,CU,,,,,,,1,,,planned,\n")
+        # one source clip with a hard cut of its own at 1.0 s (red then blue), plus a plain green one
+        multi = self.media("multi.mp4", "color=c=red:s=320x180:r=24:d=1[a];color=c=blue:s=320x180:r=24:d=1[b];"
+                           "[a][b]concat=n=2:v=1:a=0", ["-pix_fmt", "yuv420p"])
+        green = self.media("green.mp4", "color=c=green:s=320x180:r=24:d=2", ["-pix_fmt", "yuv420p"])
+        self.ok("take", "add", "S01", str(multi))
+        self.ok("take", "add", "S02", str(green))
+        # 0.2-1.02 runs 0.02 s past the cut: without the guard its last frame is blue
+        (prod / "06_edit/cut.txt").write_text("S01_t001 0.2 1.02\nS02_t001 0.1 0.62\nS02_t001 0.1 0.62\nS02_t001 0.1 0.62\n")
+        r = film(self.studio, "assemble")
+        self.assertEqual(r.returncode, 0, msg=r.stderr)
+        self.assertIn("crosses a cut at 1.00s", r.stderr)
+        self.assertIn("warning:", r.stderr)  # 0.75 s kept for 0.82 s asked: slowed 9%, over the 8% line
+        cut = Path(r.stdout.strip())
+        total = round((0.82 + 3 * 0.52) * 24)  # 0.82 + 1.56 s = 2.38 s -> 57 frames, not 20 + 3 * 12 = 56
+        self.assertEqual(round(ff.probe(cut)["duration"] * 24), total)
+        px = lambda t: subprocess.run([FFMPEG, "-v", "error", "-ss", str(t), "-i", str(cut), "-frames:v", "1",
+                                       "-vf", "format=rgb24,crop=1:1:160:90", "-f", "rawvideo", "-pix_fmt", "rgb24", "-"],
+                                      capture_output=True).stdout
+        last_red = px((20 - 1) / 24)
+        self.assertGreater(last_red[0], 200); self.assertLess(last_red[2], 60)   # still red on the last frame
+        self.assertGreater(px(20 / 24)[1], 100)                                   # green starts exactly on frame 20
+        # opting out takes the range as written
+        off = film(self.studio, "assemble", "--no-shot-guard")
+        self.assertNotIn("crosses a cut", off.stderr)
+
+    def test_bed_align_lands_the_payoff(self):
+        import math
+        import random
+        import wave
+        sr, bpm = 8000, 120
+        rnd = random.Random(7)
+        beat = 60 / bpm
+        pat = [rnd.choice([220, 262, 330, 392, 440, 523, 659, 784]) for _ in range(8)]  # two bars, repeated
+        samples = []
+        for _ in range(3):
+            for f in pat:
+                n = int(beat * sr)
+                samples += [int(12000 * math.exp(-6 * t / sr) * (math.sin(2 * math.pi * f * t / sr)
+                            + 0.5 * math.sin(2 * math.pi * f * 2.01 * t / sr))) for t in range(n)]
+        for t in range(4 * sr):  # the payoff at 12 s: a louder sustained chord
+            samples.append(int(6300 * (math.sin(2 * math.pi * 196 * t / sr) + math.sin(2 * math.pi * 247 * t / sr)
+                                       + math.sin(2 * math.pi * 294 * t / sr))))
+        track = self.tmp / "track.wav"
+        with wave.open(str(track), "wb") as w:
+            w.setnchannels(1); w.setsampwidth(2); w.setframerate(sr)
+            w.writeframes(b"".join(v.to_bytes(2, "little", signed=True) for v in samples))
+        # not enough runway: the payoff is at 12 s but must land at 20 s -> one 4-bar (8 s) loop
+        out = self.tmp / "bed.wav"
+        report = self.ok("bed", "align", str(track), "--landing", "12", "--at", "20", "--bpm", "120", "--out", str(out))
+        self.assertIn("repeated 1x", report)
+        self.assertIn("4 bars", report)
+        self.assertAlmostEqual(ff.probe(out)["duration"], 24.0, delta=0.01)
+        landed = float(report.split("payoff lands at ")[1].split("s")[0])
+        self.assertAlmostEqual(landed, 20.0, delta=0.005)
+        corr = float(report.split("splice correlation ")[1].split()[0].rstrip(","))
+        self.assertGreater(corr, 0.9)
+        # no tempo given: it is estimated from the onsets, and an extension that is not a whole loop is trimmed at the head
+        out2 = self.tmp / "bed2.wav"
+        report = self.ok("bed", "align", str(track), "--landing", "12", "--at", "18", "--out", str(out2))
+        self.assertAlmostEqual(float(report.split("payoff lands at ")[1].split("s")[0]), 18.0, delta=0.005)
+        self.assertAlmostEqual(ff.probe(out2)["duration"], 22.0, delta=0.01)
+        # runway to spare: the head is just trimmed
+        report = self.ok("bed", "align", str(track), "--landing", "12", "--at", "9", "--out", str(self.tmp / "bed3.wav"))
+        self.assertIn("runway", report)
+        self.assertAlmostEqual(float(report.split("payoff lands at ")[1].split("s")[0]), 9.0, delta=0.005)
+        # silence has no pulse: say so instead of guessing
+        quiet = self.media("quiet.wav", "anullsrc=r=8000:cl=mono", ["-t", "30"])
+        r = film(self.studio, "bed", "align", str(quiet), "--landing", "10", "--at", "20")
+        self.assertNotEqual(r.returncode, 0)
+
+    def test_mix_levels_lift_cues_beds_and_fade(self):
+        import math
+        self.ok("new", "Mixer", "--duration", "6")
+        video = self.media("v.mp4", "color=c=black:s=320x180:r=24:d=6", ["-pix_fmt", "yuv420p"])
+        dia = self.media("dia.wav", "sine=f=300:d=1.5", [])
+        music = self.media("mus.wav", "sine=f=220:d=6", [])
+        hit = self.media("hit.wav", "sine=f=900:d=2", [])
+        rain = self.media("rain.wav", "anoisesrc=d=1:c=pink:a=0.3", [])
+        cues = self.tmp / "cues.json"
+        cues.write_text(f'[{{"file": "{hit}", "at": 4.0, "db": -6, "max": 0.5}}]')
+        out = Path(self.ok("mix", "--video", str(video), "--dialogue", str(dia), "--music", str(music),
+                           "--duck-db", "-21", "--lift", "3:-9", "--cues", str(cues),
+                           "--amb", f"{rain}@0.5-5:-30", "--fade-out", "1", "--target", "-14").strip())
+        loud = ff.loudness(out)
+        self.assertAlmostEqual(loud["lufs"], -14, delta=0.6)
+        self.assertLessEqual(loud["true_peak"], -0.9)
+        from filmkit.sound import _pcm
+        x = _pcm(out, 8000, 1)
+        db = lambda a, b: 20 * math.log10(max(1e-9, math.sqrt(sum(v * v for v in x[int(a * 8000):int(b * 8000)]) / ((b - a) * 8000))) / 32768)
+        # after the voice: the bed sits low, then the lift at 3 s raises it by about 12 dB
+        before, after = db(2.0, 2.6), db(3.5, 3.9)
+        self.assertGreater(after - before, 8)
+        self.assertLess(after - before, 14)
+        self.assertGreater(db(4.0, 4.4), after + 1)       # the cue (a loud 900 Hz hit) shows on top
+        self.assertLess(db(5.85, 5.99), after - 15)       # the one-second fade-out has emptied the end
+        # old options still work
+        self.ok("mix", "--video", str(video), "--music", str(music), "--fx", f"{hit}@2.5")
 
     def test_overlay_graphics_per_shape(self):
         self.ok("new", "Gfx", "--aspect", "16:9")

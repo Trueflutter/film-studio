@@ -208,7 +208,8 @@ def cmd_animatic(a):
 def cmd_assemble(a):
     from .media import assemble
     prod = find_production(a.prod)
-    print(assemble(prod, R(a.edl) if a.edl else None, a.trim, a.fit))
+    print(assemble(prod, R(a.edl) if a.edl else None, a.trim, a.fit,
+                   guard=None if a.no_shot_guard else a.shot_threshold))
 
 
 def cmd_review(a):
@@ -223,12 +224,36 @@ def cmd_teardown(a):
 
 
 def cmd_mix(a):
-    from .sound import mix, parse_placed
+    from .sound import load_cues, mix, parse_bed, parse_lift, parse_placed
     prod = find_production(a.prod)
     placed = lambda xs: [(R(p), at) for p, at in (parse_placed(x) for x in xs or [])]
+    beds = [(R(f), s0, e0, db) for f, s0, e0, db in (parse_bed(x, a.ambience_db) for x in a.amb or [])]
     out = mix(prod, R(a.video), R(a.dialogue), R(a.music), placed(a.ambience), placed(a.fx),
-              a.music_db, a.ambience_db, a.target, not a.ignore_video_audio)
+              a.music_db, a.ambience_db, a.target, not a.ignore_video_audio,
+              duck_db=a.duck_db, lifts=[parse_lift(x) for x in a.lift or []],
+              cues=load_cues(R(a.cues), R) if a.cues else None, beds=beds,
+              fade_out=a.fade_out, true_peak=a.true_peak)
     print(out)
+
+
+def cmd_voice(a):
+    from .sound import tighten, tighten_report
+    from . import captions as cap
+    src = R(a.audio)
+    if a.words:
+        words_file = R(a.words)
+    else:
+        words_file = src.with_suffix(".words.json")
+        print(f"no --words given: transcribing {src.name} with ElevenLabs Scribe", file=sys.stderr)
+        cap.transcribe(src, words_file, a.lang)
+    words = cap.load_words(words_file)
+    print(tighten_report(tighten(src, words, Path(a.out) if a.out else None, a.gap, a.tempo)))
+
+
+def cmd_bed(a):
+    from .sound import bed_align, bed_report
+    r = bed_align(R(a.music), a.landing, a.at, a.bpm or 0.0, Path(a.out) if a.out else None)
+    print(bed_report(r, a.landing, a.at))
 
 
 def cmd_qc(a):
@@ -388,7 +413,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--stage", default="", choices=["", "still", "draft", "final", "upscale", "fix"])
     p.add_argument("--draft", action="store_true", help="ark: cheap linked draft (Seedance 2.5)")
     p.add_argument("--from-draft", help="ark: render the final from this approved draft take")
-    p.add_argument("--image-gen", action="store_true", help="evolink: image model endpoint")
+    p.add_argument("--image-gen", action="store_true", help="evolink: image model endpoint (default model: see rates.json default_image_model)")
     p.add_argument("--cost", default="", help="USD for this take (else looked up in rates.json)")
     p.add_argument("--mode", default="", help="label: t2v, i2v, ref, multishot, v2v ...")
     p.add_argument("--param", action="append", help="extra provider field key=value; repeatable")
@@ -426,7 +451,12 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("assemble", help="rough cut from 06_edit/cut.txt")
     p.add_argument("--edl"); p.add_argument("--trim", type=float, default=0.1, help="head/tail trim for whole takes")
-    p.add_argument("--fit", default="crop", choices=["crop", "pad"]); p.set_defaults(fn=cmd_assemble)
+    p.add_argument("--fit", default="crop", choices=["crop", "pad"])
+    p.add_argument("--shot-threshold", type=float, default=0.3,
+                   help="scene-change sensitivity for the shot guard: ranges that cross or touch a hard cut inside "
+                        "their source clip are pulled inside the shot and slowed to keep their length")
+    p.add_argument("--no-shot-guard", action="store_true", help="take ranges exactly as written")
+    p.set_defaults(fn=cmd_assemble)
 
     p = sub.add_parser("review", help="every join of a cut as frames, the rhythm, cuts against the beat")
     p.add_argument("cut", nargs="?", help="default: the latest 06_edit/cuts/cut_vNNN.mp4 (an editor export works too)")
@@ -447,8 +477,38 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--ambience", action="append", help="bed; add @seconds to start it later")
     p.add_argument("--fx", action="append", help="effect; place it with @seconds, e.g. sfx/door.wav@4.2")
     p.add_argument("--music-db", type=float, default=-18); p.add_argument("--ambience-db", type=float, default=-24)
+    p.add_argument("--duck-db", type=float,
+                   help="music held this many dB under the dialogue for the whole cut, e.g. -21 (no sidechain; "
+                        "the music is first matched to the dialogue's loudness)")
+    p.add_argument("--lift", action="append", metavar="SECONDS:DB",
+                   help="ramp the music to DB over 0.3 s at SECONDS, e.g. 30.5:-12 into a chorus or sting; repeatable")
+    p.add_argument("--cues", metavar="cues.json",
+                   help='sound effects at exact times: [{"file": "sfx/hit.wav", "at": 12.4, "db": -6, "max": 1.5}]')
+    p.add_argument("--amb", action="append", metavar="FILE@START-END:DB",
+                   help="looped ambience bed with 0.3 s fades, e.g. sfx/rain.wav@4-20:-26; repeatable")
+    p.add_argument("--fade-out", type=float, default=0.0, help="fade the whole mix out over this many seconds")
     p.add_argument("--target", type=float, help="LUFS (default: production.json)")
+    p.add_argument("--true-peak", type=float, default=-1.0, help="true-peak ceiling in dBTP (default -1)")
     p.add_argument("--ignore-video-audio", action="store_true"); p.set_defaults(fn=cmd_mix)
+
+    p = sub.add_parser("voice", help="work on a voice-over")
+    vs = p.add_subparsers(dest="voice_cmd", required=True)
+    v = vs.add_parser("tighten", help="brisker pace: shorten the pauses, then speed up (pitch kept)")
+    v.add_argument("audio", help=".mp3 or .wav")
+    v.add_argument("--words", help="word-timed transcript .json (else made with ElevenLabs Scribe)")
+    v.add_argument("--lang", default="", help="language for the transcription, e.g. en, ar")
+    v.add_argument("--gap", type=float, default=0.2, help="seconds of silence between chunks (default 0.2)")
+    v.add_argument("--tempo", type=float, default=1.15, help="speed-up after the pauses are tightened (default 1.15)")
+    v.add_argument("--out"); p.set_defaults(fn=cmd_voice)
+
+    p = sub.add_parser("bed", help="work on a music bed")
+    bs = p.add_subparsers(dest="bed_cmd", required=True)
+    b = bs.add_parser("align", help="make the payoff of a track land at an exact moment of the video")
+    b.add_argument("music")
+    b.add_argument("--landing", type=float, required=True, help="seconds into the track where the payoff/chorus starts")
+    b.add_argument("--at", type=float, required=True, help="seconds into the video where it must land")
+    b.add_argument("--bpm", type=float, help="the track's tempo (else estimated)")
+    b.add_argument("--out"); p.set_defaults(fn=cmd_bed)
 
     p = sub.add_parser("qc", help="technical QC + creative rubric sheet")
     p.add_argument("file"); p.add_argument("--spec", choices=["social", "web", "broadcast", "cinema-ish"])
