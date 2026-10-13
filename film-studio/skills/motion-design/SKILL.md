@@ -16,9 +16,13 @@ A 3 to 5 minute explainer is never 3 to 5 minutes of generated video. **The voic
 | Slides inserted as designed full-screen scenes | as needed | free (code) |
 | Short generated B-roll where real motion matters (aerial, a door opening) | 0 to 10% | a few takes |
 
+A faceless piece (no presenter) splits the presenter's share between motion graphics and stills.
+
+**Length:** after tightening, voices run about 2.7 to 3 words a second. 90 words is about 30 s; a 3 minute explainer is about 500 words.
+
 ## 1. Inputs (ask once, then decide)
 
-The approved script and its final voice file with **word timings** (`words.json`: transcribe the final, tightened voice, never the pre-tightened one), the presenter's reference pack, the place pack, the brand (fonts, one accent colour, real logo file), the shape (16:9 YouTube or 9:16 Shorts: build each shape as its own layout).
+The approved script and its final voice file with **word timings** (`words.json`: transcribe the final, tightened voice, never the pre-tightened one), the presenter's reference pack, the place pack, the brand (fonts, one accent colour, the real logo file; for an invented or spec brand with no logo, set the name as a wordmark in the display face and say so), the shape (16:9 YouTube or 9:16 Shorts: build each shape as its own layout).
 
 ## 2. The visual plan (one OK)
 
@@ -32,7 +36,7 @@ Show the plan on one board or as one table. Nothing is built before the OK.
 
 ## 3. Build
 
-1. `SPEC.md` from the plan (template in `reference/plan-and-spec.md`), then the HyperFrames skills do the framework work: `/talking-head-recut` for graphics over the presenter, `/motion-graphics` or `/faceless-explainer` for full-screen scenes, `/slideshow` for slide inserts, `/hyperframes-registry` **before hand-building** any chart, map, terminal, transition or effect.
+1. `SPEC.md` from the plan (template in `reference/plan-and-spec.md`), then the HyperFrames skills do the framework work: `/talking-head-recut` for graphics over the presenter, `/motion-graphics` or `/faceless-explainer` for full-screen scenes, `/slideshow` for slide inserts, `/hyperframes-registry` **before hand-building** any chart, map, terminal, transition or effect. Search it once per graphic; if nothing fits the exact idea (a split bar, a payment timeline), hand-build it with the presets and note "built by hand" in the spec.
 2. One composition per section of 30 to 60 s for long pieces (render and check each, then join), one composition for short ones. The base edit (presenter clips + stills + B-roll + voice) is the bottom track; never retime it.
 3. Every graphic arrives **0.1 s before its word** and exits before the next one arrives. Motion numbers are in `reference/motion.md`: use them, don't improvise easing.
 4. The house look and the banned list are in `reference/look.md`. Read it before writing any CSS.
@@ -44,6 +48,7 @@ Show the plan on one board or as one table. Nothing is built before the OK.
 
 ## Rules
 
+- Hero stills shown full screen for more than 3 s: make them at 2K (Aristotto Sunburst); ChatGPT landscape stills are about 1672×941 and go soft when they drift.
 - Never generate text, numbers, logos, charts or UI with an image or video model. Code only, with the exact approved words and numbers. Never invent a statistic.
 - One accent colour, one display face, one text face. Brand from the user's files.
 - Name the build tool and the presets in the spec, so the next episode comes out the same.
