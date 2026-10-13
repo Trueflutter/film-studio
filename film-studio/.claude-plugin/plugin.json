@@ -1,7 +1,7 @@
 {
   "name": "film-studio",
   "displayName": "AI Video Studio",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "AI video and content creation inside Claude Code, from a single shot to reels, series, product ads and brand films: story engine, bibles, shot design, directed prompts, draft-to-final generation with cost tracking, performance and voice, sound, captions, edit with Claude reviewing every join, graphics built in code, QC and delivery, one idea in many formats, series built from a pilot. Ships the `film` command and the studio handbook.",
   "author": { "name": "Saqr Academy" },
   "license": "Proprietary (course material). Bundled fonts: SIL Open Font License 1.1.",

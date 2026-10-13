@@ -4,4 +4,4 @@ Stdlib only (Python 3.9+) plus ffmpeg on PATH. Every command works on a
 production folder created by `film new`. See studio-kit/README.md.
 """
 
-__version__ = "1.4.0"
+__version__ = "1.5.0"

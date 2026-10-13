@@ -15,25 +15,27 @@ The recipe that works: a short, spoken script → one character image → the vo
 - Mark the on-camera lines: open, one middle beat, close. Everything else is narration over pictures.
 - Put the script on a text board or in the chat; wait for the OK.
 
-## 2. Character (one card)
+## 2. Character, then the place (one board each)
 
-- **GPT Image 2.5 Sunburst**, 4 outputs in ONE quote (one carousel). Describe a specific person (face shape, skin texture, a beauty mark, hair, wardrobe), real light, the set, "a frame from a real broadcast", never "beautiful" or "flawless".
-- The pick becomes the master (`02_design/<name>_master.jpg`, notes in `02_design/<name>.md`). Next episodes: same face, new outfit or set, made by editing the master (image-to-image), never by re-describing her.
-- For split clips, also make a side or three-quarter version so not every clip opens on the front-facing master.
+- Use the `image-prompt` skill: four options on one board (through the director's ChatGPT when connected), the pick made as a **GPT Image 2.5 Sunburst 2K** master on Aristotto.
+- Then the **reference pack** as edits of the master: face close-up (the one that keeps the face in video), mid shot, full body, three-quarter, side. Notes in `02_design/<name>.md`. Next episodes: same face, new outfit by editing the master, never by re-describing her.
+- The place: where she talks plus the B-roll places, each from several angles of the same space. Never name the city in an image prompt (landmark clichés).
 
 ## 3. Voice first
 
-- ElevenLabs **Eleven v3**: audition 3 voices on one line in one board; lighter accents read more natural. Voice the whole script once (one consistent read), then `film voice tighten` for social pace. Check the transcript word by word.
+- The `voice-audition` skill: the newest ElevenLabs model only (auto-picked), 3 voices on one line in one board; lighter accents read more natural. Voice the whole script once (one consistent read), then tighten for the platform's pace. Check the transcript word by word.
 - Cut the on-camera lines out of the tightened narration, padded with 0.15 s before and silence after to a whole-second clip length.
 
 ## 4. Talking clips
 
-- **Seedance 2.5 reference-to-video**: the master (or its side version) as the reference, the line as the audio. On Aristotto the audio goes in through the upload card (it doesn't take links); on EvoLink `film gen ... --audio-ref <file>` does it without a card.
+- **Seedance 2.5 reference-to-video**: the face close-up plus the pack shot nearest the clip's framing as references, the line as the audio. On Aristotto the audio goes in through the upload card (it doesn't take links); on EvoLink `film gen ... --audio-ref <file>` does it without a card.
 - Plan one line per clip with a **different opening angle and distance** each: e.g. arc and push-in from three-quarter / front close-up / low side tracking into close-up. 5 to 11 s each.
 - Prompt: "she speaks on camera" in the style, the beat and the constraints; start already speaking; eyes on the lens for a presenter; "mouth closes after the last word"; no music, no text.
 - Transcribe each clip; cut out stutters or repeats and cover the cut with a punch-in.
 
 ## 5. The middle, B-roll and graphics
+
+For anything over about 45 s, or with graphs, slides or many numbers, plan the layers with the `motion-design` skill first (presenter 15 to 25%, motion graphics 30 to 40%, stills with camera moves, slides, a little B-roll).
 
 - B-roll as multi-angle 10 to 15 s takes (3 to 5 shots each, every cut a different camera move, no face held over 3 s), planned against the narration, used **inside** their shot boundaries.
 - Graphics in ONE HyperFrames composition over the assembled edit: notifications, typed fields, counters, connectors, comparisons, each landing on its word (from the word timings). Full-screen graphic scenes where there's no good picture. Brand rules from the director's notes. Lower third with the presenter's full name and the series; no duplicate title tag.
