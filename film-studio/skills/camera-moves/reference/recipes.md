@@ -61,13 +61,19 @@ Top-down as the hands set out the ingredients → hard cut to a macro slide acro
 
 What students point at when they say "cinematic brand video": short shots (1 to 3 s), each with one big move, details that build to a hero reveal, a drop where everything changes, one colour world. Ours beats the usual reel by holding each move long enough to feel expensive, lighting from one source with haze in the beam, and keeping all text out of the shot.
 
+**Give it a story, not an inventory.** Details alone feel flat (tested: a sequence of beautiful parts with no one wanting anything was "boring"). Someone wants something and gets it, or the product wakes up and goes somewhere. Pick one:
+- **With a person:** a want and a payoff. Collecting the car, opening the gift, arriving home, the first sip. Face never shown, or shown only in a close shot from the reference pack. The details now have a cause (the mirror unfolds *because* he walks up).
+- **Without people:** the product is the character. It wakes (lights, motors, steam), it moves (rolls out, opens, pours), it arrives somewhere (the road, the table, the view).
+
 Structure: **silhouette** (a strip of light reveals the shape) → **two or three details moving on their own** (a mirror motoring open, a door swinging, a lid lifting, a screen rising, stitching under raking light) → **the human touch** (a hand presses the button, sleeve and watch, face never seen) → **the drop** (lights snap on, engine fires, the music hits; one shot) → **the hero** (a slow orbit at headlight height) → **the reveal wide** (rise and pull back, settle with empty space for the logo).
 
 - Hard cuts at named seconds, a different move in every shot, stated three times.
 - Details where the **subject** moves (motors, doors, lights) read as real; owners film exactly these.
 - One accent colour taken from the brand; everything else black, graphite or chrome.
-- Native sound asked for shot by shot: the motor whir, the click, the ignition, the hit on the drop.
-- Generic product, no badges, unless the brand owns the product and supplies references.
+- Native sound effects asked for shot by shot: the motor whir, the click, the ignition, the hit on the drop.
+- **Name the exact product** (make, model, colour, year) when the brand sells it: an invented "generic grand tourer" reads as anonymous. Still ask for no badges or lettering (they come out garbled).
+- **No lettering on anything** that normally carries text: say "a plain glowing start button with no lettering". The model writes on buttons, screens and plates anyway (it produced "START STOOP"); cut before the text is readable rather than blurring it.
+- **Sound effects only, no music, in the prompt:** "Sound effects only: strictly no music, no score, no BGM" in STYLE, in SOUND and in CONSTRAINTS. Music baked into the take can't be removed without losing the effects. Add music in the mix (ElevenLabs music with a composition plan, or the brand's track), keep it under the build and slam it up on the drop, compress lightly so the build isn't silent on a phone, -14 LUFS.
 - Finishing in the edit, not the prompt: flash and zoom punch on the drop, slow motion in the orbit, a whip into the reveal, halation and grain (`motion-design/scripts/finish.py`), then the logo end card and the mix.
 
 ## Owner showcase details (cars, watches, homes, gadgets)
