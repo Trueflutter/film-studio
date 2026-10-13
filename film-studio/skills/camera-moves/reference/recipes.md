@@ -56,3 +56,20 @@ Aerial descend toward the building at golden hour → hard cut to a glide throug
 ## Food or process (8 to 12 s)
 
 Top-down as the hands set out the ingredients → hard cut to a macro slide across the texture → hard cut to a side-on locked-off shot of the pour or the cut → hard cut to a slow push-in on the finished thing.
+
+## The fast-cut brand film (the "Hollywood" reel, 15 s, 7 or 8 shots)
+
+What students point at when they say "cinematic brand video": short shots (1 to 3 s), each with one big move, details that build to a hero reveal, a drop where everything changes, one colour world. Ours beats the usual reel by holding each move long enough to feel expensive, lighting from one source with haze in the beam, and keeping all text out of the shot.
+
+Structure: **silhouette** (a strip of light reveals the shape) → **two or three details moving on their own** (a mirror motoring open, a door swinging, a lid lifting, a screen rising, stitching under raking light) → **the human touch** (a hand presses the button, sleeve and watch, face never seen) → **the drop** (lights snap on, engine fires, the music hits; one shot) → **the hero** (a slow orbit at headlight height) → **the reveal wide** (rise and pull back, settle with empty space for the logo).
+
+- Hard cuts at named seconds, a different move in every shot, stated three times.
+- Details where the **subject** moves (motors, doors, lights) read as real; owners film exactly these.
+- One accent colour taken from the brand; everything else black, graphite or chrome.
+- Native sound asked for shot by shot: the motor whir, the click, the ignition, the hit on the drop.
+- Generic product, no badges, unless the brand owns the product and supplies references.
+- Finishing in the edit, not the prompt: flash and zoom punch on the drop, slow motion in the orbit, a whip into the reveal, halation and grain (`motion-design/scripts/finish.py`), then the logo end card and the mix.
+
+## Owner showcase details (cars, watches, homes, gadgets)
+
+Real owners film the things that move or click: bonnet or boot lifting, mirrors unfolding, door opening onto the seat, an edition plaque, the start button, a screen rising from the dash, the spoiler rising, wheel and caliper, tail-lights waking. For a home: curtains opening onto the view, a hidden door, lights dimming up, water filling a pool edge. For a watch: the crown wound, the clasp closing, light across the dial. Use them as the detail shots; the subject's own motion sells it more than the camera's.

@@ -42,6 +42,10 @@ Show the plan on one board or as one table. Nothing is built before the OK.
 4. The house look and the banned list are in `reference/look.md`. Read it before writing any CSS.
 5. Write `CUES.md`: the output time and type of every arrival (whoosh, pop, tick, type, impact) for the sound mix.
 
+## Finishing a generated film
+
+For brand films and anything cinematic: flash, zoom punch, speed ramps, whip, light leak, halation and grain go on in the edit with `scripts/finish.py`, never in the video prompt. Usage and limits in `reference/finishing.md`. Finish first, then graphics, then the sound mix.
+
 ## 4. Look before anyone watches
 
 `npx hyperframes check`, then snapshots at the first second, every arrival + 0.4 s (settled), and every scene change. Open them and score each 1 to 10 on: reads at phone size, one thing first, motion with mass, brand, clears the face and the platform's buttons, matches the voice. Fix the worst three and snapshot again; render only when everything is 8 or more. Then decode stills from the **final MP4** at the same times and scan for one-frame pops. "It compiled" is not done.
