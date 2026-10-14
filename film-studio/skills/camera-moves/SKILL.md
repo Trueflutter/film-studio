@@ -17,7 +17,9 @@ Camera movement is what makes generated video feel expensive. It also goes wrong
 6. **Timestamps are honoured.** In Seedance 2.5, 1-second-precise beats with no gaps (`0-3s`, `3-6s`...). "Hard cut to" between beats gives a real cut within about 0.4 s; "Still the same take, no cut" gives a continuous move. Say the take type three times: in the style line, in each beat, in the constraints.
 7. **Name what stays still.** "The camera settles and holds for the last second" gives you an edit point. Real camera operators land their moves; models drift unless told to stop.
 8. **Sound effects only.** Ask the video model for effects and room sound, never music ("strictly no music, no score, no BGM", said three times); music goes on in the mix where it can be changed.
-9. **Describe places, never name the city** (the model adds the landmark), and never ask for readable text on screens or signs.
+9. **The hero action gets its own close-up** (the ribbon untying, the key turning, the lid lifting), then the wide; folded into a wide it never lands.
+10. **One change of state per shot, never across a cut, and nothing moves by itself.** Add a CONTINUITY block saying what stays true after each change. Draft at 480p and check the frame either side of every cut before any final.
+11. **Describe places, never name the city** (the model adds the landmark), and never ask for readable text on screens or signs.
 
 The full list of moves, with the wording that works and what to avoid, is in `reference/moves.md`. Ready-made shot plans (presenter clips, multi-angle B-roll, the one-take brand film, product, property) are in `reference/recipes.md`.
 

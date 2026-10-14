@@ -106,6 +106,7 @@ You can look at images: boards, reference packs, frames and contact sheets (`fil
 | a generated presenter, explainer, launch or series episode | `presenter-video` (with `motion-design` for the layered explainer) |
 | a realistic person, character, product or place still; a reference pack; ChatGPT image setup | `image-prompt` |
 | pick, audition or make a voice; narration; voice pace | `voice-audition` |
+| a brand film, cinematic ad, concept or idea for an ad; an ad that feels flat | `brand-film` (then `camera-moves`, `motion-design`) |
 | how the camera moves in any generated shot: cinematic, oner, multi-angle, drone, orbit, push-in; shots that feel static or samey | `camera-moves` (with every video prompt) |
 | motion graphics, animated graphs and counters, slides in a video, an explainer's visual plan | `motion-design` (then `graphics` and the HyperFrames skills build it) |
 | find, test or write the idea; brief; treatment; script | `story-engine` |
