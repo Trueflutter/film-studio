@@ -100,5 +100,6 @@ Everything that matters shows ✓. Then tell the student, in a few short lines: 
 
 ## What's new
 
+- **1.6.2:** imperfection stays quiet. Small irregularities read as real; a dramatic scar reads as make-up. Marks only when the story needs them, drawn fainter than wanted on screen (video makes them stronger); flour and dirt on hands and clothes, not the face.
 - **1.6.1:** how people look. Scars, moles, birthmarks and tattoos go on the face picture, not the words (words alone draw a fresh wound). Today's flour, sweat or mud goes in each shot's words. Faces are cast like character actors. Skin texture varies across the face. The EvoLink picture model is fixed.
 - **1.6.0:** the `seedance-directing` skill directs any shot with people, acting or several cuts like a film crew: a block per shot with lens, camera, action, timing, sound and a lock; faces three-quarter; the camera held by an unseen operator; repair a take instead of re-rolling it. Studio rules v4.
