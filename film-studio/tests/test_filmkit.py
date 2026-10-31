@@ -211,14 +211,14 @@ class TestLogic(StudioCase):
 
     def test_default_still_model_is_gpt_image_2_5(self):
         from filmkit.gen import default_image_model, rate_for
-        self.assertEqual(default_image_model("evolink"), "gpt-image-2.5")
+        self.assertEqual(default_image_model("evolink"), "gpt-image-2.5-sunburst")
         self.assertEqual(default_image_model("ark"), "")
         self.assertEqual(rate_for("ark", "seedance-2-5", "480p"), 0.10)  # the rate table still reads
         self.ok("new", "Stills")
         prompt = self.tmp / "p.md"
         prompt.write_text("A kitchen at dawn.")
         out = self.ok("gen", "S01", "--via", "evolink", "--image-gen", "--prompt-file", str(prompt), "--dry-run")
-        self.assertIn("gpt-image-2.5", out)
+        self.assertIn("gpt-image-2.5-sunburst", out)
         self.assertNotEqual(film(self.studio, "gen", "S01", "--via", "ark", "--image-gen",
                                  "--prompt-file", str(prompt), "--dry-run").returncode, 0)
 

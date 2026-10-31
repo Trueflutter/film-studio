@@ -14,12 +14,12 @@ Ask at most one question, and only if the answer changes the picture (e.g. "vert
 Write the prompt as natural prose in this order (details in `reference/method.md`):
 
 1. **The picture:** what it is ("a still frame from a premium evening news broadcast"), the crop and orientation **in words** ("framed from mid-chest up, vertical, a little headroom"). The image tool does not always obey a separate size setting; the words do.
-2. **The person:** a fictional adult, a few stable traits, grooming and makeup **as their role would really have it** (a presenter on air is made up; realism is "right for the situation", not "plain"), and **two or three small asymmetries** (one brow higher, smile fuller on one side, a mark on a named side). Add: "one particular person, not a symmetrical model's face."
+2. **The person:** a fictional adult, a few stable traits, grooming and makeup **as their role would really have it** (a presenter on air is made up; realism is "right for the situation", not "plain"), and **two or three small asymmetries** (one brow higher, smile fuller on one side, a mark on a named side). Add: "one particular person, not a symmetrical model's face." **Cast the face** the way a casting brief would: what life has done to it (a strong nose, heavy uneven brows, lines from squinting), not how attractive it is. Give every mark an **age and a state** ("an old, long-healed scar: a pale, flat line where no brow hairs grow"); "a scar" alone comes back as a fresh cut.
 3. **The moment:** one action, the expression and where the eyes go ("has just looked up from her notes, about to speak, eyes on the lens"). Hands touch something specific.
 4. **The place:** only the props the story needs; the background softens but "still reads as a real place".
 5. **The camera:** height, distance and perspective ("eye level, a comfortable distance, the unexaggerated look of an 85 mm lens"); what is sharp.
 6. **The light:** one dominant source and its **visible effects** ("key to camera left, the right side of her face falls gently darker, soft shadow under the jaw, a window-shaped catchlight").
-7. **Texture matched to distance:** a close portrait shows pores and sheen; a full-body shot shows fabric and ground contact instead.
+7. **Texture matched to distance:** a close portrait shows pores and sheen; a full-body shot shows fabric and ground contact instead. Texture varies across a face: pores larger on the nose and inner cheeks, almost smooth along the jaw. "Visible pores" gives one even, sharpened pattern that reads as plastic.
 8. **One short exclusion line:** "No skin smoothing, glamour retouching or glossy finish. No text or logos."
 
 Never write: "not a render", "not AI", "8K", "masterpiece", "hyper-realistic", "flawless", "beautiful", camera brands, seeds or settings in the prose.
@@ -52,6 +52,8 @@ Video models keep a face only as well as their references show it. As soon as th
 2. **Mid shot:** waist up, hands visible.
 3. **Full body:** head to shoes, standing, the whole outfit.
 4. **Three-quarter** and 5. **side** views, so clips don't all open on the same front shot.
+
+**Permanent features only on the face close-up.** Scars, moles, birthmarks and tattoos go on it, drawn at the age you want: video copies them faithfully, mistakes included, and words alone come back as the model's default (in our look test, a fresh red cut in 4 of 4 text-only takes). Today's state (flour, sweat, mud, the day's makeup) stays off the pack and goes in each shot's prompt. Check the close-up at 100% for marks you didn't ask for before any video. For reference-to-video, judge it on features, not skin finish: a plastic-skinned GPT Image close-up still gave natural skin in motion. A start frame for image-to-video is different, because its finish carries: make that one the most photographic still you have (Nano Banana Pro, EvoLink `gemini-3-pro-image` with `size=2:3` and `quality=2K`, gave the most photographic skin in our test, but check its pose and which side each mark is on).
 
 Save to `<subject>/pack/` and write `<subject>.md`: the identity record (stable traits the pictures actually show), the wardrobe record, each file with its job or media id. Every video clip of this person gets the close-up plus the pack shot nearest its framing as references, each with a role and a never in the prompt ("face reference only: never composition, framing, pose or expression"). When a still is used only for staging (who stands where), paint its faces white and say they are placeholders that are never rendered, so the face comes only from the close-up. New outfits or places later are edits of the approved master ("keep this exact woman... change only her outfit to..."), never a re-description; then redo the pack.
 

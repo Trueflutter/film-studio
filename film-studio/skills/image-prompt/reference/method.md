@@ -25,7 +25,7 @@ Describe what the viewer can check, not adjectives:
 
 ## Match detail to distance
 
-- **Close portrait:** pores, fine hairs, sheen, catchlights.
+- **Close portrait:** pores (larger on the nose and inner cheeks, fading along the jaw), fine hairs, sheen, catchlights.
 - **Waist-up:** expression, hands, fabric folds; skin texture "subtle at this distance".
 - **Full body:** proportions, weight on one leg, shoes meeting the ground, clothes hanging with gravity. Don't ask for pores.
 

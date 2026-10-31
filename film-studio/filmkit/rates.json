@@ -2,7 +2,7 @@
   "_read_me": "USD per second of output, keyed '<via>:<model id>:<resolution>' (or '<via>:<model id>'). Used by `film gen` to cost each take automatically. Prices move monthly: check the provider page before a production and update 'verified'. Replace the model ids with the exact ids your provider uses; an unknown key just means you pass --cost yourself.",
   "verified": "2026-10-11 (EvoLink Seedance 2.5 rows); 2026-09-26 for the rest (research pass; see course/research/). Studio-billed rows marked [billed].",
   "default_image_model": {
-    "evolink": "gpt-image-2.5"
+    "evolink": "gpt-image-2.5-sunburst"
   },
   "per_second": {
     "ark:seedance-2-5:480p": 0.1,

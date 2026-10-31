@@ -20,7 +20,7 @@ The model is your camera crew, cast and art department, and it follows instructi
 | **Text-to-video** (native) | B-roll, establishing, one-off characters, organic "filmed" texture; exploring | little control over identity and composition |
 | **Image-to-video** (start frame) | composition, light and identity must be exact | the still's look (and any synthetic sheen) carries into motion |
 | **First + last frame** | a controlled transformation or move between two known states | unnatural in-between motion if the frames are far apart |
-| **Reference-to-video** (multi-reference) | identity, wardrobe, product and location held by images without pinning the first frame | references leaking their background, light or grade; say "identity only" |
+| **Reference-to-video** (multi-reference) | identity, wardrobe, product and location held by images without pinning the first frame | references leaking their background, light or grade; say "identity only". Every mark on the face reference comes through, mistakes included (its skin finish does not: the model draws its own skin) |
 | **Multishot** (several hard cuts in one generation) | coverage of one moment in one place with one main character | sometimes renders one continuous move instead of cuts: generate 2, keep the one that cut |
 | **Video reference** | borrowing camera movement, blocking, rhythm or an effect from a clip (incl. a phone-shot or blockout reference) | the model may copy unwanted motion too |
 | **Audio-driven** (audio reference) | dialogue with real lip sync, beat-synced cuts | needs the exact transcript and clean audio (handbook 07) |

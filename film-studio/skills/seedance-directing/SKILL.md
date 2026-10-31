@@ -29,12 +29,14 @@ Keep what works. Regenerate only what doesn't.
 | a camera move or staging the model won't follow | graybox or phone blockout as a video reference (section 4) |
 | the final lost what the draft had | harvest the approved draft's frames as start frames for the final (section 2) |
 | non-identity B-roll, establishing | native text-to-video, one roll; the anatomy still applies, shorter |
+| a scar, mole, birthmark or tattoo must look a certain age | draw it on the face reference at that age; the words alone get the model's default, usually a fresh wound |
 | stills, start frames, character packs | `image-prompt` (the person, the pack, the place) |
 
 ## 1. Before any video
 
 - **A script with a performance target per character.** Their archetype, or the kind of comic or dramatic energy they bring, written for you, the prompt writer. Translate it into physical behaviour in every prompt. Never put a real actor's name in a generation prompt.
 - **An asset kit per character.** A front, side and back turnaround on a neutral background (face blanked or tiny on the body views), a separate face close-up, and a short voice clip if they speak. Optional: a six-panel grid of angles to fit many views into one reference slot.
+- **Marks live on the face reference; today's state lives in the words.** A scar, mole, birthmark or tattoo goes on the face close-up, drawn at the age you want: the video copies it faithfully, mistakes included, while words alone get the model's default (a fresh red cut in 4 of 4 text-only takes in our look test, a healed line with a reference). Keep flour, sweat, mud and the day's makeup off the reference and write them per shot. Judge a reference-to-video face on its features, not its skin finish: a plastic-skinned still gave natural skin in motion. A start frame is different: its finish carries.
 - **A reference budget per route.** Dreamina caps a generation at 12 files; EvoLink reference-to-video is reliable with 1-8 images; check `list_capabilities` on Aristotto. Merge angles into grids and drop the least useful reference before you drop a role line.
 
 ## 2. The coverage pass (dialogue and multi-angle scenes)
@@ -116,3 +118,4 @@ Write every shot or sequence in the block anatomy: `references/prompt-anatomy.md
 
 - **Nexus** (Dreamina, 720p): the method behind a series with 62 million views.
 - **Our A/B** (31 October 2026, Seedance 2.5 text-to-video, the same scene and character, 5 takes): with the directed prompt the character was three-quarter or in profile, looking at what she reacted to, framed off-centre in motivated light, in 3 of 3 takes. With the short prompt she was front-on, centred, looking into the lens and ending in a presenter pose in 2 of 2, despite "she doesn't look at the camera". Sub-second cut times were not honoured (hence whole-second cuts), and wardrobe drifted with text alone in both arms (use reference images for clothes). The winning prompt and its result: `references/tested-example.md`.
+- **Our look test** (31 October 2026, the same scene, 7 takes): words carried the casting and the moment (a more particular face, sheen, flour on the forearms) but drew the old scar as a fresh red cut in 4 of 4 text-only takes, once on the nose. With a face reference, 0 of 3 takes drew a fresh cut and the healed line showed in 2 of 2; the reference's paste-like flour came back on her face too.
