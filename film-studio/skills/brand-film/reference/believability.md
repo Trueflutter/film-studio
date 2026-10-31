@@ -5,7 +5,7 @@ Ask of every beat: would this happen on a real day, with real people, in a real 
 - **Time of day fits the action.** Deliveries happen in the morning; dinners at night.
 - **People do things the way people do.** Nobody delivers a car in white gloves. Residents wear weekend clothes, not suits. One person films (video, phone upright), not a cluster of phones taking photos.
 - **Envy and attention come from the street:** a dog walker slows, a neighbour stops, someone films from across the road.
-- **Reactions are behaviour, not emotion words:** "lips part, one hand rises to her chest, a slow smile", never "shocked" or "amazed" (they come out as cartoon gasps).
+- **Reactions are the feeling plus its physical signs, timed:** "surprised, small and real: her brows rise a little and stay up, lips part a few millimetres, one slow blink", never the word alone ("shocked" or "amazed" on their own come out as cartoon gasps). Eyes on what they react to, never the lens.
 - **Relatable places:** a modern villa street with short driveways and neighbours close by, not a palace with a kilometre of palms. Describe it; never name the city (the model adds its landmark).
 - **The same people and animals stay the same:** the dog belongs to one owner in every shot.
 - **Nothing moves by itself; nothing vanishes.** Every change has a visible cause and leaves a trace (the cover lies on the ground in every later shot).

@@ -58,7 +58,7 @@ Structure that works across engines:
 [Constraints]       Only Maya in frame. No text, no music. Same kitchen as @image1.
 ```
 
-- **Length:** as long as the decisions, no longer. Most good video prompts are 60-200 words. Adjective stacks don't add control; they add noise.
+- **Length:** as long as the decisions, no longer. A single B-roll or product shot is often 60-200 words. A shot with a person, acting or several cuts needs a block per shot (lens, camera, action, timing, sound, lock) and runs 400-1,000 words: in our A/B (October 2026) the directed prompt turned front-on, lens-staring faces into people looking at what they react to. Adjective stacks still add nothing but noise. Aristotto caps a prompt at 6,000 characters. Method: the `seedance-directing` skill.
 - **Vocabulary:** real names for sizes, lenses, moves, light setups and film stocks do real work in one word. Some tokens tint: a warm film-stock word gave us an orange cast (studio-tested). Test stock words before you rely on them.
 - **Timecodes** for multi-beat shots on engines that follow them: `[0-2s] ... [2-5s] ...`. Still one action per beat.
 - **Physics must be named** (cloth, liquid, weight, contact); models don't infer it reliably.
@@ -78,11 +78,15 @@ Structure that works across engines:
 ## Multishot and coverage
 
 For one moment in one place with one main character, generating the coverage *in one pass* gives cuts that match (same light, same room, same face) and avoids the jarring join of separate generations.
-- Up to about three cuts in 10 seconds is the reliable range (Kling 3.0 multishot, studio-tested May 2026).
+- Up to about three cuts in 10 seconds is the reliable range (Kling 3.0 multishot, studio-tested May 2026). On Seedance 2.5 with a block per shot, three to five cuts in 6-10 s hold (the Nexus process, October 2026). Put cuts on whole seconds.
 - Write it as hard cuts: _"render as three distinct hard cuts, not crossfades"_.
 - Put the face where the engine holds it best (early cuts); make the last cut an insert, a wide or an over-the-shoulder.
 - Generate 2 and keep the take that actually cut.
 - A "cut to" prompt on some engines produces one continuous move through several sizes instead of cuts; that's useful too: harvest frames from it as start frames (stills from motion).
+
+## Keep what works
+
+Composition, camera and performance are three separate wins: lock each (as an image, harvested frames or a video reference) before chasing the next. When a take is right except one element, paint that element out white in a frame from the take, start from it, describe what fills the gap, and say the white is a placeholder that is never rendered. When a final has no seed (Aristotto, EvoLink), start it from the approved draft's frames. Details: `seedance-directing`.
 
 ## Stills from motion and burst frames
 

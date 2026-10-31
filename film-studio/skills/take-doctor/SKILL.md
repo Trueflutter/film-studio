@@ -20,7 +20,7 @@ You can't watch video or hear audio. Get evidence:
 2. **Name the failure** with one or more codes: CONCEPT, REF, PROMPT, MODEL, MODE, CAMERA, ACTION, FRAME, IDENTITY, PHYSICS, PERFORMANCE, SYNC, ARTEFACT, WORKFLOW (`film take codes`).
 3. **Trace it:** is it the idea, the input (REF, FRAME, PROMPT, CAMERA, ACTION), or the tool (MODEL, MODE, WORKFLOW)?
 4. **Prescribe the cheapest rung** of the remedy ladder, and say what the rung above would be if it fails:
-   0 keep and cut around (use the good 1-2 seconds) · 1 fix in post · 2 re-roll the same inputs (max 2, only for random-looking failures) · 3 change ONE variable · 4 change the start frame or references · 5 simplify or split the shot · 6 change mode · 7 change engine · 8 redesign (different angle, insert, sound-only beat, real footage, cut).
+   0 keep and cut around (use the good 1-2 seconds) · 1 fix in post · 1b repair the one wrong element (paint it out white in a frame from the take, start from that frame, describe what fills it, say the white is a placeholder that is never rendered: `seedance-directing` section 4) · 2 re-roll the same inputs (max 2, only for random-looking failures) · 3 change ONE variable · 4 change the start frame or references · 5 simplify or split the shot · 6 change mode · 7 change engine · 8 redesign (different angle, insert, sound-only beat, real footage, cut).
 5. **Three strikes:** if this approach has already failed three times, you're at rung 5 or above. Say so plainly.
 6. **Write the fix:** if it's a prompt change, create the next version file changing only the one variable, and name the variable in the file name.
 7. **Log it:** `film take rate <take> reject --fail CODE+CODE --note "next: <rung and change>"`.
@@ -44,6 +44,10 @@ You can't watch video or hear audio. Get evidence:
 | voice timbre shifts | SYNC | speech-to-speech the clip's own audio to the locked voice |
 | overacting | PERFORMANCE | task + tell instead of emotion words; shorter line |
 | dead eyes / deadpan | PERFORMANCE/FRAME | give the eyes a target; start frame in the right expression state |
+| face front-on, centred, staring into the lens | FRAME/PROMPT | THREE-QUARTER, never front-on; a target for the eyes; the camera as an unseen operator (`seedance-directing`) |
+| blank mannequin face or a presenter grin | PERFORMANCE | the feeling plus its physical signs, where it lives and when each change happens |
+| right except one element (a prop, an extra, a background person) | WORKFLOW | paint-out repair, not a re-roll |
+| the final lost the draft's framing or acting | WORKFLOW | start the final from the draft's harvested frames |
 | starts on an awkward turn | FRAME | start frame in the first state of the action |
 | multishot didn't cut | MODE | "N distinct hard cuts, not crossfades"; generate 2 |
 | separate clips jar at the cut | WORKFLOW | transition rule: change size and angle, cut on action, cut away, or generate coverage natively |

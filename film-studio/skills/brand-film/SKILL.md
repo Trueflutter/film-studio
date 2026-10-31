@@ -32,12 +32,13 @@ Run `reference/believability.md` on the concept before writing a prompt. The aud
 - **The hero action gets its own close-up** (the ribbon untying, the key turning), then the wide.
 - **A CONTINUITY block** in the prompt: what stays true after each change, who stands where, same light.
 - Name the exact product. Ask the video model for **sound effects only** ("strictly no music, no score, no BGM", three times). Camera moves from the `camera-moves` skill.
+- **With a person in frame**, write it with `seedance-directing`: faces three-quarter with eyes on what they react to, the feeling as physical signs with timing, an unseen operator holding the camera.
 
 ## 4. Draft, check, then final
 
 1. **480p draft** (15 s: about 1,830 credits, about 4 to 5 minutes).
 2. **Continuity check:** the frame either side of every cut and the last frame; who is where; props in the same state; nothing vanished or appeared; same light and time of day. Report what passes and what to fix.
-3. **Final** at 1080p (about 9,660 credits, 5 to 7 minutes) from the corrected prompt. It's a new generation, so fix the prompt, don't expect the same take.
+3. **Final** at 1080p (about 9,660 credits, 5 to 7 minutes). It's a new generation with no seed, so keep what worked: harvest the draft's frame at each cut (`film frames`) and give them to the final as start frames or composition references (role stated), then fix only the notes in the prompt. If the draft is right except one element, repair that element (paint-out, `seedance-directing`) instead of rolling the whole film again.
 
 ## 5. Sound and finish
 

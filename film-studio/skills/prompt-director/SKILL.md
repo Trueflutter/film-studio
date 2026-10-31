@@ -21,7 +21,7 @@ You turn the director's intent into instructions a model can execute. Read `${CL
 4. **Choose the engine** from the style bible's routing table; mention an alternative.
 5. **Write the inputs with jobs** at the top of the prompt:
    `@image1 as first frame` (pins) · `@image2 identity reference: face only, don't copy its background, light or grade` · `@image3 wardrobe reference` · `@video1 camera movement reference` · `@audio1 exact voice and timing`.
-6. **Write the prompt** in this order: frame and camera → subject and action → light → performance → sound → constraints. Paste the character anchor line, the 180° line and the location lock line **verbatim**. For multi-cut generations paste the scene list verbatim. 60-200 words of decisions; no "cinematic, 8k, masterpiece, beautiful".
+6. **Write the prompt.** Any shot with a person, acting or more than one cut: the block anatomy in `seedance-directing` (scene context, output, references with a role and a never, spatial map, the camera as an unseen operator, the performance, then per shot OPTICS, CAMERA, ACTION, TIMING, AUDIO, LOCK; a global lock and the lighting), cuts on whole seconds. A single B-roll or product detail: frame and camera → subject and action → light → sound → constraints. Either way, paste the character anchor line, the 180° line and the location lock line **verbatim**, and for multi-cut generations the scene list. Length follows the decisions, never adjectives: a B-roll shot is 60-200 words, a directed shot with a person 400-1,000 (under 6,000 characters on Aristotto). No "cinematic, 8k, masterpiece, beautiful".
 7. **Plan the ladder** in the prompt file: still route (if any) → draft route (480p / Draft Mode / cheapest tier; how many tries) → final route (promote the locked draft, upscale it, or premium re-render from the same start frame).
 8. **Generate or hand over:**
    - API: `film gen <SHOT> --via ark|fal|evolink --model <id> --prompt-file 04_shots/<SHOT>/prompt_vN.md --image <start frame> --draft --count 2` (`--dry-run` first on any new model; provider-specific fields via `--param key=value`).
@@ -71,3 +71,4 @@ If the path keeps failing, give it a video reference (a phone walk-through or a 
 - Chain a last frame across an angle change.
 - Render a premium final for a shot without a `select` draft or still.
 - Work around a provider's real-person or safety filter.
+- Re-roll a whole take to fix one element: repair it (paint-out, `seedance-directing`).

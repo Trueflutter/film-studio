@@ -5,16 +5,16 @@ description: Use when writing any video generation prompt (Seedance or similar) 
 
 # Camera moves: shots that feel filmed, not generated
 
-Camera movement is what makes generated video feel expensive. It also goes wrong in predictable ways: floating drifts, moves the model ignores, three moves mashed into one, the same front angle in every clip. This skill turns "make it cinematic" into moves Seedance 2.5 actually performs.
+Camera movement is what makes generated video feel filmed. It also goes wrong in predictable ways: floating drifts, moves the model ignores, three moves mashed into one, the same front angle in every clip. This skill turns "make it cinematic" into moves Seedance 2.5 actually performs.
 
 ## The rules
 
-1. **Every move has a cause.** The camera moves because something happens: she stands and it rises with her; the car turns and it whips round with it; we learn something and it pushes in. Write the cause into the prompt. No cause, no move (or lock it off).
+1. **Every move has a cause.** The camera moves because something happens: she stands and it rises with her; the car turns and it whips round with it; we learn something and it pushes in. Write the cause into the prompt. No cause, no move (or lock it off). **And a body:** say who holds it and how (an unseen operator on the shoulder who reframes a beat late, a dolly push that is a real move and not a zoom, a tripod pan, a car mount), and add "no camera, crew or equipment in frame". Gimbal-perfect glides nobody could hold read as generated.
 2. **One move per shot.** Two moves are two shots, or a oner with a cause handing one move to the next.
 3. **Write it in four parts:** where the camera **starts** (size and angle), the **move** (verb and direction), its **speed** (slow, steady, fast, snapping), where it **ends** (the framing it settles on). "Low three-quarter close-up; the camera arcs slowly to the front and pushes in, settling on her eyes."
-4. **Vary angle AND distance across clips.** No two clips of a person open the same way: a close-up push-in, a wide that pulls back, a low side track, a three-quarter arc. Plan it in a table before writing prompts.
+4. **Vary angle AND distance across clips.** No two clips of a person open the same way: a close-up push-in, a wide that pulls back, a low side track, a three-quarter arc. Plan it in a table before writing prompts. Faces are THREE-QUARTER by default, never front-on, with a target for the eyes; front-on only for a presenter talking to the lens.
 5. **Faces get slow moves.** Fast moves are for cars, cities, products and transitions. A generated face holds at most 4 s; the move should be finishing by then.
-6. **Timestamps are honoured.** In Seedance 2.5, 1-second-precise beats with no gaps (`0-3s`, `3-6s`...). "Hard cut to" between beats gives a real cut within about 0.4 s; "Still the same take, no cut" gives a continuous move. Say the take type three times: in the style line, in each beat, in the constraints.
+6. **Timestamps are honoured.** In Seedance 2.5, 1-second-precise beats with no gaps (`0-3s`, `3-6s`...). "Hard cut to" between beats gives a real cut within about 0.4 s; "Still the same take, no cut" gives a continuous move. Say the take type three times: in the style line, in each beat, in the constraints. Keep cuts on whole seconds (sub-second cut times landed up to 0.9 s off in our A/B), vary the beat lengths (even lengths read as generated), give the payoff the most time, and finish exact lengths in the edit.
 7. **Name what stays still.** "The camera settles and holds for the last second" gives you an edit point. Real camera operators land their moves; models drift unless told to stop.
 8. **Sound effects only.** Ask the video model for effects and room sound, never music ("strictly no music, no score, no BGM", said three times); music goes on in the mix where it can be changed.
 9. **The hero action gets its own close-up** (the ribbon untying, the key turning, the lid lifting), then the wide; folded into a wide it never lands.
@@ -26,7 +26,7 @@ The full list of moves, with the wording that works and what to avoid, is in `re
 ## How to work
 
 1. **Plan the coverage first** as a small table: clip, purpose, start framing, move, speed, end framing, cause, duration. Check it against rule 4 and show it with the prompts in one view.
-2. **Write each prompt**: STYLE (the look, the take type), the subject and place, the timestamped beats (one move each), SOUND, CONSTRAINTS (take type again, no text or logos, who speaks).
+2. **Write each prompt**: STYLE (the look, the take type), the subject and place, the timestamped beats (one move each), SOUND, CONSTRAINTS (take type again, no text or logos, who speaks). With a person in it, use the `seedance-directing` blocks instead: a lens, camera, action, timing, sound and lock line per beat.
 3. **Critique once before generating**: does every beat have a cause, one move, an end framing? Is any face held over 4 s? Would a real crew be able to shoot it?
 4. **After generating, check the moves happened**: detect the cuts (a scene-change scan), look at the first and last frame of each beat, and compare with the plan. A move that didn't happen is a note for one re-roll with the move stated more plainly, not a rewrite.
 

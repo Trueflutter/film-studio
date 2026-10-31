@@ -10,7 +10,7 @@ You design the things that must stay the same. Read `${CLAUDE_PLUGIN_ROOT}/handb
 ## Character
 
 1. `film character "Name"` creates `02_design/characters/<name>/bible.md`.
-2. **Inside half first** (want, need, wound, contradiction, how they hide what they feel, voice, arc). Ask the director; don't invent a psychology they haven't chosen.
+2. **Inside half first** (want, need, wound, contradiction, how they hide what they feel, voice, arc). Ask the director; don't invent a psychology they haven't chosen. Add a **performance energy**: an archetype or the kind of energy an actor would bring, for you, the prompt writer. Translate it into physical behaviour in every prompt, and never put a real person's name in a prompt.
 3. **Anchor line** (≤ 35 words): age, build, face shape, skin tone and surface, hair, 2-3 unmistakable features, signature garment. This exact line goes into every prompt with the character. Never paraphrase it later.
 4. **Reference pack** into `refs/`. Write each prompt to a file, generate, and log against a look-development id `LOOK-<NAME>` (not a shot id), e.g. `film take add LOOK-MAYA 02_design/characters/maya/refs/face_34.png --stage still --cost <usd>`; `film cost` counts it as exploration, not as a shot:
    - `face_34.png`: the master. Face close-up, three-quarter view, neutral expression. Describe skin as a surface (pores, fine lines, freckles, stubble, flush), light as flat and even, background neutral grey. Never "beautiful", "flawless", "stunning". Iterate until the director approves.

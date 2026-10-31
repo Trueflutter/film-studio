@@ -4,7 +4,7 @@ Audiences forgive a soft background. They do not forgive a face that lies. In AI
 
 ## The short version
 
-1. **Direct behaviour, not emotion.** Give the character a task, a place to look and one small tell. Never write "sad".
+1. **Direct behaviour, not a bare emotion.** Name the feeling, then its physical signs and when they happen; give a task, a place to look and one small tell. Never the word "sad" on its own.
 2. **Voice first.** Lock the read, then drive the picture from it. The voice is usually the weakest link, so spend your care there.
 3. **Budget the words.** About 2.5 words per second; 20-23 words is the ceiling for an 8-second clip. Short lines act better.
 4. **One emotional register per clip.** A big turn gets its own shot, and the cut does the acting.
@@ -57,6 +57,8 @@ Name the expression in plain words, give it two or three physical cues, and stop
 Don't write FACS action-unit stacks (AU1+AU2+AU5 and so on). The studio ran an A/B on a dialogue close-up in June 2026: the dense AU stack caricatured the emotion into bug-eyed alarm, while a plain named cue ("eager delight: brows lift, a quick grin") produced a believable smile (studio-tested). The follow-up review added the caveat that matters most: judged in motion, not on stills, both styles could over-play. The rule that survived: **understate, name the behaviour, and judge performance in motion, never on a frame grab.**
 
 Useful restraint words: "barely", "the start of", "held back", "a flicker of", "she doesn't let it show". Delete: "very", "extremely", "intense", "dramatic", "emotional".
+
+Restraint is a choice, not a rule. A face with no direction reads as AI as fast as a caricature does. Name the state and how strong it is, then its physical signs, where it lives on the face and when each change happens ("0.5-0.9s her eyes lift to the street; 0.9-1.5s her brows rise a little and stay up"). A big scene gets big signs, described physically; a small one gets small signs, described positively. In our A/B (October 2026) this kept faces off the lens and readable, where the short version produced presenter grins.
 
 ### One register per clip, a small trajectory inside it
 

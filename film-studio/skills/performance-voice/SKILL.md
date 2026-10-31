@@ -7,9 +7,9 @@ description: Directs performance and dialogue - voice casting and design, genera
 
 Read `${CLAUDE_PLUGIN_ROOT}/handbook/07-performance-and-dialogue.md` first; `08-sound.md` for the mix.
 
-## Direct behaviour, not emotion
+## Direct behaviour: state, signs, region, time
 
-Models caricature emotion words. For every performance beat write: the inner state (for you) → a task, where the eyes go, what's avoided, one tell (for the model). Name the expression plainly with two or three physical cues ("brows lift, a quick grin", "jaw sets, nods once too quickly") and stop; use restraint words ("barely", "the start of", "held back"). Studio tests: dense facial-coding stacks caricatured faces, and plain cues could still over-play in motion, so ask the director to judge performance in motion, never on a frame. Plan the listener: reaction shots carry scenes.
+An emotion word alone gets the model's stock face; no direction gets a blank one, which reads as AI just as fast. For every performance beat write the state and how strong it is, then its physical signs (brows, lids, eyes, nostrils, lips, jaw, breath, shoulders, hands), where it lives ("mostly in the eyes and brows") and a window for each change with an end ("0.9-1.5s her brows rise a little and stay up"). Give the eyes a target: what they look at, never the lens unless it is a presenter. Add a task and one tell where it helps. Intensity is a choice per scene: big when the scene is big, physically small when it is small, and the small version described positively ("her mouth stays nearly closed") rather than the big one banned. Facial-coding stacks (AU numbers) still caricature; plain physical cues with timing don't. Judge performance in motion, never on a frame. Plan the listener: reaction shots carry scenes. The full method: `seedance-directing`.
 
 ## Lines
 
@@ -50,6 +50,8 @@ Models caricature emotion words. For every performance beat write: the inner sta
 ## Coverage
 
 Singles, an over-the-shoulder, a reaction per exchange; 180° line and eyelines stated in every prompt; plan one J or L cut per scene (the next line starts under the reaction).
+
+For coverage that matches, run a coverage pass first (`seedance-directing`, section 2): one 20-30 s draft of the whole scene with every angle, judged only on angles and order; harvest one frame per shot, upscale, then generate each shot from its frame until the performance lands.
 
 ## Log
 

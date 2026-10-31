@@ -14,6 +14,7 @@
 | **Contradiction** | _the thing about them that doesn't fit: that's where they come alive_ |
 | **How they hide what they feel** | _this is their performance: a tell, a habit, a deflection_ |
 | **Voice** | _rhythm, vocabulary, what they never say_ |
+| **Performance energy** | _an archetype or the energy an actor would bring; for the prompt writer, never named in a prompt_ |
 | **Arc** | _from ___ to ____ |
 
 ## Outside (identity lock)

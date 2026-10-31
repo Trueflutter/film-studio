@@ -43,7 +43,7 @@ Audiences don't check pixels; they check physics, behaviour and attention. A sho
 
 **2. Honest lens.** Real cameras have real focal lengths, real heights and depth of field that matches them. Pick from a small lens kit (your style bible names three) and use them for what they do: wide lenses put people in places, 35-50mm feel like being in the room, 85mm and longer isolate faces and compress backgrounds. Keep the camera at a height a person could hold it. Match depth of field to the lens and light (a night interior is not deep focus at f/11).
 
-**3. Restrained camera.** The default is still. Movement is a decision with a cause: we follow someone who moves, we push in because something is being realised, we drift because the character is unmoored. One move per shot. Unmotivated drift is the most common tell in AI video.
+**3. Restrained camera.** The default is still. Movement is a decision with a cause: we follow someone who moves, we push in because something is being realised, we drift because the character is unmoored. One move per shot. Unmotivated drift is the most common tell in AI video. Give the camera a body too: a tripod, a shoulder, a dolly, an operator who reframes a beat late. A gimbal-smooth glide nobody could hold reads as generated, and so does a face front-on and centred: faces three-quarter by default.
 
 **4. Texture and wear.** Real surfaces have history: chipped paint, a mug ring on the desk, a creased collar, skin with pores, lines, a shaving nick, flushed cheeks. Describe the surface, not "realistic skin". Never use "beautiful", "stunning", "flawless": they trigger smoothing. Grain and halation go on once, in post, over everything (lever 12); baked-in grain on start frames made our videos soft (studio-tested).
 

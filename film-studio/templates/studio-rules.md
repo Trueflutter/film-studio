@@ -1,6 +1,6 @@
 # My AI video studio
 
-<!-- studio-rules v3 -->
+<!-- studio-rules v4 -->
 
 This folder is an AI video studio. Productions live in `productions/`, one folder each, created with `film new "Title"`. The **film-studio** plugin does the work: its `studio` skill routes every request.
 
@@ -10,7 +10,7 @@ I am the director: I describe, approve and give notes. You take the initiative a
 
 - **The simple loop:** brief → the script or plan for my OK → one approval card per batch → the result → my one note → the fix. No option boards unless I ask for options; when I do, show them in ONE view (one board page, or one Aristotto card with several outputs), never a feed of separate results.
 - **Use the newest, best model** for each job and check the list before defaulting: stills GPT Image 2.5 (Sunburst), video Seedance 2.5, voice the newest ElevenLabs model (Eleven v4 as of Oct 2026; the voice-audition skill picks it). Name the model you use.
-- **Push the craft without being asked.** Direct it like a top commercial director: every shot earns its place, the first second stops the scroll, the camera moves (low tracking, push-ins, orbits, whip pans), cuts land on motion, real light and texture, never a glossy AI look.
+- **Push the craft without being asked.** Direct it like a film crew, not a commercial reel: every shot earns its place, the first second stops the scroll, the camera is held by an unseen operator with a reason to move (a push-in, a follow, a late handheld reframe; orbits and whip pans only when the idea calls for them), cuts land on motion, real light and texture, never a glossy AI look.
 
 ## People on screen
 
@@ -18,6 +18,8 @@ I am the director: I describe, approve and give notes. You take the initiative a
 - **Real, not porcelain:** skin with pores and sheen, small asymmetries, grooming right for the role. Never name a city in an image prompt (the model plants its landmark); describe the street.
 - **Never hold a generated face longer than 4 seconds.** Cut to what they see, their hands, the world or a graphic, then come back.
 - **Vary angle AND distance** across split clips: close-up, zoom out, tracking, side or three-quarter. No two clips open the same way.
+- **Direct people like a film crew** (`seedance-directing`): faces three-quarter, never front-on, with a target for the eyes; the feeling named, then its physical signs and when each one happens; a block per shot (lens, camera, action, timing, sound, lock). Those prompts run long, and that is right (Aristotto takes up to 6,000 characters). In our A/B, short prompts gave front-on, lens-staring presenter shots; directed prompts gave people looking at what they react to.
+- **Keep what works.** Composition, then camera, then performance, each locked before the next. The final starts from the approved draft's frames. A take that is right except one thing gets a paint-out repair, not a re-roll.
 - **Voice first.** Make the voice (ElevenLabs, newest model), then drive the lips from it. About 2.5 to 3 words a second; one short line per talking shot (10 to 12 words in 4 to 5 s). Write it as it sounds ("A.I.", names spelled phonetically).
 - **Tighten the pace in the edit, not the voice:** `film voice tighten`.
 - **A narrator over pictures always works.** Lip sync only when the idea needs a face talking.

@@ -53,7 +53,7 @@ Video models keep a face only as well as their references show it. As soon as th
 3. **Full body:** head to shoes, standing, the whole outfit.
 4. **Three-quarter** and 5. **side** views, so clips don't all open on the same front shot.
 
-Save to `<subject>/pack/` and write `<subject>.md`: the identity record (stable traits the pictures actually show), the wardrobe record, each file with its job or media id. Every video clip of this person gets the close-up plus the pack shot nearest its framing as references. New outfits or places later are edits of the approved master ("keep this exact woman... change only her outfit to..."), never a re-description; then redo the pack.
+Save to `<subject>/pack/` and write `<subject>.md`: the identity record (stable traits the pictures actually show), the wardrobe record, each file with its job or media id. Every video clip of this person gets the close-up plus the pack shot nearest its framing as references, each with a role and a never in the prompt ("face reference only: never composition, framing, pose or expression"). When a still is used only for staging (who stands where), paint its faces white and say they are placeholders that are never rendered, so the face comes only from the close-up. New outfits or places later are edits of the approved master ("keep this exact woman... change only her outfit to..."), never a re-description; then redo the pack.
 
 ## 5. The place, from several angles
 

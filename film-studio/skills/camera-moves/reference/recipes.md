@@ -18,13 +18,13 @@ Each prompt: the reference pack (face close-up + the pack shot nearest the openi
 ```text
 STYLE: Real footage, filmed on a cinema camera, natural colour, not CGI. A multi-angle sequence with hard cuts.
 0-3s: wide aerial descending slowly toward [place], low sun between the buildings.
-3-6s: hard cut to a handheld close-up tracking [hands doing the action].
-6-9s: hard cut to a low-angle tracking shot moving beside [subject] at walking pace.
-9-12s: hard cut to a wide from the far end: [the payoff]; the camera settles and holds.
-CONSTRAINTS: hard cuts at 3, 6 and 9 s; no text, no readable signs or screens, no logos; nobody speaks; no music.
+3-5s: hard cut to a handheld close-up tracking [hands doing the action], 50mm look, the operator a beat behind them.
+5-8s: hard cut to a low-angle tracking shot moving beside [subject] at walking pace, 35mm look.
+8-12s: hard cut to a wide from the far end: [the payoff], 28mm look; the camera settles and holds.
+CONSTRAINTS: hard cuts at 3, 5 and 8 s; no camera, crew or equipment in frame; no text, no readable signs or screens, no logos; nobody speaks; no music.
 ```
 
-Every shot a different size and a different move. In the edit, use each shot **inside** its cut points.
+Every shot a different size, lens and move, and the payoff the longest. In the edit, use each shot **inside** its cut points.
 
 ## The one-take brand film (10 to 15 s, no cuts)
 
