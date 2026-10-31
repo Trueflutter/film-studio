@@ -31,6 +31,14 @@ Claude clones this repo and runs `setup/install.sh` (macOS with Homebrew, or Win
 
 Without git access, the zip works from disk: unzip it and run `bash film-studio-kit/setup/install.sh`.
 
+## Update (student on an older install)
+
+Updates install themselves once the studio is set up from this repository. A student on an older install (another link, a zip or a folder) pastes one prompt in Claude Code:
+
+```
+Update my AI video studio. Follow the instructions at https://github.com/Trueflutter/film-studio/blob/main/UPDATE.md and do every step for me. Don't change my keys, my studio notes or my productions.
+```
+
 ## Publish for a cohort (instructor)
 
 Students can't reach this private repo. Publish the kit as its own repository (private with student access, or public):
