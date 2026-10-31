@@ -36,7 +36,7 @@ Keep what works. Regenerate only what doesn't.
 ## 1. Before any video
 
 - **A script with a performance target per character.** Their archetype, or the kind of comic or dramatic energy they bring, written for you, the prompt writer. Translate it into physical behaviour in every prompt. Never put a real actor's name in a generation prompt.
-- **Cast in motion.** For anyone who appears in video, a 5 s screen test (text-to-video, a locked camera, a slow head turn from three-quarter to the lens to the other side) and frames cut from it make the face pack. Frames from video read as filmed; generated stills read as stock photography, and as a start frame they carry that look into the shot.
+- **Cast in motion.** For anyone who appears in video, a 5 s screen test at 1080p (text-to-video, a locked camera, a close-up, a slow head turn from three-quarter to the lens to the other side with a hold at each angle) and frames cut from it make the face pack. Frames from video read as filmed; generated stills read as stock photography, and as a start frame they carry that look into the shot.
 - **An asset kit per character.** A front, side and back turnaround on a neutral background (face blanked or tiny on the body views), a separate face close-up, and a short voice clip if they speak. Optional: a six-panel grid of angles to fit many views into one reference slot.
 - **Marks live on the face reference; today's state lives in the words.** A scar, mole, birthmark or tattoo goes on the face close-up, drawn at the age you want: the video copies it faithfully, mistakes included, while words alone get the model's default (a fresh red cut in 4 of 4 text-only takes in our look test, a healed line with a reference). Video makes marks stronger (a faint healed scar came back as a bright white stroke; two specks on the reference became extra scars), so imperfection stays quiet: small irregularities read as real, one dramatic mark reads as make-up, and a scar or tattoo appears only when the story needs it. Keep flour, sweat, mud and the day's makeup off the reference and write them per shot, mostly on hands, forearms and clothes. Judge a reference-to-video face on its features, not its skin finish: a plastic-skinned still gave natural skin in motion. A start frame is different: its finish carries.
 - **A reference budget per route.** Dreamina caps a generation at 12 files; EvoLink reference-to-video is reliable with 1-8 images; check `list_capabilities` on Aristotto. Merge angles into grids and drop the least useful reference before you drop a role line.
@@ -77,6 +77,7 @@ Write every shot or sequence in the block anatomy: `references/prompt-anatomy.md
 15. **Positive first, then short locks.** Describe what you want in full; negatives live only in one-line LOCKs after it ("never front-on", "her mouth stays closed").
 16. **Spell words normally.** Describe a long shout as held much longer than the others; never stretch the spelling.
 17. **One word can flip a performance.** In the Nexus case the word "nod" made an officer read as knowing and sarcastic; a single flat movement of the head with a completely blank face got the laugh. When a performance reads wrong, change the verb before anything else.
+18. **Light makes it a film.** A bright, evenly lit room reads as stock footage whatever else the prompt does. Give the scene a time of day and sources you could point to (a window, a lamp, a doorway), two colour temperatures (cool daylight against warm practicals), and exposure set for the faces with the edges of the frame left to fall dark. In our tests the same agent read as stock footage at about 50% average brightness in a bright white flat, and as a film at about 25-29% at dusk with the lamps coming on, the same as the bakery.
 
 ## 4. Repair, don't re-roll
 
@@ -100,6 +101,7 @@ Write every shot or sequence in the block anatomy: `references/prompt-anatomy.md
 - [ ] Every reference has a role and a never.
 - [ ] Every shot has OPTICS, CAMERA, ACTION, TIMING, AUDIO and a LOCK.
 - [ ] Every camera move has a rig, an operator and a cause.
+- [ ] The light has a time of day, sources you could point to and two colour temperatures; the edges of the frame fall dark.
 - [ ] Faces three-quarter unless it is a presenter.
 - [ ] Every performance beat has a state, its signs, a region and a window with an end.
 - [ ] Cuts on whole seconds; shot lengths uneven and the payoff the longest (finished in the edit).

@@ -100,6 +100,7 @@ Everything that matters shows ✓. Then tell the student, in a few short lines: 
 
 ## What's new
 
+- **1.6.5:** screen tests are close-ups at 1080p with a hold at each angle, so the cut frames are sharp; Seedance 2.5 stays the casting default (in the director's review it looked far better than Kling v4); light makes it a film (a time of day, two colour temperatures, the edges of the frame falling dark). `film gen` no longer sends a sound setting to Kling v4, and knows its price.
 - **1.6.4:** cast people in motion. A short screen test (text-to-video, a slow head turn) and frames cut from it make the face pack: frames from video read as filmed, generated stills as stock photography. Image models stay for places, products, staging and final stills.
 - **1.6.3:** people look normal but attractive, cast like a good commercial: one particular person with a few small features, never a model's symmetrical face and never scarred or worn down for the sake of "real".
 - **1.6.2:** imperfection stays quiet. Small irregularities read as real; a dramatic scar reads as make-up. Marks only when the story needs them, drawn fainter than wanted on screen (video makes them stronger); flour and dirt on hands and clothes, not the face.

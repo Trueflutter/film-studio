@@ -266,6 +266,17 @@ class TestLogic(StudioCase):
                       "--prompt-file", str(prompt), "--image", "S01_t001", "--dry-run")
         self.assertIn("https://cdn.example/still.png", out)
 
+    def test_evolink_kling_4_sends_no_sound_field_and_is_costed(self):
+        # Kling 4 on EvoLink rejects any sound field with HTTP 400; its 1080p rate is in rates.json
+        from filmkit.gen import rate_for
+        self.ok("new", "Casting")
+        prompt = self.tmp / "p.md"
+        prompt.write_text("A screen test.")
+        out = self.ok("gen", "S01", "--via", "evolink", "--model", "kling-v4-text-to-video",
+                      "--prompt-file", str(prompt), "--res", "1080p", "--no-audio", "--dry-run")
+        self.assertNotIn("generate_audio", out)
+        self.assertEqual(rate_for("evolink", "kling-v4-text-to-video", "1080p"), 0.235)
+
 
 class TestFfmpegDiscovery(unittest.TestCase):
     def test_env_then_full_build_then_path_and_paired_ffprobe(self):

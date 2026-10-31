@@ -280,9 +280,11 @@ def build_payload(via: str, model: str, prompt: str, images: list[str], image_ro
             body["video_urls"] = [_video_url(v) for v in video_refs]
         if kind == "image":  # size/quality for images go in via --param (e.g. size=1536x1024)
             return f"{base}/images/generations", {**body, "n": 1, **params}
-        # image-to-video takes its shape from the start frame (EvoLink rejects anything but "adaptive")
+        # image-to-video takes its shape from the start frame (EvoLink rejects anything but "adaptive");
+        # Kling 4 rejects any sound field (HTTP 400)
         opt = {"duration": duration, "quality": res,
-               "aspect_ratio": "adaptive" if "image-to-video" in model else aspect, "generate_audio": audio,
+               "aspect_ratio": "adaptive" if "image-to-video" in model else aspect,
+               "generate_audio": None if "kling-v4" in model else audio,
                "seed": int(seed) if seed else None}
         body.update({k: v for k, v in opt.items() if v not in (None, "")})
         return f"{base}/videos/generations", {**body, **params}
