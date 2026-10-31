@@ -18,7 +18,7 @@ The model is your camera crew, cast and art department, and it follows instructi
 | Mode | Use it when | Watch out for |
 |---|---|---|
 | **Text-to-video** (native) | B-roll, establishing, one-off characters, organic "filmed" texture; exploring | little control over identity and composition |
-| **Image-to-video** (start frame) | composition, light and identity must be exact | the still's look (and any synthetic sheen) carries into motion |
+| **Image-to-video** (start frame) | composition, light and identity must be exact | the still's look (and any synthetic sheen) carries into motion; for people, start from a frame cut from a video (a screen test) rather than a generated still |
 | **First + last frame** | a controlled transformation or move between two known states | unnatural in-between motion if the frames are far apart |
 | **Reference-to-video** (multi-reference) | identity, wardrobe, product and location held by images without pinning the first frame | references leaking their background, light or grade; say "identity only". Every mark on the face reference comes through stronger, mistakes included, so keep marks faint (its skin finish does not come through: the model draws its own skin) |
 | **Multishot** (several hard cuts in one generation) | coverage of one moment in one place with one main character | sometimes renders one continuous move instead of cuts: generate 2, keep the one that cut |

@@ -46,6 +46,8 @@ Look at the chosen picture yourself at full size first (face, hands, light direc
 
 ## 4. The person's reference pack (right after the pick)
 
+**If the person will appear in video, cast them in motion instead** (`bible-builder`, the screen test): frames cut from a short text-to-video clip read as filmed, while a generated still reads as stock photography and carries that look into an image-to-video shot. Use this section for pictures that are the final product, and when the face must match a still the director already approved.
+
 Video models keep a face only as well as their references show it. As soon as the user picks a person, make the pack as **edits of the approved picture** (same face, hair, outfit, light), in ONE batch and ONE board:
 
 1. **Face close-up:** head and shoulders filling the frame, eyes sharp. This is the one that keeps the face in video.

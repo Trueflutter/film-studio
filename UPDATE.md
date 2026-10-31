@@ -100,6 +100,7 @@ Everything that matters shows ✓. Then tell the student, in a few short lines: 
 
 ## What's new
 
+- **1.6.4:** cast people in motion. A short screen test (text-to-video, a slow head turn) and frames cut from it make the face pack: frames from video read as filmed, generated stills as stock photography. Image models stay for places, products, staging and final stills.
 - **1.6.3:** people look normal but attractive, cast like a good commercial: one particular person with a few small features, never a model's symmetrical face and never scarred or worn down for the sake of "real".
 - **1.6.2:** imperfection stays quiet. Small irregularities read as real; a dramatic scar reads as make-up. Marks only when the story needs them, drawn fainter than wanted on screen (video makes them stronger); flour and dirt on hands and clothes, not the face.
 - **1.6.1:** how people look. Scars, moles, birthmarks and tattoos go on the face picture, not the words (words alone draw a fresh wound). Today's flour, sweat or mud goes in each shot's words. Faces are cast as one particular person. Skin texture varies across the face. The EvoLink picture model is fixed.

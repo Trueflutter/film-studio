@@ -28,6 +28,7 @@ Keep what works. Regenerate only what doesn't.
 | the take is right except one element | paint-out repair (section 4) |
 | a camera move or staging the model won't follow | graybox or phone blockout as a video reference (section 4) |
 | the final lost what the draft had | harvest the approved draft's frames as start frames for the final (section 2) |
+| casting a person who will appear in video | a screen test, then cut the face pack from it (`bible-builder`) |
 | non-identity B-roll, establishing | native text-to-video, one roll; the anatomy still applies, shorter |
 | a scar, mole, birthmark or tattoo the story needs | draw it on the face reference, small and fainter than you want on screen; the words alone get the model's default, usually a fresh wound |
 | stills, start frames, character packs | `image-prompt` (the person, the pack, the place) |
@@ -35,6 +36,7 @@ Keep what works. Regenerate only what doesn't.
 ## 1. Before any video
 
 - **A script with a performance target per character.** Their archetype, or the kind of comic or dramatic energy they bring, written for you, the prompt writer. Translate it into physical behaviour in every prompt. Never put a real actor's name in a generation prompt.
+- **Cast in motion.** For anyone who appears in video, a 5 s screen test (text-to-video, a locked camera, a slow head turn from three-quarter to the lens to the other side) and frames cut from it make the face pack. Frames from video read as filmed; generated stills read as stock photography, and as a start frame they carry that look into the shot.
 - **An asset kit per character.** A front, side and back turnaround on a neutral background (face blanked or tiny on the body views), a separate face close-up, and a short voice clip if they speak. Optional: a six-panel grid of angles to fit many views into one reference slot.
 - **Marks live on the face reference; today's state lives in the words.** A scar, mole, birthmark or tattoo goes on the face close-up, drawn at the age you want: the video copies it faithfully, mistakes included, while words alone get the model's default (a fresh red cut in 4 of 4 text-only takes in our look test, a healed line with a reference). Video makes marks stronger (a faint healed scar came back as a bright white stroke; two specks on the reference became extra scars), so imperfection stays quiet: small irregularities read as real, one dramatic mark reads as make-up, and a scar or tattoo appears only when the story needs it. Keep flour, sweat, mud and the day's makeup off the reference and write them per shot, mostly on hands, forearms and clothes. Judge a reference-to-video face on its features, not its skin finish: a plastic-skinned still gave natural skin in motion. A start frame is different: its finish carries.
 - **A reference budget per route.** Dreamina caps a generation at 12 files; EvoLink reference-to-video is reliable with 1-8 images; check `list_capabilities` on Aristotto. Merge angles into grids and drop the least useful reference before you drop a role line.
