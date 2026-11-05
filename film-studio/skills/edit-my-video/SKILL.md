@@ -30,7 +30,7 @@ The director may give some of these; propose the rest in the plan:
 
 1. `film assemble` the base edit (picture + their voice) from the plan; it keeps B-roll inside its shots and lands cuts on exact frames.
 2. Generate B-roll on Aristotto (one card per batch), log with `film take add`, then reassemble.
-3. One HyperFrames composition: the base edit as the bottom track, every graphic and caption on top, landing on its word from the transcript. Use the `hyperframes` skills (`/talking-head-recut` is the closest workflow) and the `graphics` skill's rules.
+3. One HyperFrames composition: the base edit as the bottom track, every graphic and caption on top, landing on its word from the transcript. Use `/hyperframes` (its guidance on graphics over footage) and the `graphics` skill's rules.
 4. Snapshots at every cut, every graphic and the first second; fix the worst problems before the director sees anything.
 5. Mix and render; check loudness (-14 LUFS for social) and that every word still transcribes.
 

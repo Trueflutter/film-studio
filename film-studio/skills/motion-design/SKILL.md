@@ -36,7 +36,7 @@ Show the plan on one board or as one table. Nothing is built before the OK.
 
 ## 3. Build
 
-1. `SPEC.md` from the plan (template in `reference/plan-and-spec.md`), then the HyperFrames skills do the framework work: `/talking-head-recut` for graphics over the presenter, `/motion-graphics` or `/faceless-explainer` for full-screen scenes, `/slideshow` for slide inserts, `/hyperframes-registry` **before hand-building** any chart, map, terminal, transition or effect. Search it once per graphic; if nothing fits the exact idea (a split bar, a payment timeline), hand-build it with the presets and note "built by hand" in the spec.
+1. `SPEC.md` from the plan (template in `reference/plan-and-spec.md`), then the HyperFrames skills do the framework work: `/hyperframes` for graphics over the presenter and for full-screen scenes (its explainer and vertical-clip guides), `/slideshow` for slide inserts, `/hyperframes-registry` **before hand-building** any chart, map, terminal, transition or effect. Search it once per graphic; if nothing fits the exact idea (a split bar, a payment timeline), hand-build it with the presets and note "built by hand" in the spec.
 2. One composition per section of 30 to 60 s for long pieces (render and check each, then join), one composition for short ones. The base edit (presenter clips + stills + B-roll + voice) is the bottom track; never retime it.
 3. Every graphic arrives **0.1 s before its word** and exits before the next one arrives. Motion numbers are in `reference/motion.md`: use them, don't improvise easing.
 4. The house look and the banned list are in `reference/look.md`. Read it before writing any CSS.

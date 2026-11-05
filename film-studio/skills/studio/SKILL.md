@@ -118,6 +118,7 @@ You can look at images: boards, reference packs, frames and contact sheets (`fil
 | dialogue, voices, lip sync, performance capture | `performance-voice` |
 | real footage transformed, render-to-real, compositing | `hybrid-footage` |
 | sound plan, effects, music, the mix | `sound-design` |
+| learn from an inspiration video: reverse engineer it, how did they do this effect, make mine like this | `study-a-reference` |
 | cut, pacing, fixes in post, review a cut, tear down a reference, cutdowns and other formats | `editor` |
 | hooks, reels, series formats, scenario videos, tutorials, a week of content | `story-engine` for the idea, then the pipeline; handbook 18 |
 | end cards, titles, supers, lower thirds, on-screen UI, motion graphics | `graphics` |

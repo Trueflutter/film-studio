@@ -38,7 +38,7 @@ Before sending a shot back to `take-doctor` for a new generation, try: trim · r
 
 ## Cut it like a reference
 
-When the director names a film or ad to learn from: `film teardown <file>` gives its cut list, shot lengths, holds and bursts, and one frame per shot. Write the grammar up from the sheets (shot sizes in order, camera moves, transitions, how text enters and leaves, where the holds fall) and apply it to this cut. Take the grammar, never the content. Use a file the director is allowed to have and keep it private.
+For a full study of a reference (effects, motion, grade, sound) use `study-a-reference`. For the cut grammar alone, when the director names a film or ad to learn from: `film teardown <file>` gives its cut list, shot lengths, holds and bursts, and one frame per shot. Write the grammar up from the sheets (shot sizes in order, camera moves, transitions, how text enters and leaves, where the holds fall) and apply it to this cut. Take the grammar, never the content. Use a file the director is allowed to have and keep it private.
 
 ## Short-form, cutdowns and other formats
 
