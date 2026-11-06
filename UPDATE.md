@@ -101,6 +101,7 @@ Everything that matters shows ✓. Then tell the student, in a few short lines: 
 
 ## What's new
 
+- **1.6.7:** stills on GPT Image 2.6 (Sunburst): on EvoLink now (about $0.19 an image at 2K), on Aristotto as soon as it lists it. The image skill writes prompts the way 2.6 reads them (a real photograph, light as a time of day and a direction, film grain, no retouching) and spells out named lighting setups such as Rembrandt. Studio rules v5.
 - **1.6.6:** the `study-a-reference` skill. Give Claude an inspiration video and say "reverse engineer this": it measures every cut, move, transition, colour and sound hit with HyperFrames' free `measure` tools, writes a recipe, and proves it with a short piece in your own brand. The technique, never the content. HyperFrames updates with the kit; no HeyGen account or Pro needed.
 - **1.6.5:** screen tests are close-ups at 1080p with a hold at each angle, so the cut frames are sharp; Seedance 2.5 stays the casting default (in the director's review it looked far better than Kling v4); light makes it a film (a time of day, two colour temperatures, the edges of the frame falling dark). `film gen` no longer sends a sound setting to Kling v4, and knows its price.
 - **1.6.4:** cast people in motion. A short screen test (text-to-video, a slow head turn) and frames cut from it make the face pack: frames from video read as filmed, generated stills as stock photography. Image models stay for places, products, staging and final stills.

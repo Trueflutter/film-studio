@@ -228,7 +228,7 @@ def rate_for(via: str, model: str, res: str) -> float | None:
 
 def default_image_model(via: str) -> str:
     """The still-image model `film gen --image-gen` uses when --model is left out: rates.json
-    "default_image_model" (GPT Image 2.5 where the provider carries it)."""
+    "default_image_model" (GPT Image 2.6 where the provider carries it)."""
     rates_file = Path(__file__).with_name("rates.json")
     return json.loads(rates_file.read_text()).get("default_image_model", {}).get(via, "") if rates_file.exists() else ""
 

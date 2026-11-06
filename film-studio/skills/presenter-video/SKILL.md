@@ -17,7 +17,7 @@ The recipe that works: a short, spoken script → one character image → the vo
 
 ## 2. Character, then the place (one board each)
 
-- Use the `image-prompt` skill: four options on one board (through the director's ChatGPT when connected), the pick made as a **GPT Image 2.5 Sunburst 2K** master on Aristotto.
+- Use the `image-prompt` skill: four options on one board (through the director's ChatGPT when connected), the pick made as a **GPT Image 2.6 Sunburst 2K** master (Aristotto once it lists 2.6, EvoLink until then).
 - Then the **reference pack** as edits of the master: face close-up (the one that keeps the face in video), mid shot, full body, three-quarter, side. Notes in `02_design/<name>.md`. Next episodes: same face, new outfit by editing the master, never by re-describing her.
 - The place: where she talks plus the B-roll places, each from several angles of the same space. Never name the city in an image prompt (landmark clichés).
 

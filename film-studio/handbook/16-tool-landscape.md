@@ -34,7 +34,7 @@ AI tools change monthly: between June and September 2026 the leaderboard top thr
 
 | Job | Recommended | Alternatives | Notes | Confidence |
 |---|---|---|---|---|
-| Identity-locked stills, wardrobe, edits | GPT Image 2 (Apr 2026); GPT Image 2.5 shipped 8 Sep 2026 (`flare` fast, `sunburst` precise) | Nano Banana 2 / Pro | Up to 16 inputs. Best on wardrobe (studio-tested); edits soften skin, locations skew yellow. 2.5 claims better light, texture and reference fidelity at the same price: test it live | reported |
+| Identity-locked stills, wardrobe, edits | GPT Image 2 (Apr 2026); GPT Image 2.5 shipped 8 Sep 2026; **GPT Image 2.6** (Nov 2026, `flare` fast, `sunburst` precise) is the default: on EvoLink 5 Nov, quality up to `max`, 2K/4K, about $0.19 at xhigh 2K; Aristotto not yet | Nano Banana 2 / Pro | Up to 16 inputs. Best on wardrobe (studio-tested); edits soften skin, locations skew yellow. 2.5 claims better light, texture and reference fidelity at the same price: test it live | reported |
 | Faces, multi-turn edits | Nano Banana 2 (`gemini-3.1-flash-image`, GA 28 May 2026) | Nano Banana Pro for 4K and complex frames | Up to 14 inputs, 6 at high fidelity; aspect 1:8 to 8:1; takes video as input. About $0.067 per 1K image, Pro $0.134 | verified Sep 2026 (specs); reported (prices) |
 | Look development, mood | Midjourney V8.2 (default since 24 Jul 2026) | Seedream 5, FLUX.2 | Edit Model in public test since 27 Aug 2026: up to 4 references, replaces Omni and Character Reference. No official API (verify before cohort). Not for identity lock | reported |
 | Creatures, style range | Seedream 5.0 Pro (12 Aug 2026) | | Up to 14 references; about $0.045 per image | reported |

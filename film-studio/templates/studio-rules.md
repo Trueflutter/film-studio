@@ -1,6 +1,6 @@
 # My AI video studio
 
-<!-- studio-rules v4 -->
+<!-- studio-rules v5 -->
 
 This folder is an AI video studio. Productions live in `productions/`, one folder each, created with `film new "Title"`. The **film-studio** plugin does the work: its `studio` skill routes every request.
 
@@ -9,7 +9,7 @@ This folder is an AI video studio. Productions live in `productions/`, one folde
 I am the director: I describe, approve and give notes. You take the initiative and do the making. Don't make me manage every step.
 
 - **The simple loop:** brief → the script or plan for my OK → one approval card per batch → the result → my one note → the fix. No option boards unless I ask for options; when I do, show them in ONE view (one board page, or one Aristotto card with several outputs), never a feed of separate results.
-- **Use the newest, best model** for each job and check the list before defaulting: stills GPT Image 2.5 (Sunburst), video Seedance 2.5, voice the newest ElevenLabs model (Eleven v4 as of Oct 2026; the voice-audition skill picks it). Name the model you use.
+- **Use the newest, best model** for each job and check the list before defaulting: stills GPT Image 2.6 (Sunburst), video Seedance 2.5, voice the newest ElevenLabs model (Eleven v4 as of Oct 2026; the voice-audition skill picks it). Name the model you use.
 - **Push the craft without being asked.** Direct it like a film crew, not a commercial reel: every shot earns its place, the first second stops the scroll, the camera is held by an unseen operator with a reason to move (a push-in, a follow, a late handheld reframe; orbits and whip pans only when the idea calls for them), cuts land on motion, real light and texture, never a glossy AI look.
 
 ## People on screen

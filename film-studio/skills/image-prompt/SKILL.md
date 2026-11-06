@@ -3,7 +3,7 @@ name: image-prompt
 description: Use when the user wants a realistic image of a person, character, presenter, product shot, location or start frame for a video; asks for a portrait, headshot, character, "make an image", "a still", a thumbnail or a keyframe; wants to fix an image that looks AI, waxy, glossy or fake; or wants a character kept the same across scenes or outfits. Also when they ask to connect or set up ChatGPT image generation.
 ---
 
-# Image prompt: believable pictures with GPT Image 2.5
+# Image prompt: believable pictures with GPT Image 2.6
 
 Real-looking people come from a **coherent photographic situation and specific visible details**, not from words like "8K", "ultra-realistic" or "not AI". Your job: turn the user's few lines into one strong prompt, make a small batch, show it on **one board**, and repair the chosen picture one problem at a time.
 
@@ -36,7 +36,7 @@ python3 <skill>/scripts/images.py gen <project>/images/<subject>/prompt.txt <pro
 
 It opens `board.html` with all four. If `check` fails, run the setup in `reference/setup-chatgpt.md`.
 
-**Route B: Aristotto (the master for video).** When the picture will be animated or shown large: `gpt-image-2.5`, variant `sunburst`, 2K, 4 outputs in ONE quote, same prompt. Download the outputs into the same folder and run `images.py board <folder>`. Never show four separate result cards.
+**Route B: Aristotto (the master for video).** When the picture will be animated or shown large: the newest GPT Image on Aristotto (check `list_capabilities`: `gpt-image-2.6` the moment it is listed, until then `gpt-image-2.5`), variant `sunburst`, 2K, 4 outputs in ONE quote, same prompt. When Aristotto has no 2.6 yet and the master matters, make it on EvoLink: `film gen <SHOT> --via evolink --image-gen --param size=2:3 --param resolution=2K --param quality=xhigh --cost 0.19` (the default model is `gpt-image-2.6-sunburst`, about $0.19 an image). Download the outputs into the same folder and run `images.py board <folder>`. Never show four separate result cards.
 
 Then ask one thing: "Which number?"
 
@@ -67,7 +67,9 @@ Make the location once, then the **same space** from 3 or 4 camera positions (wi
 
 ## Rules
 
-- Newest model only: GPT Image 2.5 (Sunburst for masters, ChatGPT/Flare for exploring).
+- Newest model only: GPT Image 2.6 (Sunburst for masters, ChatGPT/Flare for exploring).
+- Prompting GPT Image 2.6 (OpenAI's guide, and our first tests): open with "A photorealistic candid photograph" or "a real photograph, not an advert"; describe the light as a time of day and where it comes from, not mood words; end with "subtle film grain, natural colour balance" and rule out skin smoothing, retouching, heavy colour grading and a glossy finish. Camera and lens words are hints, not physics. Quality `xhigh` at 2K for anything shown large; `medium` is enough to explore. In our first test its skin read as photographed at full size, where 2.5's read waxy. For edits, say what changes and repeat what must stay, every time.
+- Named lighting setups need the geometry spelled out: "Rembrandt lighting" alone gave an evenly lit headshot. Say where the light sits, which way the face turns, which cheek falls into shadow and what the light does there (for Rembrandt, a small triangle of light under the shadowed eye).
 - Fictional adults unless the user owns the rights to the face. Never present a synthetic person as a real customer or witness.
 - Never generate text, logos or UI that must be right; add them later in code.
 - The user signs in to ChatGPT themselves. Never ask for, read or print a password, token or key.
