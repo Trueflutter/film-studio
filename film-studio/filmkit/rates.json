@@ -17,7 +17,11 @@
     "evolink:seedance-2.5:1080p": 0.528,
     "evolink:kling-v4:720p": 0.157,
     "evolink:kling-v4:1080p": 0.235,
-    "fal:fal-ai/minimax/h3-max:768p": 0.08
+    "fal:fal-ai/minimax/h3-max:768p": 0.08,
+    "evolink:gemini-omni-1.2:360p": 0.023,
+    "evolink:gemini-omni-1.2:720p": 0.068,
+    "evolink:gemini-omni-1.2:1080p": 0.1,
+    "evolink:gemini-omni-1.2:4k": 0.2
   },
   "_notes": {
     "ark:seedance-2-5": "BytePlus list prices (reported Sep 2026 via aggregator; ByteDance's 57%/77% savings claims reproduce exactly from them), 5s clip without video input. Draft (480p) → final (1080p) from the draft task id: a 5s experiment costs ~$0.50 vs ~$2.85 at 1080p.",
@@ -26,7 +30,8 @@
     "evolink:kling-v4": "[published] EvoLink Kling 4 page, 31 Oct 2026: text-, image- and reference-to-video; 3-30 s; 720p or 1080p; no sound field (HTTP 400 if sent, so film gen drops it); prompts up to 2,500 characters.",
     "fal:fal-ai/minimax/h3-max": "fal launch price, Sep 2026. Id is illustrative: copy the exact endpoint id from the fal model page.",
     "reference, not used for lookup": "Veo 3.1 (Gemini API): Lite ~$0.05/s, Fast ~$0.10/s, Standard ~$0.40/s. Kling 3.0 API 1080p ~$0.112/s (~$0.168/s with audio). Runway Gen-4.5 ~$0.12/s. Topaz video upscale via fal ~$0.08/s at 1080p. Images: GPT Image 2.6 Sunburst is the default still model (`default_image_model`), priced by tokens on EvoLink: about $0.19 at quality=xhigh resolution=2K, about $0.03 at low 1K; `film gen` takes --cost 0.19 for it. GPT Image 2.5 is the older default; gpt-image-2 ~$0.03-0.08, Nano Banana Pro ~$0.134.",
-    "per_credit": "USD per credit on credit platforms, used by `film take add --credits`. aristotto: the course discount code (in the portal) gives 70% off the first month's subscription (Signature $59 -> $17.70 for 60,000 credits = $0.000295; Virtuoso $29 -> $8.70 for 25,000 = $0.000348). Full price from month two ($0.00098-0.00116). Measured 2026-10-11: gpt-image-2 still 1K 200 cr; Seedance 2.5 image-to-video 4 s 480p 491 cr, 12 s 480p 1,463 cr, 12 s 720p 3,148 cr; text-to-video 25 s 720p with audio 6,539 cr."
+    "per_credit": "USD per credit on credit platforms, used by `film take add --credits`. aristotto: the course discount code (in the portal) gives 70% off the first month's subscription (Signature $59 -> $17.70 for 60,000 credits = $0.000295; Virtuoso $29 -> $8.70 for 25,000 = $0.000348). Full price from month two ($0.00098-0.00116). Measured 2026-10-11: gpt-image-2 still 1K 200 cr; Seedance 2.5 image-to-video 4 s 480p 491 cr, 12 s 480p 1,463 cr, 12 s 720p 3,148 cr; text-to-video 25 s 720p with audio 6,539 cr.",
+    "evolink:gemini-omni-1.2": "[listed] EvoLink, 2026-11-05: billed by tokens; video output $0.011 per 1K tokens, 5,792 tokens/s at 720p (360p a third, 1080p x1.5, 4k x3) plus a few cents of input and thinking tokens. Sound always on. Extend bills only the appended seconds (the input clip counts as cheap input tokens)."
   },
   "per_credit": {
     "aristotto": 0.0003

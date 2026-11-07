@@ -266,6 +266,17 @@ class TestLogic(StudioCase):
                       "--prompt-file", str(prompt), "--image", "S01_t001", "--dry-run")
         self.assertIn("https://cdn.example/still.png", out)
 
+    def test_evolink_gemini_omni_uses_resolution_and_no_sound_field(self):
+        from filmkit.gen import rate_for
+        self.ok("new", "Omni")
+        prompt = self.tmp / "p.md"; prompt.write_text("A screen test.")
+        out = self.ok("gen", "S01", "--via", "evolink", "--model", "gemini-omni-1.2-flash-text-to-video",
+                      "--prompt-file", str(prompt), "--res", "1080p", "--duration", "8", "--dry-run")
+        self.assertIn('"resolution": "1080p"', out)
+        self.assertNotIn("generate_audio", out)
+        self.assertNotIn('"quality"', out)
+        self.assertEqual(rate_for("evolink", "gemini-omni-1.2-flash-video-extend", "720p"), 0.068)
+
     def test_evolink_kling_4_sends_no_sound_field_and_is_costed(self):
         # Kling 4 on EvoLink rejects any sound field with HTTP 400; its 1080p rate is in rates.json
         from filmkit.gen import rate_for

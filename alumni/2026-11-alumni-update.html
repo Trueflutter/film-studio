@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Alumni update: AI video studio, November 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  @page { size: A4; margin: 0; }
+  :root { --obsidian:#0D0D0D; --ink:#1A1A18; --ink2:#2E2D29; --muted:#5E5A53; --sand:#E8E3D9; --bone:#FCFAF7; --emerald:#10B981; --clay:#D4A373; --line:rgba(26,26,24,.12); }
+  * { box-sizing: border-box; }
+  html, body { margin:0; background: var(--bone); color: var(--ink); }
+  body { font: 9.3pt/1.42 'Lora', Georgia, serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .page { width:210mm; height:297mm; padding:13mm 16mm 16mm; position:relative; overflow:hidden; page-break-after: always; }
+  .page:last-child { page-break-after: auto; }
+  .mono { font-family:'DM Mono', monospace; font-size:7.6pt; letter-spacing:.14em; text-transform:uppercase; }
+  .eyebrow { color: var(--emerald); display:flex; align-items:center; gap:10px; }
+  .eyebrow::before { content:""; width:28px; height:1px; background: var(--emerald); }
+  h1, h2, h3 { font-family:'Inter Tight', system-ui, sans-serif; font-weight:500; letter-spacing:-.02em; margin:0; color: var(--ink); }
+  h1 { font-size:24pt; line-height:1.05; margin:8px 0 7px; }
+  h2 { font-size:12.6pt; line-height:1.15; margin:0 0 5px; }
+  h3 { font-size:11pt; margin:0 0 4px; font-weight:600; }
+  p { margin:0 0 8px; }
+  .lede { font-size:10.2pt; color: var(--ink2); max-width:160mm; }
+  .head { border-bottom:1px solid var(--line); padding-bottom:8px; margin-bottom:10px; }
+  .brand { position:absolute; top:13mm; right:16mm; color: var(--muted); }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .card { background: var(--sand); padding:10px 12px 6px; border-radius:2px; }
+  .card .num { color: var(--muted); margin-bottom:6px; }
+  .card ul { margin:4px 0 0; padding-left:16px; }
+  .card li { margin:0 0 2px; }
+  table { width:100%; border-collapse:collapse; font-family:'Inter Tight', sans-serif; font-size:9.2pt; margin-top:6px; }
+  th, td { text-align:left; padding:3.5px 8px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { font-weight:600; color: var(--muted); font-size:8pt; text-transform:uppercase; letter-spacing:.06em; }
+  td.hl { color: var(--ink); font-weight:600; }
+  .steps { counter-reset: s; margin:6px 0 0; padding:0; list-style:none; }
+  .steps li { counter-increment: s; position:relative; padding-left:24px; margin:0 0 4px; }
+  .steps li::before { content: counter(s); position:absolute; left:0; top:0; width:18px; height:18px; border-radius:50%; background: var(--obsidian); color: var(--bone); font:600 8.5pt/18px 'Inter Tight', sans-serif; text-align:center; }
+  .note { font-size:9pt; color: var(--muted); }
+  .link { font-family:'DM Mono', monospace; font-size:9.6pt; color: var(--ink); background: var(--sand); padding:2px 6px; border-radius:2px; }
+  .claude { background: var(--obsidian); color: #EDEAE3; padding:11px 14px 9px; border-radius:2px; margin-top:9px; }
+  .claude h2 { color: var(--bone); }
+  .claude .mono { color: var(--clay); }
+  .claude pre { white-space:pre-wrap; font-family:'DM Mono', monospace; font-size:7.9pt; line-height:1.42; margin:8px 0 0; color:#F5F2EC; }
+  .foot { position:absolute; bottom:7mm; left:16mm; right:16mm; display:flex; justify-content:space-between; color: var(--muted); }
+  .tag { display:inline-block; font-family:'DM Mono', monospace; font-size:7.4pt; letter-spacing:.08em; text-transform:uppercase; color: var(--emerald); margin-bottom:4px; }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1: what changed -->
+<section class="page">
+  <div class="brand mono">Saqr Academy</div>
+  <div class="head">
+    <div class="eyebrow mono">Alumni update · AI video studio · November 2026</div>
+    <h1>The two biggest changes in AI video this month</h1>
+    <p class="lede">In the last two weeks two releases changed how we make AI films. We tested both in our own studio before telling you. Your studio kit now uses them by default: update it once (page 2) and your Claude does the rest.</p>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="num mono">Change 1 · Pictures</div>
+      <h2>GPT Image 2.6 is the new default for images</h2>
+      <p>OpenAI's new image model (the "Sunburst" version) is a clear step up from 2.5. Skin, hair and light now read as photographed at full size, and the waxy, plastic look is gone.</p>
+      <ul>
+        <li>Use it for places, products, thumbnails, posters and final stills.</li>
+        <li>About <b>$0.19 an image</b> at 2K on EvoLink.</li>
+        <li>Prompt it like a photographer: "a real photograph", the time of day and where the light comes from, "subtle film grain, natural colour", no retouching.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="num mono">Change 2 · Video</div>
+      <h2>Gemini Omni is the new default for video</h2>
+      <p>Google's new video model, Gemini Omni 1.2 Flash, is cheaper, quick to generate, and in our tests gave the most natural faces we have made, straight from words. Seedance 2.5 stays as the backup.</p>
+      <ul>
+        <li>About <b>a fifth of Seedance's price</b> per second.</li>
+        <li><b>Extend:</b> continue a clip with the same person, clothes and light. No reference photo needed.</li>
+        <li><b>Edit:</b> fix one thing in a take instead of starting again.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2 style="margin-top:11px">The new way to make a scene with people</h2>
+  <ol class="steps">
+    <li><b>Cast in motion.</b> Make a 5-second "screen test" of your person on Gemini Omni: a close-up, a slow head turn. Don't start from a generated photo: people cast in video look filmed, people from a still look like stock photography.</li>
+    <li><b>Grow the scene with extend.</b> Continue the screen test or any shot by 3 to 10 seconds at a time. Tell Claude where the clip ends ("she has just turned to her right") so the next part keeps the same direction.</li>
+    <li><b>New place, new shot.</b> Extend only adds to the end. For a new location, Claude uses frames from the screen test as references so it is still the same person.</li>
+    <li><b>Fix, don't re-roll.</b> One short instruction ("remove the cup from the table, keep everything else the same") repairs a take.</li>
+  </ol>
+
+  <h2 style="margin-top:9px">What it costs (EvoLink, November 2026)</h2>
+  <table>
+    <tr><th>Job</th><th>Gemini Omni 1.2 Flash</th><th>Seedance 2.5 (backup)</th></tr>
+    <tr><td>5-second shot, 720p</td><td class="hl">about $0.34</td><td>about $1.47</td></tr>
+    <tr><td>Per second, 720p</td><td class="hl">about $0.07</td><td>about $0.29</td></tr>
+    <tr><td>Add 5 seconds to a clip (extend)</td><td class="hl">about $0.34</td><td>not available</td></tr>
+    <tr><td>One still image, 2K (GPT Image 2.6)</td><td colspan="2" class="hl">about $0.19</td></tr>
+  </table>
+  <p class="note" style="margin-top:8px">Good to know: Omni makes sound with every clip, so say what you want to hear (and "no music" if you don't want it). It delivers 720p today; Claude can upscale a final. Clips run up to 15 seconds per generation; extend takes them longer. When Omni is busy, or a shot needs Seedance's strengths (up to 30 seconds, native 1080p, lip sync to a voice file), Claude switches to Seedance and tells you.</p>
+
+  <div class="foot mono"><span>Saqr Academy · AI Filmmaking alumni</span><span>1 / 2</span></div>
+</section>
+
+<!-- PAGE 2: update -->
+<section class="page">
+  <div class="brand mono">Saqr Academy</div>
+  <div class="head">
+    <div class="eyebrow mono">Update your studio · about 5 minutes</div>
+    <h1 style="font-size:22pt">Update your studio kit</h1>
+    <p class="lede">Your studio kit lives on GitHub. Updating it gives your Claude both new defaults, the new Gemini Omni directing skill, and the prices above. Your keys, notes and productions are never touched.</p>
+  </div>
+
+  <h3>The studio kit (save this link)</h3>
+  <p><span class="link">https://github.com/Trueflutter/film-studio</span></p>
+  <p class="note">Update guide inside it: <span class="link">https://github.com/Trueflutter/film-studio/blob/main/UPDATE.md</span></p>
+
+  <h3 style="margin-top:12px">How to update</h3>
+  <ol class="steps">
+    <li>Open Claude Code in your studio folder (usually <b>Documents/my-studio</b>).</li>
+    <li>Give Claude this PDF and say <b>"Do what this says."</b> Or copy the box below and paste it in.</li>
+    <li>When Claude asks, quit Claude Code and open it again in your studio folder. That loads the new version.</li>
+    <li>Check you have EvoLink credit: Gemini Omni 1.2 runs on EvoLink today. If you use Aristotto, it offers Omni 1.1 now and 1.2 when it arrives; Claude picks the newest.</li>
+  </ol>
+
+  <div class="claude">
+    <div class="mono">For Claude · paste this, or read it from this PDF</div>
+    <h2>Instructions for Claude</h2>
+<pre>The student wants their AI video studio updated to the latest Saqr Academy
+studio kit, version 1.6.8 or newer.
+
+1. Follow the update guide exactly:
+   https://github.com/Trueflutter/film-studio/blob/main/UPDATE.md
+   The kit's only home is https://github.com/Trueflutter/film-studio
+   (marketplace "saqr-film", plugin "film-studio"). If it was installed
+   from anywhere else, replace it as the guide says.
+2. Never read, print, change or ask for their API keys. Never overwrite
+   .env, .mcp.json, anything under "## My studio notes" in CLAUDE.md, or
+   anything in productions/.
+3. Check the result: `claude plugin list` shows film-studio 1.6.8 or newer;
+   the plugin has the skill "omni-directing"; the studio rules in CLAUDE.md
+   say "studio-rules v6"; `film doctor` passes.
+4. From now on, in this studio:
+   - Video: Gemini Omni 1.2 Flash by default, through the omni-directing
+     skill (screen test to cast people, extend to continue a clip and keep
+     the screen direction, edit to fix a take). Seedance 2.5 is the
+     fallback, through seedance-directing.
+   - Still images: GPT Image 2.6 Sunburst (EvoLink gpt-image-2.6-sunburst,
+     2K, quality xhigh), through the image-prompt skill.
+   - Show the cost before anything is generated.
+5. Tell the student in a few short lines: the version they are on now,
+   the two new defaults, and that their keys, notes and productions are
+   exactly as they were. Ask them to restart Claude Code if needed.</pre>
+  </div>
+
+  <h3 style="margin-top:14px">Try it after the update</h3>
+  <p>Ask your Claude: <i>"Cast a woman in her thirties for a property ad: do a Gemini Omni screen test, then extend it so she walks into the living room."</i> It costs well under a dollar and shows you both changes at once.</p>
+
+  <div class="foot mono"><span>Questions: reply in the alumni group</span><span>2 / 2</span></div>
+</section>
+</body>
+</html>

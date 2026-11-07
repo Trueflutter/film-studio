@@ -1,6 +1,6 @@
 ---
 name: seedance-directing
-description: Use when writing a Seedance 2.5 video prompt (or any reference-driven video model) for a shot with people, a face, acting, dialogue, an action beat or several cuts in one generation; when clips feel "AI", lifeless, stiff, mugging, floaty, glossy or evenly paced; when a take is right except for one element; when the final lost what the draft had; or when building a scene from several angles. The PJ Ace / Chris Capel "Nexus" method, adapted to our routes.
+description: The fallback to omni-directing (Gemini Omni is the default video model). Use when writing a Seedance 2.5 video prompt (or any reference-driven video model) for a shot with people, a face, acting, dialogue, an action beat or several cuts in one generation; when clips feel "AI", lifeless, stiff, mugging, floaty, glossy or evenly paced; when a take is right except for one element; when the final lost what the draft had; or when building a scene from several angles. The PJ Ace / Chris Capel "Nexus" method, adapted to our routes.
 ---
 
 # Seedance directing: direct it, don't roll the dice

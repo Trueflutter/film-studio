@@ -60,6 +60,7 @@ AI tools change monthly: between June and September 2026 the leaderboard top thr
 
 | Job | First choice | Alternatives | Why | Confidence |
 |---|---|---|---|---|
+| **Default for people, scenes and continuing a clip** | **Gemini Omni 1.2 Flash** (GA 5 Nov 2026; EvoLink `gemini-omni-1.2-flash-*`, Aristotto lists 1.1 until 1.2 arrives) | Seedance 2.5 (fallback: over 15 s, native 1080p, audio references) | Studio-tested 7 Nov 2026: the most natural faces we have generated, straight from text; extend continued a clip seamlessly with the same person and no reference; about $0.07/s at 720p, a fifth of Seedance. 1080p requests returned 720p; reference-to-video was "service busy" on launch day. See `omni-directing` | tested |
 | Photoreal close-ups | Seedance 2.5 at 1080p via Draft → Final | Seedance 2.0 4K; Veo 3.1 Standard; Gemini Omni 1.1 1080p; MiniMax H3 2K | Faces expose the 720p ceiling; Kling close-ups show eye flicker (studio-tested) | reported: A/B on day 1 |
 | Dialogue, lip sync | Seedance 2.0/2.5 with the voice track as an audio reference | MiniMax H3 (audio refs, 11 languages incl. Arabic, claimed); Kling 3.0 (max 12-15 words per 5 s); Gemini Omni (no audio reference) | Your cast voice drives the mouth | studio-tested |
 | Action, physics | Kling 3.0 Pro/4K with motion control | Gemini Omni 1.1; Wan 3.0; Veo 3.1 | Seedance 2.5 blurs in fast motion | reported |

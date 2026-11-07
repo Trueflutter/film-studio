@@ -280,6 +280,15 @@ def build_payload(via: str, model: str, prompt: str, images: list[str], image_ro
             body["video_urls"] = [_video_url(v) for v in video_refs]
         if kind == "image":  # size/quality for images go in via --param (e.g. size=1536x1024)
             return f"{base}/images/generations", {**body, "n": 1, **params}
+        if "gemini-omni" in model:
+            # Gemini Omni: `resolution` (not `quality`), sound always on (no audio field), and
+            # edit / extend / upscale follow the input video's shape and length.
+            follows_input = any(m in model for m in ("video-edit", "video-extend", "video-upscale"))
+            opt = {"duration": None if ("video-edit" in model or "video-upscale" in model) else duration,
+                   "resolution": res, "aspect_ratio": "auto" if follows_input else aspect,
+                   "seed": int(seed) if seed else None}
+            body.update({k: v for k, v in opt.items() if v not in (None, "")})
+            return f"{base}/videos/generations", {**body, **params}
         # image-to-video takes its shape from the start frame (EvoLink rejects anything but "adaptive");
         # Kling 4 rejects any sound field (HTTP 400)
         opt = {"duration": duration, "quality": res,
@@ -358,6 +367,8 @@ def generate(prod: Production, shot: str, via: str, model: str, prompt_file: str
     payload_images = [_hosted_ref(prod, i, not dry_run) for i in images] if via == "evolink" else images
     if via == "evolink":
         audio_refs = [_hosted_ref(prod, a, not dry_run) for a in audio_refs or []]
+        # a take id or local clip becomes a link (Gemini Omni extend/edit/upscale, reference videos)
+        video_refs = [_hosted_ref(prod, v, not dry_run) for v in video_refs or []]
     url, body = build_payload(via, model, prompt, payload_images, image_role, duration, res, aspect,
                               audio, seed, draft, draft_task, dict(extra), kind, audio_refs, audio_role,
                               video_refs)
