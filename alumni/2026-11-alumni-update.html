@@ -122,7 +122,7 @@
     <tr><td>Add 5 seconds to a clip (extend)</td><td class="num">about $0.34</td><td class="num">not available</td></tr>
     <tr><td>One still image, 2K (GPT Image 2.6)</td><td class="num">about $0.19</td><td class="num">about $0.19</td></tr>
   </table>
-  <p class="note">Good to know: Omni makes sound with every clip, so say what you want to hear (and "no music" if you don't want it). It delivers 720p today; Claude can upscale a final. Clips run up to 15 seconds per generation; extend takes them longer. When Omni is busy, or a shot needs Seedance's strengths (up to 30 seconds, native 1080p, lip sync to a voice file), Claude switches to Seedance and tells you.</p>
+  <p class="note">Good to know: Omni makes sound with every clip, so say what you want to hear (and "no music" if you don't want it). It delivers 720p whatever you ask for; Claude can upscale a final to 1080p. Clips run up to 15 seconds per generation; extend takes them longer. When Omni is busy, or a shot needs Seedance's strengths (up to 30 seconds, native 1080p, lip sync to a voice file), Claude switches to Seedance and tells you.</p>
 
   <div class="foot"><span>Saqr Academy, AI Filmmaking alumni</span><span>1 of 2</span></div>
 </section>
@@ -159,11 +159,11 @@
   <div class="panel">
     <h2>Instructions for Claude</h2>
     <div class="sub">Paste this into Claude Code, or give Claude this PDF.</div>
-    <p>The student wants their AI video studio updated to the latest Saqr Academy studio kit, version 1.6.8 or newer.</p>
+    <p>The student wants their AI video studio updated to the latest Saqr Academy studio kit, version 1.6.9 or newer.</p>
     <ol>
       <li><b>Follow the update guide exactly:</b> https://github.com/Trueflutter/film-studio/blob/main/UPDATE.md. The kit's only home is https://github.com/Trueflutter/film-studio (marketplace "saqr-film", plugin "film-studio"). If it was installed from anywhere else, replace it as the guide says.</li>
       <li><b>Never</b> read, print, change or ask for their API keys. Never overwrite .env, .mcp.json, anything under "## My studio notes" in CLAUDE.md, or anything in productions/.</li>
-      <li><b>Check the result:</b> "claude plugin list" shows film-studio 1.6.8 or newer; the plugin has the skill "omni-directing"; the studio rules in CLAUDE.md say "studio-rules v6"; "film doctor" passes.</li>
+      <li><b>Check the result:</b> "claude plugin list" shows film-studio 1.6.9 or newer; the plugin has the skill "omni-directing"; the studio rules in CLAUDE.md say "studio-rules v6"; "film doctor" passes.</li>
       <li><b>From now on, in this studio:</b>
         <ul>
           <li>Video: Gemini Omni 1.2 Flash by default, through the omni-directing skill (a screen test to cast people, extend to continue a clip and keep the screen direction, edit to fix a take). Seedance 2.5 is the fallback, through seedance-directing.</li>

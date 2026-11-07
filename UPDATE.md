@@ -101,6 +101,7 @@ Everything that matters shows ✓. Then tell the student, in a few short lines: 
 
 ## What's new
 
+- **1.6.9:** Gemini Omni: always ask for 720p (it returns 720p whatever you request); upscale for a 1080p final.
 - **1.6.8:** Gemini Omni 1.2 Flash is the default video model (new `omni-directing` skill): people cast in motion with a screen test, scenes grown with extend (same person, no reference photo, about a fifth of Seedance's price), takes fixed with an edit. Seedance 2.5 is the fallback. `film gen` calls all six Omni routes. Studio rules v6.
 - **1.6.7:** stills on GPT Image 2.6 (Sunburst): on EvoLink now (about $0.19 an image at 2K), on Aristotto as soon as it lists it. The image skill writes prompts the way 2.6 reads them (a real photograph, light as a time of day and a direction, film grain, no retouching) and spells out named lighting setups such as Rembrandt. Studio rules v5.
 - **1.6.6:** the `study-a-reference` skill. Give Claude an inspiration video and say "reverse engineer this": it measures every cut, move, transition, colour and sound hit with HyperFrames' free `measure` tools, writes a recipe, and proves it with a short piece in your own brand. The technique, never the content. HyperFrames updates with the kit; no HeyGen account or Pro needed.

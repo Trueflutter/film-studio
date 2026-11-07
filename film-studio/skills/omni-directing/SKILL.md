@@ -24,7 +24,7 @@ On **Aristotto**, take the newest Omni it lists (`list_capabilities`, modality v
 
 **Sound is always on.** There is no audio switch: name the sound you want and write "Do not add music" or "No dialogue" when you don't want them.
 
-**Resolution:** ask for 720p. In our tests a 1080p request came back as 720x1280; use the upscale route for a sharper final, and judge faces at 720p.
+**Resolution:** always ask for 720p (`--res 720p`). Omni returns 720p whatever you request (in our tests both 1080p and 360p requests came back 720x1280), so another value only makes the cost estimate and the file name wrong. For a 1080p or 4k final, run the upscale route on the chosen take.
 
 ## How Omni wants to be prompted (Google's guide, and our tests)
 
